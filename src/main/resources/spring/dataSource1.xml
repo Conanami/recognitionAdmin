@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd 
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.1.xsd 
+		">
+
+	<!-- 加载db.properties文件 -->
+	<context:property-placeholder location="classpath:mybatis/db.properties"/>
+
+	<!-- 配置数据源-->
+	<bean id="oneDataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
+		<property name="driverClassName" value="${one.jdbc.driver}" />
+		<property name="url" value="${one.jdbc.url}" />
+		<property name="username" value="${one.jdbc.username}" />
+		<property name="password" value="${one.jdbc.password}" />
+		<property name="maxActive" value="300" />
+		<property name="maxIdle" value="10" />
+        <property name="validationQuery" value="select 1"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="8000"/>
+        <property name="minEvictableIdleTimeMillis" value="1000"/>
+	</bean>
+	
+	<!-- sqlSessionFactory -->
+	<bean id="oneSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 数据库连接池 -->
+		<property name="dataSource" ref="oneDataSource"/>
+		<!-- 加载mybatis的全局配置文件 -->
+		<property name="mapperLocations" value="classpath:/mybatis/one/*Mapper.xml" />
+	</bean>
+	
+	<!-- mapper扫描器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描包路径，如果需要扫描多个包，中间使用半角逗号隔开 -->
+		<property name="basePackage" value="mybatis.one.mapper,com.role.mybatis.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="oneSqlSessionFactory"/>
+	</bean>
+
+</beans>

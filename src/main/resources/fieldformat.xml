@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+    <item type="order.status" value="1" name="待付款"/>
+    <item type="order.status" value="2" name="付款成功"/>
+    <item type="order.status" value="3" name="交易取消"/>
+    
+    <item type="plan.status" value="1" name="正常"/>
+    <item type="plan.status" value="2" name="已完成未到期"/>
+    <item type="plan.status" value="3" name="未完成已到期"/>
+    <item type="plan.status" value="4" name="已完成已到期"/>
+    <item type="plan.status" value="5" name="提现申请中"/>
+    <item type="plan.status" value="6" name="提现完成"/>
+    <item type="plan.status" value="7" name="作废"/>
+    
+    <item type="pay.status" value="1" name="待发验证短信"/>
+    <item type="pay.status" value="2" name="验证短信已发，待验证"/>
+    <item type="pay.status" value="3" name="验证短信发送失败"/>
+    <item type="pay.status" value="4" name="验证成功，支付成功"/>
+    <item type="pay.status" value="5" name="验证失败"/>
+    
+    <item type="redeem.status" value="1" name="待赎回"/>
+    <item type="redeem.status" value="2" name="赎回成功"/>
+    <item type="redeem.status" value="3" name="交易取消"/>
+    
+    <item type="CreateInvestInfo.resCode" value="01" name="创建失败"/>
+    <item type="CreateInvestInfo.resCode" value="02" name="响应异常"/>
+    <item type="CreateInvestInfo.resCode" value="03" name="份额不足"/>
+    <item type="CreateInvestInfo.resCode" value="04" name="份额无效"/>
+    <item type="CreateInvestInfo.resCode" value="05" name="产品编号不存在"/>
+    <item type="CreateInvestInfo.resCode" value="06" name="产品不可购买"/>
+    <item type="CreateInvestInfo.resCode" value="07" name="系统清算中"/>
+    <item type="CreateInvestInfo.resCode" value="08" name="存在未付款投资"/>
+    <item type="CreateInvestInfo.resCode" value="09" name="未实名绑卡认证"/>
+    <item type="CreateInvestInfo.resCode" value="10" name="未知错误"/>
+    
+    <item type="RedeemApply.resCode" value="00" name="赎回成功"/>
+    <item type="RedeemApply.resCode" value="01" name="赎回失败"/>
+    <item type="RedeemApply.resCode" value="02" name="份额不足"/>
+    <item type="RedeemApply.resCode" value="03" name="低于最小赎回份额"/>
+    <item type="RedeemApply.resCode" value="04" name="未找到持有"/>
+    <item type="RedeemApply.resCode" value="05" name="其他未知错误"/>
+    <item type="RedeemApply.resCode" value="06" name="不可赎回"/>
+    <item type="RedeemApply.resCode" value="07" name="赎回份额格式错误"/>
+
+</root>

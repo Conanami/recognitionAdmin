@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd ">
+
+	<context:component-scan base-package="com.role"></context:component-scan>
+	
+	<context:component-scan base-package="com.sxd.controller"></context:component-scan>
+	<context:component-scan base-package="com.sxd.service.impl"></context:component-scan>
+
+	<context:property-placeholder ignore-unresolvable="true"
+			location="classpath*:/*.properties" />	
+
+	<!-- 配置注解驱动的Spring MVC Controller 的编程模型.注:次标签只在 Servlet MVC工作! -->  
+	<mvc:annotation-driven conversion-service="conversionService">
+		<mvc:message-converters register-defaults="true">
+		    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">  
+                <property name="objectMapper">  
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">  
+                        <property name="dateFormat">  
+                            <bean class="java.text.SimpleDateFormat">  
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />  
+                            </bean>  
+                        </property>  
+                    </bean>  
+                </property>  
+            </bean>  
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+    
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	</bean>
+	
+	<mvc:resources mapping="/css/**" location="/css/"/>
+    <mvc:resources mapping="/js/**" location="/js/"/>
+    <mvc:resources mapping="/images/**" location="/images/"/>
+    <mvc:resources mapping="/files/**" location="/files/"/>
+    <mvc:resources mapping="/*.html" location="/"/>
+    <mvc:resources mapping="/download/**" location="/download/"/>
+    <mvc:resources mapping="/css/**" location="/css/"/>
+    
+    <!-- 全局异常处理器 -->
+	<bean class="com.common.exception.WExceptionResolver"/>
+    
+    <bean id="conversionService"
+        class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <set>
+                <bean class="com.common.formatter.DateFormatter">
+                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd" />
+                </bean>
+            </set>
+        </property>
+    </bean>
+    
+	<mvc:view-controller path="/" view-name="redirect:/jsp/Login.jsp"/>
+    
+</beans>

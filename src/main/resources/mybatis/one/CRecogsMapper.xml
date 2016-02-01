@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.one.mapper.CRecogsMapper">
+
+    <!-- 领取手机号进行电话拨打 -->
+    <select id="pickup" resultType="mybatis.one.po.DBRecogs">
+        SELECT
+            *
+        FROM
+            recogs
+        WHERE
+        1=1
+        <if test="merchid != null and merchid != ''" >
+            AND a.merchid = #{merchid}
+        </if>
+        AND (
+            ISNULL(`status`)
+            OR `status` = 1
+        )
+        ORDER BY
+            createtime
+        LIMIT 0,
+         1
+    </select>
+
+  <!-- 根据 商户号，手机号，流水号 查询 手机号状态识别记录-->
+  <select id="selectRecogs" resultType="mybatis.one.po.DBRecogs">
+      SELECT
+      a.*
+      FROM
+      recogs a
+
+      WHERE  1=1
+      <if test="merchid != null and merchid != ''" >
+          AND a.merchid = #{merchid}
+      </if>
+      <if test="mobile != null and mobile != ''" >
+          AND a.mobile = #{mobile}
+      </if>
+
+    ORDER BY
+	a.seqid DESC
+	
+	<if test="pagesize != null" >
+		LIMIT #{start}, #{pagesize}
+    </if>
+	
+  </select>
+  
+  <!-- 根据 商户号，手机号，流水号 查询 手机号状态识别记录, 返回 总数量 -->
+  <select id="totalRecogs" resultType="java.lang.Integer" >
+  	  SELECT
+		COUNT(*)
+      FROM
+      recogs a
+
+      WHERE  1=1
+      <if test="merchid != null and merchid != ''" >
+          AND a.merchid = #{merchid}
+      </if>
+      <if test="mobile != null and mobile != ''" >
+          AND a.mobile = #{mobile}
+      </if>
+  </select>
+
+</mapper>

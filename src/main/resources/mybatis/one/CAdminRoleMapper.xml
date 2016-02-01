@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.role.mybatis.mapper.CAdminRoleMapper">
+  
+  <!-- 查询  所有的 管理员用户 -->
+  <select id="selectAdminUsers" resultType="java.util.HashMap">
+	SELECT
+		a.userid,
+		a.username,
+		a.realname,
+		a.department,
+		a.mobile,
+		a.`status`,
+		b.roleid,
+		c.rolename,
+		c.roledesc
+	FROM
+		admin_userinfo a
+	LEFT JOIN admin_userrole b ON a.userid = b.userid
+	LEFT JOIN admin_role c ON b.roleid = c.roleid
+  </select>
+  
+  <!-- 根据用户名查询 该用户的所有角色信息 -->
+  <select id="selectRoleWithUsername" parameterType="java.lang.String" resultType="com.role.controller.RoleUserDto">
+  	SELECT
+		a.roleid,
+		a.userid,
+		b.rolename,
+		c.username,
+		c.realname
+	FROM
+		admin_userrole a
+	LEFT JOIN admin_role b ON a.roleid = b.roleid
+	LEFT JOIN admin_userinfo c ON a.userid = c.userid
+	WHERE
+		c.username = #{username}
+  </select>
+  
+  <!-- 查询  所有的 角色以及所属菜单，用于动态添加到 shiro的 权限控制里面 -->
+  <select id="selectAllRoleMenuPermission" resultType="com.role.controller.RolePermissionsDto">
+	SELECT
+		d.menuid,
+		d.url,
+		d.menuname,
+		group_concat(rolename) AS roles
+	FROM
+		(
+			SELECT
+				a.roleid,
+				c.rolename,
+				a.menuid,
+				b.menuname,
+				b.url
+			FROM
+				admin_rolemenu a
+			LEFT JOIN admin_menu b ON a.menuid = b.menuid
+			LEFT JOIN admin_role c ON a.roleid = c.roleid
+			WHERE
+				ISNULL(b.url) = FALSE
+			AND b.url != ''
+		) d
+	GROUP BY
+		d.menuid
+  </select>
+  
+  <!-- 查询  某个角色和所有菜单的关系，如果是所属，则 checked==1, 否则为0 -->
+  <select id="selectAdminRoleMenu" parameterType="java.lang.Integer" resultType="com.role.controller.RoleMenuDto">
+  	SELECT
+		a.menuid,
+		c.menuname AS parentmenuname,
+		a.menuname,
+		a.url,
+		a.type,
+		a.parentmenuid,
+		a.isleaf,
+		b.roleid,
+		b.position,
+		CASE
+	WHEN ISNULL(b.roleid) THEN
+		0
+	ELSE
+		1
+	END AS checked
+	FROM
+		admin_menu a
+	LEFT JOIN (
+		SELECT
+			*
+		FROM
+			admin_rolemenu
+		WHERE
+			admin_rolemenu.roleid = #{roleid,jdbcType=INTEGER}
+	) b ON a.menuid = b.menuid
+	LEFT JOIN admin_menu c ON a.parentmenuid = c.menuid
+	 
+	ORDER BY
+		b.position asc
+  </select>
+  
+</mapper>
