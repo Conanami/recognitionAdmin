@@ -85,7 +85,7 @@ public class BankRestController {
      * 保存 录音文件到对应手机号
      * @param merchId
      * @param signInfo
-     * @param reqid
+     * @param seqid
      * @param dataurl
      * @param request
      * @param httpSession
@@ -96,7 +96,7 @@ public class BankRestController {
     public WSResponse<DBRecogs> api_mobile_audio_save(
             @RequestParam(value = "merchid", required = true) String merchId,
             @RequestParam(value = "signinfo", required = true) String signInfo,
-            @RequestParam(value = "reqid", required = true) Long reqid,
+            @RequestParam(value = "seqid", required = true) Long seqid,
             @RequestParam(value = "zjmobile", required = true) String zjmobile,
             @RequestParam(value = "dataurl", required = true) String dataurl,
             HttpServletRequest request,
@@ -111,9 +111,10 @@ public class BankRestController {
         if (!MerchValidateUtil.validate(request.getParameterMap(), merchId, appSecret)) {
             throw new WException(ExceptionConst.SIGN_VALID_FAIL.intValue());
         }
+        bankService.saveAudioInfo(seqid, zjmobile, dataurl);
 
         WSResponse<DBRecogs> response = new WSResponse<>();
-        bankService.saveAudioInfo(reqid, zjmobile, dataurl);
+        response.add(recogsMapper.selectByPrimaryKey(seqid));
         response.setRespDescription("保存录音文件信息成功");
         return response;
     }

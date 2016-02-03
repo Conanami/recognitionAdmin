@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
-<!-- 只查询 当前登录用户创建的课程 -->
+<!-- 手机号码状态识别记录 -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,13 +14,11 @@
 	<script type="text/javascript" src="<c:url value='/js/easyui/jquery.min.js'/>" ></script>  
     <script type="text/javascript" src="<c:url value='/js/easyui/jquery.easyui.min.js'/>" ></script> 
     <script type="text/javascript" src="<c:url value='/js/easyui/jquery.edatagrid.js'/>" ></script> 
-    <script type="text/javascript" src="<c:url value='/js/jquery.form.js'/>" ></script> 
-	 
+    <script type="text/javascript" src="<c:url value='/js/jquery.form.js'/>" ></script>
+    <script type="text/javascript" src="<c:url value='/js/audioplayer.js'/>"></script>
+
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/form_common.css'/>" />
     <style>
-        span.datebox {
-            border: 0;
-        }
     </style>
     <script type="text/javascript">
 
@@ -72,6 +70,7 @@
                 $('#dlg').dialog('open').dialog('center').dialog('setTitle','修改');
 	            $('#fm').form('clear');
                 $('#fm').form('load',row);
+                $('#fm').find('#dataurl').attr('src', row.dataurl);
             }else{
             	$.messager.alert('提示', '请先选择一笔记录','error');
             }
@@ -121,8 +120,9 @@
 		}
 		
 	    $(function(){
-	    	
-			$('#dg').edatagrid({
+
+//            $( 'audio' ).audioPlayer();
+            $('#dg').edatagrid({
                 pageSize: 15,//每页显示的记录条数
                 pageList: [15,30,60],//可以设置每页记录条数的列表
 				url: "<c:url value='/api.recogs.query'/>",
@@ -159,7 +159,7 @@
 	<!-- 隐藏组件区域 -->
 	<div style="display: none">
 	
-		<!-- 课程的 工具栏 -->
+		<!-- 工具栏 -->
 		<div id="toolbar">
 			<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showNewForm()">新增</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="javascript:showEditForm()">编辑</a>
@@ -168,7 +168,7 @@
 			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg').datagrid('reload')">reload</a>
 		</div>
 
-        <!-- 课程新增 区域 -->
+        <!-- 新增 区域 -->
         <div id="dlgnew" class="easyui-dialog" style="width:500px;height:450px;padding:10px 20px"
              closed="true" buttons="#dlg-buttons-new">
             <div class="ftitle">手机号信息</div>
@@ -184,7 +184,7 @@
             </form>
         </div>
 
-		<!-- 课程编辑 区域 -->
+		<!-- 编辑 区域 -->
 		<div id="dlg" class="easyui-dialog" style="width:500px;height:450px;padding:10px 20px"
 	            closed="true" buttons="#dlg-buttons">
 	        <div class="ftitle">手机号信息</div>
@@ -207,7 +207,7 @@
                 </div>
                 <div class="fitem">
                     <label>录音文件:</label>
-                    <input id="dataurl" name="dataurl" class="easyui-textbox" style="border: none" editable="false" >
+                    <audio id="dataurl" name="dataurl" src="audio.wav" preload="auto" controls ></audio>
                 </div>
                 <div class="fitem">
                     <label>人工分析结果:</label>
