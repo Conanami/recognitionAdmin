@@ -21,6 +21,19 @@
     <style>
     </style>
     <script type="text/javascript">
+        //采用jquery easyui loading css效果
+        function ajaxLoading(){
+            $("<div class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:$(window).height()}).appendTo("body");
+            $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({display:"block",left:($(document.body).outerWidth(true) - 190) / 2,top:($(window).height() - 45) / 2});
+        }
+        function ajaxLoadingWith(msg){
+            $("<div class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:$(window).height()}).appendTo("body");
+            $("<div class=\"datagrid-mask-msg\"></div>").html(msg).appendTo("body").css({display:"block",left:($(document.body).outerWidth(true) - 190) / 2,top:($(window).height() - 45) / 2});
+        }
+        function ajaxLoadEnd(){
+            $(".datagrid-mask").remove();
+            $(".datagrid-mask-msg").remove();
+        }
 
 		function format_status(value,row){
 			if(value==1){
@@ -39,9 +52,13 @@
             if(value==1){
                 return '正常';
             }else if(value==2){
-                return '欠费停机';
+                return '欠费停机';;
             }else if(value==3){
                 return '空号';
+            }else if(value==4){
+                return '关机';
+            }else if(value==0){
+                return '未知';
             }
             return '';
         }
@@ -52,10 +69,35 @@
 			return btn;  
 		}
 		function settingdg(rec){
-			//var arrs = rec.split(',');
-			//var url = "<c:url value='/jsp/model/paper.jsp'/>"+'?courseid='+arrs[0]+'&coursename='+arrs[1];
-			//window.location = url;
 		}
+
+        function showImport(){
+            $('#uploaddlg').dialog('open');
+            $('#uploaddlg').panel({title: "导入手机号列表，第一列为手机号"});
+        }
+
+        function submit(){
+            var length = $("#file").val();
+            if(length==""){
+                alert("请选择需要上传的文件");
+            }else{
+                //关闭
+                $('#uploaddlg').dialog('close');
+                ajaxLoading();
+//                setTimeout("requestStatus()",1000);	//1秒后执行requestStatus()方法，更新上传进度
+                $("#uploadFileForm").ajaxSubmit({
+                    success:function(result){
+                        ajaxLoadEnd();
+                        if(result.respCode!=0){
+                            $.messager.alert('提示', result.respDescription,'error');
+                        }else{
+                            $.messager.alert('提示', result.respDescription,'info');
+                            $('#dg').datagrid('reload');
+                            $("#uploadFileForm").resetForm();
+                        }
+                    }});
+            }
+        }
 
 		function showNewForm(){
         	$('#dlgnew').dialog('open').dialog('center').dialog('setTitle','新增');
@@ -142,12 +184,13 @@
 			<tr>
 				<th field="seqid" >序号</th>
 				<th field="merchid" >商户号</th>
+                <th field="batchid" >批次号码</th>
                 <th field="mobile" >被叫号码</th>
                 <th field="zjmobile" >主叫号码</th>
-                <th field="dataurl" >录音文件地址</th>
                 <th field="status" formatter="format_status">状态</th>
                 <th field="result" formatter="format_result">结果</th>
                 <th field="manualresult" formatter="format_result">人工分析结果</th>
+                <th field="dataurl" >录音文件地址</th>
                 <th field="createtime" >创建时间</th>
                 <th field="receivetime" >领取时间</th>
                 <th field="calltime" >拨打时间</th>
@@ -158,9 +201,17 @@
 	
 	<!-- 隐藏组件区域 -->
 	<div style="display: none">
-	
+
+        <div id="uploaddlg" class="easyui-dialog" title="选择附件" closed="true" data-options="iconCls:'icon-save'" style="width:400px;height:200px;padding:10px">
+            <div>&nbsp;</div>
+            <form  id="uploadFileForm" action="<c:url value='/api.mobile.upload'/>" method="POST" enctype="multipart/form-data">
+                <input type='file' name="file" id="file" style="width:300px;"/> <a href="#" onclick="submit();" >上传</a>
+            </form>
+        </div>
+
 		<!-- 工具栏 -->
 		<div id="toolbar">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showImport()">导入</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showNewForm()">新增</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="javascript:showEditForm()">编辑</a>
 			
@@ -202,10 +253,6 @@
                     <input id="mobile" name="mobile" class="easyui-textbox" required="true">
                 </div>
                 <div class="fitem">
-                    <label>主叫号码:</label>
-                    <input id="zjmobile" name="zjmobile" class="easyui-textbox" style="border: none"  editable="false" >
-                </div>
-                <div class="fitem">
                     <label>录音文件:</label>
                     <audio id="dataurl" name="dataurl" src="audio.wav" preload="auto" controls ></audio>
                 </div>
@@ -216,23 +263,8 @@
                         <option value="1">正常</option>
                         <option value="2">欠费停机</option>
                         <option value="3">空号</option>
+                        <option value="4">关机</option>
                     </select>
-                </div>
-                <div class="fitem">
-                    <label>创建时间:</label>
-                    <input id="createtime" name="createtime" class="easyui-textbox" style="border: none" editable="false" value="0" >
-                </div>
-                <div class="fitem">
-                    <label>领取时间:</label>
-                    <input id="receivetime" name="receivetime" class="easyui-textbox" style="border: none" editable="false" value="0" >
-                </div>
-                <div class="fitem">
-                    <label>拨打时间:</label>
-                    <input id="calltime" name="calltime" class="easyui-textbox" style="border: none" editable="false" value="0" >
-                </div>
-                <div class="fitem">
-                    <label>识别时间:</label>
-                    <input id="recogtime" name="recogtime" class="easyui-textbox" style="border: none" editable="false" value="0" >
                 </div>
 	        </form>
 	    </div>

@@ -325,6 +325,76 @@ public class DBRecogsExample {
             return (Criteria) this;
         }
 
+        public Criteria andBatchidIsNull() {
+            addCriterion("batchid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidIsNotNull() {
+            addCriterion("batchid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidEqualTo(String value) {
+            addCriterion("batchid =", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidNotEqualTo(String value) {
+            addCriterion("batchid <>", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidGreaterThan(String value) {
+            addCriterion("batchid >", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidGreaterThanOrEqualTo(String value) {
+            addCriterion("batchid >=", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidLessThan(String value) {
+            addCriterion("batchid <", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidLessThanOrEqualTo(String value) {
+            addCriterion("batchid <=", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidLike(String value) {
+            addCriterion("batchid like", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidNotLike(String value) {
+            addCriterion("batchid not like", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidIn(List<String> values) {
+            addCriterion("batchid in", values, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidNotIn(List<String> values) {
+            addCriterion("batchid not in", values, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidBetween(String value1, String value2) {
+            addCriterion("batchid between", value1, value2, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidNotBetween(String value1, String value2) {
+            addCriterion("batchid not between", value1, value2, "batchid");
+            return (Criteria) this;
+        }
+
         public Criteria andZjmobileIsNull() {
             addCriterion("zjmobile is null");
             return (Criteria) this;
@@ -957,6 +1027,11 @@ public class DBRecogsExample {
 
         public Criteria andMerchidLikeInsensitive(String value) {
             addCriterion("upper(merchid) like", value.toUpperCase(), "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidLikeInsensitive(String value) {
+            addCriterion("upper(batchid) like", value.toUpperCase(), "batchid");
             return (Criteria) this;
         }
 

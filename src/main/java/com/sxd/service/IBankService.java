@@ -7,6 +7,13 @@ import java.util.List;
 public interface IBankService {
 
     /**
+     * 批量插入手机号码
+     * @param merchid
+     * @param list
+     */
+    public void insertMobiles(String merchid, String batchid, List<String> list);
+
+    /**
      * 领取手机号 用于拨打电话
      * @param merchid
      * @throws Exception

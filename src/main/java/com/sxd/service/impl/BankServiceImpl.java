@@ -22,7 +22,21 @@ public class BankServiceImpl implements IBankService {
     @Resource
     CRecogsMapper cRecogsMapper;
 
-
+    /**
+     * 批量插入手机号码
+     * @param merchid
+     * @param list
+     */
+    public void insertMobiles(String merchid, String batchid, List<String> list){
+        for (int i=0;i<list.size();i++){
+            DBRecogs recogs = new DBRecogs();
+            recogs.setMerchid(merchid);
+            recogs.setBatchid(batchid);
+            recogs.setMobile(list.get(i));
+            recogs.setCreatetime(new Date());
+            recogsMapper.insert(recogs);
+        }
+    }
     /**
      * 领取手机号 用于拨打电话
      * @param merchid
@@ -35,6 +49,8 @@ public class BankServiceImpl implements IBankService {
             throw new WException(500).setMessage("没有待识别的记录");
         }
         recogs.setStatus(2);
+        recogs.setResult(-1);
+        recogs.setManualresult(-1);
         recogs.setReceivetime(new Date());
         recogsMapper.updateByPrimaryKey(recogs);
         return recogs;

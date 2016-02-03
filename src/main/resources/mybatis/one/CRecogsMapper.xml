@@ -16,6 +16,8 @@
         AND (
             ISNULL(`status`)
             OR `status` = 1
+            OR manualresult =0
+            OR result=0
         )
         ORDER BY
             createtime
