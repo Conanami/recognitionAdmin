@@ -5,7 +5,7 @@ public class Coordi {
 	public double y;
 	public Coordi(int i, double bigsound) {
 		// TODO Auto-generated constructor stub
-		x=  i;
+		x = i;
 		y = bigsound;
 	}
 	@Override
