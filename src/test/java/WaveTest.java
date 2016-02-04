@@ -13,9 +13,11 @@ import org.fuxin.util.WaveMatcher;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +31,7 @@ public class WaveTest {
     public void runtest(){
         WaveIdentifyUtil.setWaveSampleResourceDir("C:\\Users\\boshu\\Downloads\\11公开接口\\9录音\\standard");
 
-        String urlstr = "http://sxddev.zhangguijr.com:80/imageserver/api.file.get?filename=18221822415_20160203162012516.wav";
+        String urlstr = "http://sxddev.zhangguijr.com:80/imageserver/api.file.get?filename=18221822405_201602031630347027.wav";
         String mobile = "";
         Pattern p = Pattern.compile("filename=(.*)_");
         Matcher m = p.matcher(urlstr);
@@ -40,6 +42,6 @@ public class WaveTest {
         TelePhone phone = new TelePhone(mobile);
         phone.identifyWave(urlstr);
 
-       log.info(""+phone.getStatus());
+       log.info(""+phone.getStatus().getSimpleName());
     }
 }

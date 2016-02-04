@@ -188,7 +188,7 @@
                 <th field="mobile" >被叫号码</th>
                 <th field="zjmobile" >主叫号码</th>
                 <th field="status" formatter="format_status">状态</th>
-                <th field="result" formatter="format_result">结果</th>
+                <th field="result" formatter="format_result">语音识别结果</th>
                 <th field="manualresult" formatter="format_result">人工分析结果</th>
                 <th field="dataurl" >录音文件地址</th>
                 <th field="createtime" >创建时间</th>

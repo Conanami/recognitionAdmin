@@ -42,7 +42,7 @@
 </tx:advice>
 <!-- aop -->
 <aop:config>
-	<aop:advisor advice-ref="txAdvice" pointcut="execution(* com.sxd.service.impl.*.*(..)) or execution(* com.role.service.impl.*.*(..))"/>
+	<aop:advisor advice-ref="txAdvice" pointcut="execution(* com.web.service.impl.*.*(..)) or execution(* com.role.service.impl.*.*(..))"/>
 </aop:config>
 
 </beans>

@@ -1,4 +1,4 @@
-package com.sxd.service;
+package com.web.service;
 
 import mybatis.one.po.DBRecogs;
 

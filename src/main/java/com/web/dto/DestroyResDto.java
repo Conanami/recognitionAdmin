@@ -1,4 +1,4 @@
-package com.sxd.dto;
+package com.web.dto;
 
 public class DestroyResDto {
 	private Boolean success;

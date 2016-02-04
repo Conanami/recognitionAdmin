@@ -6,15 +6,23 @@ package org.fuxin.extend;
 public enum PhoneStatus {
     work(1, "正常")
     ,stopped(2, "停机")
-    ,closed(3, "关机")
-    ,empty(4, "空号")
+    ,empty(3, "空号")
+    ,closed(4, "关机")
     ;
 
-    private Integer seqid;
+    private Integer code;
     private String simpleName;
-    private PhoneStatus(Integer seqid, String simpleName)
+    private PhoneStatus(Integer code, String simpleName)
     {
-        this.seqid = seqid;
+        this.code = code;
         this.simpleName = simpleName;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getSimpleName() {
+        return simpleName;
     }
 }

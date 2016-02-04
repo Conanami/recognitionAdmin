@@ -1,4 +1,4 @@
-package com.sxd.controller;
+package com.web.controller;
 
 import com.common.exception.ExceptionConst;
 import com.common.exception.ExceptionFormatter;
@@ -7,8 +7,8 @@ import com.common.util.IopUtils;
 import com.common.util.MerchManagerUtil;
 import com.common.util.MerchValidateUtil;
 import com.common.util.WSResponse;
-import com.sxd.dto.DestroyResDto;
-import com.sxd.service.IBankService;
+import com.web.dto.DestroyResDto;
+import com.web.service.IBankService;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBRecogsExample;
