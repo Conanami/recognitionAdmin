@@ -258,6 +258,7 @@
                 <div class="fitem">
                     <label>人工分析结果:</label>
                     <select class="easyui-combobox" id="manualresult" name="manualresult" editable="false" style="width:200px;">
+                        <option value="-1">无</option>
                         <option value="0">未知</option>
                         <option value="1">正常</option>
                         <option value="2">欠费停机</option>
