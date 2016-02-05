@@ -68,6 +68,7 @@ public class RecogTaskServiceImpl implements IRecogTaskService{
     public List<DBRecogs> queryLast(){
         DBRecogsExample example = new DBRecogsExample();
         example.createCriteria().andStatusEqualTo(3);//已经拨打的电话记录
+        example.setOrderByClause("seqid asc");
         List<DBRecogs> dbRecogsList = recogsMapper.selectByExample(example);
         if (dbRecogsList.size()>20){
             return dbRecogsList.subList(0,20);

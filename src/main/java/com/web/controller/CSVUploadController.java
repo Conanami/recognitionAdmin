@@ -59,7 +59,9 @@ public class CSVUploadController {
     @RequestMapping("api.mobile.upload")
     public WSResponse<Boolean> uploadmobile(
             @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "colnum", required = true) Integer colnum,
             HttpServletRequest request, HttpSession httpSession) throws Exception {
+        String type = "";
         if (file.isEmpty()) {
             System.out.println("文件未上传");
             throw new WException(500).setMessage("请选择文件");
@@ -72,11 +74,23 @@ public class CSVUploadController {
 
             //保存文件
             String realName = file.getOriginalFilename();
-            String type = realName.substring(realName.indexOf("."),
+            type = realName.substring(realName.indexOf("."),
                     realName.length());
-            if (!type.equals(".txt")) {
-                throw new WException(500).setMessage("文件必须是制表符分隔txt格式");
+            if (!type.equals(".txt") && !type.equals(".csv")) {
+                throw new WException(500).setMessage("文件必须是制表符分隔txt格式,或者csv格式");
             }
+        }
+
+        if (colnum<1){
+            throw  new WException(500).setMessage("请输入有效的 表格中手机号所在的列数，从1开始");
+        }
+
+        CSVFormat format = CSVFormat.DEFAULT;
+        if (type.equals(".txt")){
+            format = CSVFormat.TDF;
+        }
+        if (type.equals(".csv")){
+            format = CSVFormat.EXCEL;
         }
 
         String merchid = "";
@@ -86,20 +100,22 @@ public class CSVUploadController {
             merchid = username;
         }
 
+        colnum = colnum -1 ;//传入的默认从1开始， 实际使用的从0开始
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmm");
         String batchid = simpleDateFormat.format(new Date());
         List<String> listMobile = new ArrayList<>();
-        List<List<String>> lists = readListFromCsvFile(file.getInputStream());
+        List<List<String>> lists = readListFromCsvFile(file.getInputStream(), format);
         for (int i=0;i<lists.size();i++){
             List<String> list = lists.get(i);
-            String mobile = list.get(0);
+            String mobile = list.get(colnum);
             if (isNumeric(mobile)){
                 listMobile.add(mobile);
             }
         }
         bankService.insertMobiles(merchid, batchid, listMobile);
         WSResponse<Boolean> response = new WSResponse<>();
-        response.setRespDescription("批量提交手机号成功");
+        response.setRespDescription("批量提交手机号码 "+listMobile.size()+" 条 成功");
         return response;
     }
 
@@ -112,12 +128,12 @@ public class CSVUploadController {
         return true;
     }
 
-    public static List<List<String>> readListFromCsvFile(InputStream is) throws Exception, IOException {
+    public static List<List<String>> readListFromCsvFile(InputStream is, CSVFormat format) throws Exception, IOException {
         List<List<String>> result = new ArrayList<>();
 
         String encoding = "GBK";
         CSVParser parser = new CSVParser(new InputStreamReader(
-                is, encoding), CSVFormat.TDF);
+                is, encoding), format);
         List<CSVRecord> list = parser.getRecords();
         for (int j = 0; j < list.size(); j++) {
             CSVRecord item = list.get(j);

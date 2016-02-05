@@ -73,7 +73,7 @@
 
         function showImport(){
             $('#uploaddlg').dialog('open');
-            $('#uploaddlg').panel({title: "导入手机号列表，第一列为手机号"});
+            $('#uploaddlg').panel({title: "导入手机号列表"});
         }
 
         function submit(){
@@ -94,6 +94,7 @@
                             $.messager.alert('提示', result.respDescription,'info');
                             $('#dg').datagrid('reload');
                             $("#uploadFileForm").resetForm();
+                            $('#uploadFileForm').find('#colnum').textbox('setValue',1);
                         }
                     }});
             }
@@ -205,7 +206,14 @@
         <div id="uploaddlg" class="easyui-dialog" title="选择附件" closed="true" data-options="iconCls:'icon-save'" style="width:400px;height:200px;padding:10px">
             <div>&nbsp;</div>
             <form  id="uploadFileForm" action="<c:url value='/api.mobile.upload'/>" method="POST" enctype="multipart/form-data">
-                <input type='file' name="file" id="file" style="width:300px;"/> <a href="#" onclick="submit();" >上传</a>
+                <div class="fitem">
+                    <label></label>
+                    <input type='file' name="file" id="file" style="width:300px;"/> <a href="#" onclick="submit();" >上传</a>
+                </div>
+                <div class="fitem">
+                    <label style="width: 200px;">上传表格中，手机号所在列数:</label>
+                    <input id="colnum" name="colnum" class="easyui-textbox" value="1" style="width:100px;"/>
+                </div>
             </form>
         </div>
 
