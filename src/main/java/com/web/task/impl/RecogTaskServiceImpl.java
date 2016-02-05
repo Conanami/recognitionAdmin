@@ -33,6 +33,27 @@ public class RecogTaskServiceImpl implements IRecogTaskService{
     @Resource
     DBRecogsMapper recogsMapper;
 
+
+    /**
+     * 扫描领取超过5分钟没有拨打成功的电话
+     */
+    @Scheduled(cron="0 0/5 * * * ?")   //每5分钟执行一次
+    public void runSacanWaitCalling(){
+        DBRecogsExample example = new DBRecogsExample();
+        example.createCriteria().andStatusEqualTo(2);  // 1 表示 尚未领取 ，2  表示已经领取， 3 表示 已经拨打， 4 表示 已经识别。
+        List<DBRecogs> list = recogsMapper.selectByExample(example);
+        for (DBRecogs recogs : list){
+            if (recogs.getReceivetime().getTime() + 5*60*1000 < new Date().getTime()){
+                recogs.setStatus(1);
+                recogsMapper.updateByPrimaryKey(recogs);
+                log.info(recogs.getMobile()+" 状态由 已经领取 变更为 尚未领取");
+            }
+        }
+    }
+
+    /**
+     * 语音识别
+     */
     @Scheduled(cron="0 0/5 * * * ?")   //每5分钟执行一次
     @Override
     public void runIndentify(){
