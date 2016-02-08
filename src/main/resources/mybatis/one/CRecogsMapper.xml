@@ -20,7 +20,7 @@
             OR result=0
         )
         ORDER BY
-            createtime
+            seqid
         LIMIT 0,
          1
     </select>
