@@ -97,6 +97,9 @@ public class CSVUploadController {
         if (IopUtils.isEmpty(merchid)) {
             // 如果没有传 teacher，默认为 当前用户自己
             String username = (String) httpSession.getAttribute("username");
+            if (IopUtils.isEmpty(username)){
+                throw new WException(500).setMessage("系统已经退出，请重新登录");
+            }
             merchid = username;
         }
 

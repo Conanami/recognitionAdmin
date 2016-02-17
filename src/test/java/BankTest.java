@@ -24,29 +24,19 @@ public class BankTest {
     @Test
     public void test() {
         try {
-            File file = new File("c:\\tools\\201601271532341483.txt");
-            String page = IOUtils.toString(new FileInputStream(file));
-            Document document = Jsoup.parse(page);
-            Element realForm = document.select("div.info-show ").first();
-            if (realForm != null) {
-                String name = realForm.select(".item").get(1).html().replace("<label>账户户名：</label>", "");
-                String cardno = realForm.select(".item").get(2).html().replace("<label>账户账号：</label>", "");
-                log.info("name:"+name +"\n cardno:"+cardno);
-//                Element userinfo = document.getElementsContainingOwnText("尊敬的").first();
-//                String userName = "";
-//                if (userinfo != null) {
-//                    String text = userinfo.html();
-//                    userName = text.substring(text.indexOf("\">") + 2, text.indexOf("</span>"));
-//                    log.info("userName:" + userName);
-//                }
+            File file = new File("C:\\Users\\boshu\\Downloads\\13061603533_201602071728204338.wav");
 
-                //登录成功，保存相关信息
-                //context.addTempParam(ParamKey.CCB_ACCOUNT, ccbAccountTemp);
+            log.info(""+file.length());
 
-            }
+//            String page = IOUtils.toString(new FileInputStream(file));
+//            Document document = Jsoup.parse(page);
+//            Element realForm = document.select("div.info-show ").first();
+//            if (realForm != null) {
+//                String name = realForm.select(".item").get(1).html().replace("<label>账户户名：</label>", "");
+//                String cardno = realForm.select(".item").get(2).html().replace("<label>账户账号：</label>", "");
+//                log.info("name:"+name +"\n cardno:"+cardno);
+//            }
 
-//            String tmp = URLDecoder.decode("%0D%0A%0D%0A%0D%0AE0000000000010%7C0101%7C%E4%BA%BA%E6%B0%91%E5%B8%81%7C0%7C0", "utf-8");
-//            log.info("tmp:" + tmp);
         } catch (Exception e) {
             e.printStackTrace();
         }

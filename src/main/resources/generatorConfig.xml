@@ -18,5 +18,7 @@
 		<javaClientGenerator targetPackage="mybatis.one.mapper" targetProject="src/main/java" type="XMLMAPPER" />
 
 	    <table  tableName="recogs" domainObjectName="DBRecogs" />
+        <table  tableName="batchlog" domainObjectName="DBBatchLog" />
+        <table  tableName="imgzb" domainObjectName="DBImgZB" />
 	</context>
 </generatorConfiguration>

@@ -10,7 +10,7 @@ import java.io.File;
  * 标准样本文件
  */
 public enum WaveSample {
-    ChinaMobileEmpty(1001, "中国移动空号样本", "ydkh_std.wav", 3000)
+    ChinaMobileEmpty(1001, "中国移动空号样本", "ydkh_std.wav", 6700)
     ,ChinaMobileStopped(1002, "中国移动停机样本", "ydtj_std.wav", 3000)
     ,ChinaMobileClosed(1003, "中国移动关机样本", "ydgj_std.wav", 2250)
 
@@ -18,7 +18,7 @@ public enum WaveSample {
     ,ChinaUnicomStopped(2002, "中国联通停机样本", "lttj_std.wav", 2000)
     ,ChinaUnicomClosed(2003, "中国联通关机样本", "ltgj_std.wav", 2000)
 
-    ,ChinaTelicomEmpty(3001, "中国电信空号样本", "ydkh_std.wav", 3000)
+    ,ChinaTelicomEmpty(3001, "中国电信空号样本", "ydkh_std.wav", 7580)
     ,ChinaTelicomStopped(3002, "中国电信停机样本", "ydtj_std.wav", 3000)   //电信 用的移动的样本
     ,ChinaTelicomClosed(3003, "中国电信关机样本", "ydgj_std.wav", 2250)
     ;
