@@ -12,14 +12,29 @@ public interface CRecogsMapper {
 	 * @return
 	 */
     public List<DBRecogs> selectRecogs(
-            @Param("merchid") String merchid,
+            @Param("batchid") String batchid,
             @Param("mobile") String mobile,
 			@Param("start") Integer start,
 			@Param("pagesize") Integer pagesize);
 
     public Integer totalRecogs(
-            @Param("merchid") String merchid,
+            @Param("batchid") String batchid,
             @Param("mobile") String mobile
+    );
+
+    /**
+     * 查询  导入批次记录
+     * @return
+     */
+    public List<DBRecogs> selectBatchLogs(
+            @Param("merchid") String merchid,
+            @Param("batchid") String batchid,
+            @Param("start") Integer start,
+            @Param("pagesize") Integer pagesize);
+
+    public Integer totalBatchLogs(
+            @Param("merchid") String merchid,
+            @Param("batchid") String batchid
     );
 
     /**

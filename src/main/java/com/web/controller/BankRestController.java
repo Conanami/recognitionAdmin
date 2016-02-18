@@ -48,6 +48,35 @@ public class BankRestController {
     }
 
     /**
+     * 批次导入记录查询
+     * @param merchid
+     * @param batchid
+     * @param sort
+     * @param order
+     * @param page
+     * @param pagesize
+     * @param httpSession
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("api.batchlog.query")
+    public WSResponse<DBRecogs> api_batchlog_query(
+            @RequestParam(value = "merchid", required = false) String merchid,
+            @RequestParam(value = "batchid", required = false) String batchid,
+            @RequestParam(value = "sort", required = false) String sort,
+            @RequestParam(value = "order", required = false) String order,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "rows", required = false) Integer pagesize,
+            HttpSession httpSession) throws Exception{
+        WSResponse<DBRecogs> response = new WSResponse<>();
+        response.setRows(bankService.selectBatchLogs(merchid, batchid, (page-1)*pagesize, pagesize));
+        response.setTotal(bankService.totalBatchLogs(merchid, batchid));
+        response.setRespDescription("批次记录查询成功");
+        return response;
+    }
+
+
+    /**
      * 获取手机号
      * @param merchId
      * @param signInfo
@@ -132,7 +161,7 @@ public class BankRestController {
      */
     @RequestMapping("api.recogs.query")
     public WSResponse<DBRecogs> api_bankflowlog_query(
-            @RequestParam(value = "merchid", required = false) String merchid,
+            @RequestParam(value = "batchid", required = false) String batchid,
             @RequestParam(value = "mobile", required = false) String mobile,
             @RequestParam(value = "sort", required = false) String sort,
             @RequestParam(value = "order", required = false) String order,
@@ -140,8 +169,8 @@ public class BankRestController {
             @RequestParam(value = "rows", required = false) Integer pagesize,
             HttpSession httpSession) throws Exception{
         WSResponse<DBRecogs> response = new WSResponse<>();
-        response.setRows(bankService.selectRecogs(merchid, mobile, (page-1)*pagesize, pagesize));
-        response.setTotal(bankService.totalRecogs(merchid, mobile));
+        response.setRows(bankService.selectRecogs(batchid, mobile, (page-1)*pagesize, pagesize));
+        response.setTotal(bankService.totalRecogs(batchid, mobile));
         response.setRespDescription("手机号识别记录查询成功");
         return response;
     }

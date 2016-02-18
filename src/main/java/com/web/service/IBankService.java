@@ -11,7 +11,7 @@ public interface IBankService {
      * @param merchid
      * @param list
      */
-    public void insertMobiles(String merchid, String batchid, List<String> list);
+    public void insertMobiles(String merchid, String batchid, String mark, List<String> list);
 
     /**
      * 领取手机号 用于拨打电话
@@ -35,13 +35,32 @@ public interface IBankService {
      * @return
      */
     public List<DBRecogs> selectRecogs(
-            String merchid,
+            String batchid,
             String mobile,
             Integer start,
             Integer pagesize);
 
     public Integer totalRecogs(
+            String batchid,
+            String mobile
+    );
+
+    /**
+     * 查询批次
+     * @param merchid
+     * @param batchid
+     * @param start
+     * @param pagesize
+     * @return
+     */
+    public List<DBRecogs> selectBatchLogs(
             String merchid,
+            String batchid,
+            Integer start,
+            Integer pagesize);
+
+    public Integer totalBatchLogs(
+            String batchid,
             String mobile
     );
 }

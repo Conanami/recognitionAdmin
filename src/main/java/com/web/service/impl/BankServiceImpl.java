@@ -3,7 +3,9 @@ package com.web.service.impl;
 import com.common.exception.WException;
 import com.web.service.IBankService;
 import mybatis.one.mapper.CRecogsMapper;
+import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
+import mybatis.one.po.DBBatchLog;
 import mybatis.one.po.DBRecogs;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +24,31 @@ public class BankServiceImpl implements IBankService {
     @Resource
     CRecogsMapper cRecogsMapper;
 
+    @Resource
+    DBBatchLogMapper batchLogMapper;
+
     /**
      * 批量插入手机号码
      * @param merchid
      * @param list
      */
-    public void insertMobiles(String merchid, String batchid, List<String> list){
+    public void insertMobiles(String merchid, String batchid, String mark,  List<String> list){
+        Date createTime = new Date();
+
+        DBBatchLog batchLog = new DBBatchLog();
+        batchLog.setMerchid(merchid);
+        batchLog.setBatchid(batchid);
+        batchLog.setCreatetime(createTime);
+        batchLog.setMark(mark);
+        batchLog.setTotalcount(list.size());
+        batchLogMapper.insert(batchLog);
+
         for (int i=0;i<list.size();i++){
             DBRecogs recogs = new DBRecogs();
             recogs.setMerchid(merchid);
             recogs.setBatchid(batchid);
             recogs.setMobile(list.get(i));
-            recogs.setCreatetime(new Date());
+            recogs.setCreatetime(createTime);
             recogsMapper.insert(recogs);
         }
     }
@@ -82,17 +97,40 @@ public class BankServiceImpl implements IBankService {
      * @return
      */
     public List<DBRecogs> selectRecogs(
-            String merchid,
+            String batchid,
             String mobile,
             Integer start,
             Integer pagesize){
-        return cRecogsMapper.selectRecogs(merchid, mobile, start, pagesize);
+        return cRecogsMapper.selectRecogs(batchid, mobile, start, pagesize);
     }
 
     public Integer totalRecogs(
-            String merchid,
+            String batchid,
             String mobile
     ){
-        return cRecogsMapper.totalRecogs(merchid, mobile);
+        return cRecogsMapper.totalRecogs(batchid, mobile);
+    }
+
+    /**
+     * 查询批次
+     * @param merchid
+     * @param batchid
+     * @param start
+     * @param pagesize
+     * @return
+     */
+    public List<DBRecogs> selectBatchLogs(
+            String merchid,
+            String batchid,
+            Integer start,
+            Integer pagesize){
+        return cRecogsMapper.selectBatchLogs(merchid, batchid, start, pagesize);
+    }
+
+    public Integer totalBatchLogs(
+            String merchid,
+            String batchid
+    ){
+        return cRecogsMapper.totalBatchLogs(merchid, batchid);
     }
 }

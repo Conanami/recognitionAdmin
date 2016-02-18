@@ -33,8 +33,8 @@
       recogs a
 
       WHERE  1=1
-      <if test="merchid != null and merchid != ''" >
-          AND a.merchid = #{merchid}
+      <if test="batchid != null and batchid != ''" >
+          AND a.batchid = #{batchid}
       </if>
       <if test="mobile != null and mobile != ''" >
           AND a.mobile = #{mobile}
@@ -57,12 +57,53 @@
       recogs a
 
       WHERE  1=1
-      <if test="merchid != null and merchid != ''" >
-          AND a.merchid = #{merchid}
+      <if test="batchid != null and batchid != ''" >
+          AND a.batchid = #{batchid}
       </if>
       <if test="mobile != null and mobile != ''" >
           AND a.mobile = #{mobile}
       </if>
   </select>
+
+
+    <!-- 根据 商户号，批次号， 查询 批次导入记录-->
+    <select id="selectBatchLogs" resultType="mybatis.one.po.DBBatchLog">
+        SELECT
+        a.*
+        FROM
+        batchlog a
+
+        WHERE  1=1
+        <if test="merchid != null and merchid != ''" >
+            AND a.merchid = #{merchid}
+        </if>
+        <if test="batchid != null and batchid != ''" >
+            AND a.batchid = #{batchid}
+        </if>
+
+        ORDER BY
+        a.seqid DESC
+
+        <if test="pagesize != null" >
+            LIMIT #{start}, #{pagesize}
+        </if>
+
+    </select>
+
+    <!-- 根据 商户号，批次号 查询 批次导入记录, 返回 总数量 -->
+    <select id="totalBatchLogs" resultType="java.lang.Integer" >
+        SELECT
+        COUNT(*)
+        FROM
+        batchlog a
+
+        WHERE  1=1
+        <if test="merchid != null and merchid != ''" >
+            AND a.merchid = #{merchid}
+        </if>
+        <if test="batchid != null and batchid != ''" >
+            AND a.batchid = #{batchid}
+        </if>
+    </select>
 
 </mapper>

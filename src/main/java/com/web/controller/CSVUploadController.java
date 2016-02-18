@@ -60,6 +60,7 @@ public class CSVUploadController {
     public WSResponse<Boolean> uploadmobile(
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "colnum", required = true) Integer colnum,
+            @RequestParam(value = "mark", required = true) String mark,
             HttpServletRequest request, HttpSession httpSession) throws Exception {
         String type = "";
         if (file.isEmpty()) {
@@ -116,7 +117,7 @@ public class CSVUploadController {
                 listMobile.add(mobile);
             }
         }
-        bankService.insertMobiles(merchid, batchid, listMobile);
+        bankService.insertMobiles(merchid, batchid, mark,listMobile);
         WSResponse<Boolean> response = new WSResponse<>();
         response.setRespDescription("批量提交手机号码 "+listMobile.size()+" 条 成功");
         return response;

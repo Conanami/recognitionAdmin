@@ -163,12 +163,10 @@
 		}
 		
 	    $(function(){
-
-//            $( 'audio' ).audioPlayer();
             $('#dg').edatagrid({
                 pageSize: 15,//每页显示的记录条数
                 pageList: [15,30,60],//可以设置每页记录条数的列表
-				url: "<c:url value='/api.recogs.query'/>",
+				url: "<c:url value='/api.recogs.query'/>"+"?batchid=${param.batchid}",
                 updateUrl: "<c:url value='/api.recogs.update'/>",
 				saveUrl: "<c:url value='/api.recogs.save'/>",
 				destroyUrl: "<c:url value='/api.recogs.remove'/>"
@@ -184,15 +182,12 @@
 		<thead>
 			<tr>
 				<th field="seqid" >序号</th>
-				<th field="merchid" >商户号</th>
-                <th field="batchid" >批次号码</th>
                 <th field="mobile" >被叫号码</th>
                 <th field="zjmobile" >主叫号码</th>
                 <th field="status" formatter="format_status">状态</th>
                 <th field="result" formatter="format_result">语音识别结果</th>
                 <th field="manualresult" formatter="format_result">人工分析结果</th>
                 <th field="dataurl" >录音文件地址</th>
-                <th field="createtime" >创建时间</th>
                 <th field="receivetime" >领取时间</th>
                 <th field="calltime" >拨打时间</th>
                 <th field="recogtime" >识别时间</th>
