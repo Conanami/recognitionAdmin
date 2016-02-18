@@ -108,7 +108,7 @@ public class CSVUploadController {
         colnum = colnum -1 ;//传入的默认从1开始， 实际使用的从0开始
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmmss");
-        String batchid = simpleDateFormat.format(new Date())+ RandomUtils.nextInt(100);
+        String batchid = simpleDateFormat.format(new Date())+"_"+ RandomUtils.nextInt(100);
         List<String> listMobile = new ArrayList<>();
         List<List<String>> lists = readListFromCsvFile(file.getInputStream(), format);
         for (int i=0;i<lists.size();i++){

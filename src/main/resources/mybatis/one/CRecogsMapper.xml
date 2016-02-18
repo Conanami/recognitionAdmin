@@ -36,6 +36,15 @@
       <if test="batchid != null and batchid != ''" >
           AND a.batchid = #{batchid}
       </if>
+      <if test="status != null " >
+          AND a.status = #{status}
+      </if>
+      <if test="result != null " >
+          AND a.result = #{result}
+      </if>
+      <if test="manualresult != null " >
+          AND a.manualresult = #{manualresult}
+      </if>
       <if test="mobile != null and mobile != ''" >
           AND a.mobile = #{mobile}
       </if>
@@ -59,6 +68,15 @@
       WHERE  1=1
       <if test="batchid != null and batchid != ''" >
           AND a.batchid = #{batchid}
+      </if>
+      <if test="status != null " >
+          AND a.status = #{status}
+      </if>
+      <if test="result != null " >
+          AND a.result = #{result}
+      </if>
+      <if test="manualresult != null " >
+          AND a.manualresult = #{manualresult}
       </if>
       <if test="mobile != null and mobile != ''" >
           AND a.mobile = #{mobile}

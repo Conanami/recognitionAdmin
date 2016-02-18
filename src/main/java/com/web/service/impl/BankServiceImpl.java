@@ -97,18 +97,18 @@ public class BankServiceImpl implements IBankService {
      * @return
      */
     public List<DBRecogs> selectRecogs(
-            String batchid,
-            String mobile,
+            DBRecogs queryParams,
             Integer start,
             Integer pagesize){
-        return cRecogsMapper.selectRecogs(batchid, mobile, start, pagesize);
+        return cRecogsMapper.selectRecogs(queryParams.getBatchid(), queryParams.getStatus(), queryParams.getResult(),
+                queryParams.getManualresult(), queryParams.getMobile(), start, pagesize);
     }
 
     public Integer totalRecogs(
-            String batchid,
-            String mobile
+            DBRecogs queryParams
     ){
-        return cRecogsMapper.totalRecogs(batchid, mobile);
+        return cRecogsMapper.totalRecogs(queryParams.getBatchid(), queryParams.getStatus(),
+                queryParams.getResult(), queryParams.getManualresult(), queryParams.getMobile());
     }
 
     /**

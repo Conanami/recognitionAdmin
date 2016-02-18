@@ -13,12 +13,18 @@ public interface CRecogsMapper {
 	 */
     public List<DBRecogs> selectRecogs(
             @Param("batchid") String batchid,
+            @Param("status") Integer status,
+            @Param("result") Integer result,
+            @Param("manualresult") Integer manualresult,
             @Param("mobile") String mobile,
 			@Param("start") Integer start,
 			@Param("pagesize") Integer pagesize);
 
     public Integer totalRecogs(
             @Param("batchid") String batchid,
+            @Param("status") Integer status,
+            @Param("result") Integer result,
+            @Param("manualresult") Integer manualresult,
             @Param("mobile") String mobile
     );
 

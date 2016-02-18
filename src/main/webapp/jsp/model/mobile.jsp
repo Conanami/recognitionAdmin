@@ -161,21 +161,64 @@
 				}
 			});
 		}
-		
-	    $(function(){
+
+        function querySearch(){
             $('#dg').edatagrid({
                 pageSize: 15,//每页显示的记录条数
                 pageList: [15,30,60],//可以设置每页记录条数的列表
-				url: "<c:url value='/api.recogs.query'/>"+"?batchid=${param.batchid}",
+                url: "<c:url value='/api.recogs.query'/>"+"?batchid=${param.batchid}",
+                queryParams: {
+                    status: $("#statusSearch").combobox('getValue'),         //服务器入参
+                    result: $("#resultSearch").combobox('getValue'),
+                    manualresult: $("#manualresultSearch").combobox('getValue'),
+                    mobile: $("#mobileSearch").textbox('getValue')
+                },
                 updateUrl: "<c:url value='/api.recogs.update'/>",
-				saveUrl: "<c:url value='/api.recogs.save'/>",
-				destroyUrl: "<c:url value='/api.recogs.remove'/>"
-			}); 
+                saveUrl: "<c:url value='/api.recogs.save'/>",
+                destroyUrl: "<c:url value='/api.recogs.remove'/>"
+            });
+        }
+        $(function(){
+            querySearch();
 		});
     </script>
 </head>
 
 <body style="padding:6px;">
+    <div class="easyui-layout" style="width:auto;height:30px;">
+        <label>状态:</label>
+        <select class="easyui-combobox" id="statusSearch" name="statusSearch" editable="false" style="width:100px;">
+            <option value="99">全部</option>
+            <option value="1">尚未领取</option>
+            <option value="2">已经领取</option>
+            <option value="3">已经拨打</option>
+            <option value="4">已经识别</option>
+        </select>
+        <label>语音识别结果:</label>
+        <select class="easyui-combobox" id="resultSearch" name="resultSearch" editable="false" style="width:100px;">
+            <option value="99">全部</option>
+            <option value="-1">尚未处理</option>
+            <option value="0">未知</option>
+            <option value="1">正常</option>
+            <option value="2">欠费停机</option>
+            <option value="3">空号</option>
+            <option value="4">关机</option>
+        </select>
+        <label>人工分析结果:</label>
+        <select class="easyui-combobox" id="manualresultSearch" name="manualresultSearch" editable="false" style="width:100px;">
+            <option value="99">全部</option>
+            <option value="-1">尚未处理</option>
+            <option value="0">未知</option>
+            <option value="1">正常</option>
+            <option value="2">欠费停机</option>
+            <option value="3">空号</option>
+            <option value="4">关机</option>
+        </select>
+        <label>手机号码:</label>
+        <input id="mobileSearch" class="easyui-textbox"  placeholder="请输入手机号码"/>
+
+        <a href="#" class="easyui-linkbutton" iconCls="icon-query" plain="true" onclick="javascript:querySearch()">查询</a>
+    </div>
 	<table id="dg" title="手机号列表" style="width:auto;height:auto"
 			toolbar="#toolbar" pagination="true" idField="seqid"
 			rownumbers="true" fitColumns="true" singleSelect="true">

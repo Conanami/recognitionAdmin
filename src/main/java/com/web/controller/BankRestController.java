@@ -10,6 +10,7 @@ import com.common.util.WSResponse;
 import com.web.dto.DestroyResDto;
 import com.web.service.IBankService;
 import mybatis.one.mapper.DBRecogsMapper;
+import mybatis.one.po.DBBatchLog;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBRecogsExample;
 import org.slf4j.Logger;
@@ -162,6 +163,9 @@ public class BankRestController {
     @RequestMapping("api.recogs.query")
     public WSResponse<DBRecogs> api_bankflowlog_query(
             @RequestParam(value = "batchid", required = false) String batchid,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "result", required = false) Integer result,
+            @RequestParam(value = "manualresult", required = false) Integer manualresult,
             @RequestParam(value = "mobile", required = false) String mobile,
             @RequestParam(value = "sort", required = false) String sort,
             @RequestParam(value = "order", required = false) String order,
@@ -169,8 +173,26 @@ public class BankRestController {
             @RequestParam(value = "rows", required = false) Integer pagesize,
             HttpSession httpSession) throws Exception{
         WSResponse<DBRecogs> response = new WSResponse<>();
-        response.setRows(bankService.selectRecogs(batchid, mobile, (page-1)*pagesize, pagesize));
-        response.setTotal(bankService.totalRecogs(batchid, mobile));
+        DBRecogs queryParams = new DBRecogs();
+        queryParams.setBatchid(batchid);
+        queryParams.setStatus(status);
+        queryParams.setResult(result);
+        queryParams.setManualresult(manualresult);
+        queryParams.setMobile(mobile);
+        if (queryParams.getStatus()==99){
+            queryParams.setStatus(null);
+        }
+        if (queryParams.getResult()==99){
+            queryParams.setResult(null);
+        }
+        if (queryParams.getManualresult()==99){
+            queryParams.setManualresult(null);
+        }
+        if (IopUtils.isEmpty(queryParams.getMobile())){
+            queryParams.setMobile(null);
+        }
+        response.setRows(bankService.selectRecogs(queryParams, (page-1)*pagesize, pagesize));
+        response.setTotal(bankService.totalRecogs(queryParams));
         response.setRespDescription("手机号识别记录查询成功");
         return response;
     }

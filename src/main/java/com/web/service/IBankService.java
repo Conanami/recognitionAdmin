@@ -35,14 +35,12 @@ public interface IBankService {
      * @return
      */
     public List<DBRecogs> selectRecogs(
-            String batchid,
-            String mobile,
+            DBRecogs queryParams,
             Integer start,
             Integer pagesize);
 
     public Integer totalRecogs(
-            String batchid,
-            String mobile
+            DBRecogs queryParams
     );
 
     /**
