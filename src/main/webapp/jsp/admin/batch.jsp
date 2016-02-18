@@ -34,6 +34,28 @@
             $(".datagrid-mask-msg").remove();
         }
 
+        //格式化秒数 为 00:01:30秒
+        function formatTimeSeconds(value, rec){
+            if(value==undefined){
+                return '';
+            }
+            // 计算
+            var h=0,i=0,s=value;
+            if(s>60){
+                i=parseInt(s/60);
+                s=parseInt(s%60);
+                if(i > 60) {
+                    h=parseInt(i/60);
+                    i = parseInt(i%60);
+                }
+            }
+            // 补零
+            var zero=function(v){
+                return (v>>0)<10?"0"+v:v;
+            };
+            return [zero(h),zero(i),zero(s)].join(":");
+        }
+
         function showdetailcell(value,rec){
             var m = rec.seqid+","+rec.merchid+","+rec.batchid+","+rec.mark;
             var btn = '<a onclick="showdetail(\''+m+'\')" href="javascript:void(0)">查看详情</a>';
@@ -113,10 +135,12 @@
                 <th field="createtime" >导入时间</th>
                 <th field="callstarttime" >呼叫开始时间</th>
                 <th field="callendtime" >呼叫完成时间</th>
+                <th field="callcount" >完成呼叫数量</th>
                 <th field="recogstarttime" >识别开始时间</th>
                 <th field="recogendtime" >识别完成时间</th>
-                <th field="totalcalltime" >总呼叫时间</th>
-                <th field="totalrecogtime" >总识别时间</th>
+                <th field="recogcount" >完成识别数量</th>
+                <th field="totalcalltime" formatter="formatTimeSeconds">总呼叫时间</th>
+                <th field="totalrecogtime" formatter="formatTimeSeconds">总识别时间</th>
                 <th field="opt2" formatter="showdetailcell">详情</th>
 			</tr>
 		</thead>

@@ -9,6 +9,7 @@ import mybatis.one.mapper.DBRecogsMapper;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -106,8 +107,8 @@ public class CSVUploadController {
 
         colnum = colnum -1 ;//传入的默认从1开始， 实际使用的从0开始
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmm");
-        String batchid = simpleDateFormat.format(new Date());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmmss");
+        String batchid = simpleDateFormat.format(new Date())+ RandomUtils.nextInt(100);
         List<String> listMobile = new ArrayList<>();
         List<List<String>> lists = readListFromCsvFile(file.getInputStream(), format);
         for (int i=0;i<lists.size();i++){

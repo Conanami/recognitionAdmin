@@ -1,6 +1,5 @@
-package com.web.task.impl;
+package com.web.task;
 
-import com.web.task.IRecogTaskService;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBRecogsExample;
@@ -8,13 +7,11 @@ import org.fuxin.extend.TelePhone;
 import org.fuxin.extend.WaveIdentifyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -25,7 +22,7 @@ import java.util.concurrent.Executors;
  * Created by boshu on 2016/2/4.
  */
 @Service
-public class RecogTaskServiceImpl implements IRecogTaskService{
+public class RecogTaskService {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private String sampleFolder = "";    //样本目录
@@ -39,23 +36,27 @@ public class RecogTaskServiceImpl implements IRecogTaskService{
      */
     @Scheduled(cron="0 0/5 * * * ?")   //每5分钟执行一次
     public void runSacanWaitCalling(){
+        log.info("---------开始扫描领取超过5分钟没有拨打成功的电话---------");
         DBRecogsExample example = new DBRecogsExample();
         example.createCriteria().andStatusEqualTo(2);  // 1 表示 尚未领取 ，2  表示已经领取， 3 表示 已经拨打， 4 表示 已经识别。
         List<DBRecogs> list = recogsMapper.selectByExample(example);
+        int count = 0;
         for (DBRecogs recogs : list){
             if (recogs.getReceivetime().getTime() + 5*60*1000 < new Date().getTime()){
+                count += 1;
                 recogs.setStatus(1);
                 recogsMapper.updateByPrimaryKey(recogs);
                 log.info(recogs.getMobile()+" 状态由 已经领取 变更为 尚未领取");
             }
         }
+        log.info("扫描到已经领取的电话数量:"+list.size()+"  状态变更为尚未领取的数量:"+count);
+        log.info("---------完成扫描---------");
     }
 
     /**
      * 语音识别
      */
     @Scheduled(cron="0 0/5 * * * ?")   //每5分钟执行一次
-    @Override
     public void runIndentify(){
 
         Properties properties =  new Properties();

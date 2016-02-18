@@ -525,6 +525,126 @@ public class DBBatchLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andCallcountIsNull() {
+            addCriterion("callcount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountIsNotNull() {
+            addCriterion("callcount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountEqualTo(Integer value) {
+            addCriterion("callcount =", value, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountNotEqualTo(Integer value) {
+            addCriterion("callcount <>", value, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountGreaterThan(Integer value) {
+            addCriterion("callcount >", value, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("callcount >=", value, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountLessThan(Integer value) {
+            addCriterion("callcount <", value, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountLessThanOrEqualTo(Integer value) {
+            addCriterion("callcount <=", value, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountIn(List<Integer> values) {
+            addCriterion("callcount in", values, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountNotIn(List<Integer> values) {
+            addCriterion("callcount not in", values, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountBetween(Integer value1, Integer value2) {
+            addCriterion("callcount between", value1, value2, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCallcountNotBetween(Integer value1, Integer value2) {
+            addCriterion("callcount not between", value1, value2, "callcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountIsNull() {
+            addCriterion("recogcount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountIsNotNull() {
+            addCriterion("recogcount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountEqualTo(Integer value) {
+            addCriterion("recogcount =", value, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountNotEqualTo(Integer value) {
+            addCriterion("recogcount <>", value, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountGreaterThan(Integer value) {
+            addCriterion("recogcount >", value, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("recogcount >=", value, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountLessThan(Integer value) {
+            addCriterion("recogcount <", value, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountLessThanOrEqualTo(Integer value) {
+            addCriterion("recogcount <=", value, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountIn(List<Integer> values) {
+            addCriterion("recogcount in", values, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountNotIn(List<Integer> values) {
+            addCriterion("recogcount not in", values, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountBetween(Integer value1, Integer value2) {
+            addCriterion("recogcount between", value1, value2, "recogcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecogcountNotBetween(Integer value1, Integer value2) {
+            addCriterion("recogcount not between", value1, value2, "recogcount");
+            return (Criteria) this;
+        }
+
         public Criteria andCreatetimeIsNull() {
             addCriterion("createtime is null");
             return (Criteria) this;
