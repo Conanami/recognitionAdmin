@@ -52,6 +52,9 @@ public class CSVUploadController {
     /**
      * 手机号批量上传
      * @param file
+     * @param colnum
+     * @param rowstart
+     * @param mark
      * @param request
      * @param httpSession
      * @return
@@ -61,6 +64,7 @@ public class CSVUploadController {
     public WSResponse<Boolean> uploadmobile(
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "colnum", required = true) Integer colnum,
+            @RequestParam(value = "rowstart", required = true) Integer rowstart,
             @RequestParam(value = "mark", required = true) String mark,
             HttpServletRequest request, HttpSession httpSession) throws Exception {
         String type = "";
@@ -85,6 +89,9 @@ public class CSVUploadController {
 
         if (colnum<1){
             throw  new WException(500).setMessage("请输入有效的 表格中手机号所在的列数，从1开始");
+        }
+        if (rowstart<1){
+            throw  new WException(500).setMessage("请输入有效的 读取手机号开始的行数，从1开始");
         }
 
         CSVFormat format = CSVFormat.DEFAULT;
@@ -111,12 +118,13 @@ public class CSVUploadController {
         String batchid = simpleDateFormat.format(new Date())+"_"+ RandomUtils.nextInt(100);
         List<String> listMobile = new ArrayList<>();
         List<List<String>> lists = readListFromCsvFile(file.getInputStream(), format);
-        for (int i=0;i<lists.size();i++){
+        for (int i=rowstart-1;i<lists.size();i++){
             List<String> list = lists.get(i);
             String mobile = list.get(colnum);
-            if (isNumeric(mobile)){
+            //去掉了手机号的数字检查
+//            if (isNumeric(mobile)){
                 listMobile.add(mobile);
-            }
+//            }
         }
         bankService.insertMobiles(merchid, batchid, mark,listMobile);
         WSResponse<Boolean> response = new WSResponse<>();

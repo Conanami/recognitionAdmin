@@ -152,18 +152,24 @@
         <div id="uploaddlg" class="easyui-dialog" title="选择附件" closed="true" data-options="iconCls:'icon-save'" style="width:600px;height:500px;padding:10px">
             <div>&nbsp;</div>
             <form  id="uploadFileForm" action="<c:url value='/api.mobile.upload'/>" method="POST" enctype="multipart/form-data">
-                <div class="fitem">
-                    <label></label>
-                    <input type='file' name="file" id="file" style="width:500px;"/>
-                </div>
-                <div class="fitem">
-                    <label style="width: 200px;">上传表格中，手机号所在列数:</label>
-                    <input id="colnum" name="colnum" class="easyui-textbox" value="1" style="width:100px;"/>
-                </div>
-                <div class="fitem">
-                    <label>备注</label>
-                    <input type='easyui-textbox' name="mark" id="mark" data-options="multiline:true" style="height:60px"/>
-                </div>
+                <table cellpadding="5" width="100%">
+                    <tr>
+                        <td style="width:40%;">cvs或者txt文件:</td>
+                        <td style="width:60%;"><input type='file' name="file" id="file"/></td>
+                    </tr>
+                    <tr>
+                        <td >从第几列取手机号（从1开始）:</td>
+                        <td ><input id="colnum" name="colnum" class="easyui-textbox" value="1" style="width:100px;"/></td>
+                    </tr>
+                    <tr>
+                        <td >从第几行开始取手机号（从1开始）:</td>
+                        <td ><input id="rowstart" name="rowstart" class="easyui-textbox" value="1" style="width:100px;"/></td>
+                    </tr>
+                    <tr>
+                        <td >备注:</td>
+                        <td ><input type='easyui-textbox' name="mark" id="mark" data-options="multiline:true" style="height:60px"/></td>
+                    </tr>
+                </table>
             </form>
             <div style="text-align:center;padding:5px">
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submit()">Submit</a>
