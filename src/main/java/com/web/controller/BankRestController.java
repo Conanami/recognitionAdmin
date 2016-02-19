@@ -7,12 +7,16 @@ import com.common.util.IopUtils;
 import com.common.util.MerchManagerUtil;
 import com.common.util.MerchValidateUtil;
 import com.common.util.WSResponse;
+import com.web.dto.DataZBStructure;
 import com.web.dto.DestroyResDto;
 import com.web.service.IBankService;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.po.DBBatchLog;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBRecogsExample;
+import net.sf.json.JSONObject;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -278,5 +287,89 @@ public class BankRestController {
         DestroyResDto res = new DestroyResDto();
         res.setSuccess(true);
         return res;
+    }
+
+    private String formatResult(int result){
+        String resultName = "";
+        if (result==0){
+            resultName = "未知";
+        }else if(result==1){
+            resultName = "正常";
+        }else if(result==2){
+            resultName = "欠费停机";
+        }else if(result==3){
+            resultName = "空号";
+        }else if(result==4){
+            resultName = "关机";
+        }else if(result==-1){
+            resultName = "尚未处理";
+        }
+        return  resultName;
+    }
+
+    /**
+     * 导出某批次的手机号数据
+     * @param httpSession
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("api.recog.batch.exportExcel")
+    public WSResponse<String> exportExcelRecog(
+            @RequestParam(value = "batchid", required = true) String batchid,
+                                               HttpSession httpSession) throws Exception
+    {
+//        httpSession.setAttribute("importtotal", 100);
+//        httpSession.setAttribute("importprogress", 0);
+        log.info("开始查询整个主表");
+        DBRecogsExample example = new DBRecogsExample();
+        example.createCriteria().andBatchidEqualTo(batchid);
+        example.setOrderByClause("seqid asc");
+        List<DBRecogs> list = recogsMapper.selectByExample(example);
+
+        DataZBStructure dt = new DataZBStructure();
+        dt.read();
+        List<String> titles = dt.getTitles();
+        List<String> fields = dt.getFields();
+
+        log.info("cvs文件开始创建");
+        File file = IopUtils.createDownloadFile("号码列表","csv");
+        FileOutputStream fos = new FileOutputStream(file);
+        OutputStreamWriter ow = new OutputStreamWriter(fos, "gb2312");
+        Writer writer = ow;
+
+        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withRecordSeparator("\n");
+        CSVPrinter cp = new CSVPrinter(writer, csvFileFormat);;
+        cp.printRecord(titles);
+        for (int i = 0; i < list.size(); i++)
+        {
+            JSONObject jobj = JSONObject.fromObject(IopUtils.parseJson(list.get(i), "yyyy-MM-dd"));
+            List<String> record = new ArrayList<>();
+            for (int j = 0; j < fields.size(); j++) {
+                String value = "";
+                if (jobj.containsKey(fields.get(j))) {
+                    value = jobj.getString(fields.get(j));
+                }else if(fields.get(j).equals("resultName")){
+                    if (jobj.containsKey("result")){
+                        value = formatResult(jobj.getInt("result"));
+                    }
+                }
+                record.add(value);
+            }
+            cp.printRecord(record);
+            if (i%100==0) {
+//                httpSession.setAttribute("importprogress", i);
+            }
+        }
+        log.info("cvs文件创建成功: filename:"+file.getName());
+        writer.flush();
+        writer.close();
+        cp.close();
+        log.info("cvs文件资源释放");
+//        httpSession.setAttribute("importprogress", list.size());
+
+        WSResponse<String> response = new WSResponse<>();
+        response.add(file.getName());
+        response.setRespDescription("生成总表csv文件成功");
+        return response;
     }
 }

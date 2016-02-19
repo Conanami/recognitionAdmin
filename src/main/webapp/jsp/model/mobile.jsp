@@ -162,6 +162,25 @@
 			});
 		}
 
+        //导出某批次的手机号以及状态数据
+        function f_explort(){
+            var url = "<c:url value='/api.recog.batch.exportExcel'/>";
+            ajaxLoading();
+//            setTimeout("requestExportStatus()",1000);
+            $.post(url, {
+                batchid : "${param.batchid}"
+            }, function(result) {
+                ajaxLoadEnd();
+                if (result.respCode==0){
+                    $.messager.alert('提示', result.respDescription+'\n点击确定下载文件','info',function(r){
+                        window.location = "<c:url value='/download/'/>"+result.rows[0];
+                    });
+                } else {
+                    $.messager.alert('提示', result.respDescription,'error');
+                }
+            });
+        }
+
         function querySearch(){
             $('#dg').edatagrid({
                 pageSize: 15,//每页显示的记录条数
@@ -218,6 +237,7 @@
         <input id="mobileSearch" class="easyui-textbox"  placeholder="请输入手机号码"/>
 
         <a href="#" class="easyui-linkbutton" iconCls="icon-query" plain="true" onclick="javascript:querySearch()">查询</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-query" plain="true" onclick="javascript:f_explort()">导出全部号码</a>
     </div>
 	<table id="dg" title="手机号列表" style="width:auto;height:auto"
 			toolbar="#toolbar" pagination="true" idField="seqid"

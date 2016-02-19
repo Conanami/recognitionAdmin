@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- 导出的号码列表 结构描述 -->
+<root>
+    <item field="seqid" title="序号"/>
+    <item field="mobile" title="手机号码"/>
+    <item field="resultName" title="结果名称"/>
+    <item field="result" title="结果id"/>
+</root>
