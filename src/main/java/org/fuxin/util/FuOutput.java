@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class FuOutput {
-	public static String Date2String(java.util.Date date,String format)
+	public static String Date2String(Date date,String format)
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		return sdf.format(date);
@@ -18,9 +18,9 @@ public class FuOutput {
 	public static void writeToFile(ArrayList<?> resultListNew, String prefix) {
 		// TODO Auto-generated method stub
 		if(resultListNew==null || resultListNew.size()==0) return;
-		SimpleDateFormat sdf  =   new  SimpleDateFormat("yyyyMMdd-HHmmss");
+		SimpleDateFormat sdf  =   new  SimpleDateFormat("yyyyMMdd-HHmmssSSS");
 		String tstamp=sdf.format(new Date());
-//		writeTofile6(resultListNew, "d:\\tmp\\"+prefix+"-"+tstamp+".txt");
+		writeTofile6(resultListNew, "d:\\tmp\\"+prefix+"-"+tstamp+".txt");
 	}
 
 
@@ -32,7 +32,7 @@ public class FuOutput {
 		FileOutputStream fos = null;
 		try {
 			// String str=System.currentTimeMillis();
-			fos = new FileOutputStream(filename, true);// 第二个参数设定是否追加文件
+			fos = new FileOutputStream(filename, true);// ??????????څ?????????
 			@SuppressWarnings("resource")
 			PrintWriter pw = new PrintWriter(fos);
 			for (int i=0;i<insp.size();i++) {

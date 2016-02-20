@@ -2,6 +2,7 @@ package com.web.controller;
 
 import com.common.exception.ExceptionFormatter;
 import com.common.exception.WException;
+import com.common.util.IopUtils;
 import com.common.util.WSResponse;
 import mybatis.one.mapper.DBImgZBMapper;
 import mybatis.one.po.DBImgZB;
@@ -71,6 +72,31 @@ public class FileZBController {
     }
 
     /**
+     * 读取文件 为 字节流
+     * @param imagename
+     * @param suffix
+     * @return
+     * @throws Exception
+     */
+    byte[] readFile(String project, String merchid, String batchid, String imagename, String suffix) throws Exception{
+        String imagePath = imageserverUrl+project+File.separator+merchid+File.separator+batchid+File.separator+imagename+"."+suffix;
+        byte[] buffer = null;
+        File file = new File(imagePath);
+        FileInputStream fis = new FileInputStream(file);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] b = new byte[1024];
+        int n;
+        while ((n = fis.read(b)) != -1)
+        {
+            bos.write(b, 0, n);
+        }
+        fis.close();
+        bos.close();
+        buffer = bos.toByteArray();
+        return buffer;
+    }
+
+    /**
      * 下载服务器的文档
      * @param project
      * @param imagename
@@ -82,6 +108,8 @@ public class FileZBController {
     public byte[] txt_query(
             @RequestParam(value = "project", required = false) String project,
             @RequestParam(value = "filename", required = false) String imagename,
+            @RequestParam(value = "merchid", required = false) String merchid,
+            @RequestParam(value = "batchid", required = false) String batchid,
             HttpSession httpSession, HttpServletResponse response) throws Exception{
         String suffix = "txt";
         if (imagename.indexOf(".")!=-1) {
@@ -96,7 +124,11 @@ public class FileZBController {
         try
         {
             //默认直接从图片库 读取图片
-            buffer = readFile(project, imagename, suffix);
+            if (IopUtils.isNotEmpty(merchid) && IopUtils.isNotEmpty(batchid)){
+                buffer = readFile(project, merchid, batchid, imagename, suffix);
+            }else{
+                buffer = readFile(project, imagename, suffix);
+            }
             response.addHeader("Content-Disposition","attachment;filename="+imagename+"."+suffix);
         }
         catch (FileNotFoundException e)
@@ -167,6 +199,67 @@ public class FileZBController {
             String url = request.getScheme() + "://" + request.getServerName()
                     + ":" + request.getServerPort() + request.getContextPath()
                     + "/api.file.get?filename=" + filename + "." + suffix;
+            response.add(url);
+
+            log.info("文件上传结束===================");
+        }
+        response.setRespDescription("文件上传成功");
+        return response;
+    }
+
+    /**
+     * 录音文件上传
+     * @param file
+     * @param project
+     * @param request
+     * @param httpSession
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("api.audio.file.upload")
+    public WSResponse<String> uploadAudioFile(
+            @RequestParam(value = "file", required = true) MultipartFile file,
+            @RequestParam(value = "project", required = true) String project,
+            @RequestParam(value = "merchid", required = true) String merchid,
+            @RequestParam(value = "batchid", required = true) String batchid,
+            HttpServletRequest request, HttpSession httpSession) throws Exception{
+        WSResponse<String> response = new WSResponse<>();
+        if (file.isEmpty()) {
+            throw new WException(500).setMessage("文件未上传");
+        } else {
+            log.info("文件上传开始===================");
+            log.info("文件长度: " + file.getSize());
+            log.info("文件类型: " + file.getContentType());
+            log.info("文件名称: " + file.getName());
+            log.info("文件原名: " + file.getOriginalFilename());
+
+            //保存文件
+            String realName = file.getOriginalFilename();
+            String suffix = realName.substring(realName.indexOf(".")+1,
+                    realName.length()).toLowerCase();
+
+            String filename = realName.substring(0, realName.indexOf("."))+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ RandomUtils.nextInt(10000);
+            FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
+                    imageserverUrl+project+File.separator+merchid+File.separator+batchid+File.separator, filename+"."+suffix));
+
+            DBImgZB img = new DBImgZB();
+            img.setMerchid(merchid);
+            img.setBatchid(batchid);
+            img.setGroupname(project);
+            img.setImagename(filename);
+            img.setSuffix(suffix);
+            img.setOldname(realName);
+            img.setRemark("");
+            img.setCreatetime(new Date());
+            zbmapper.insert(img);
+
+            String url = request.getScheme() + "://" + request.getServerName()
+                    + ":" + request.getServerPort() + request.getContextPath()
+                    + "/api.file.get?filename=" + filename + "." + suffix
+                    + "&project="+project
+                    + "&merchid="+merchid
+                    + "&batchid="+batchid
+                    ;
             response.add(url);
 
             log.info("文件上传结束===================");

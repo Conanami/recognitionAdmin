@@ -5,33 +5,26 @@ import org.fuxin.caller.C;
 public class OpMgr {
 
 	/***
-	 * 通过前3位，取得运营商
-	 * @param substring
-	 * @return 
-	 * -1,表示字符串太短，不能识别运营商
-	 * 0 错误的前3位，认不出运营商
-	 * 1 移动
-	 * 2 联通
-	 * 3 电信
+	 * 根据电话号码前3位决定运营商
 	 */
-	public static int findOp(String substring) {
-		if(substring.length()<=2) return -1;
+	public static C.Operator findOp(String substring) {
+		if(substring.length()<=2) return C.Operator.Unknown;
 		if(substring.length()>=3) 
 		{
 			String prefix = substring.substring(0,3);
 			System.out.println(prefix);
 			if(Contains(C.ydprefix,prefix))
-				return 1;
+				return C.Operator.Yd;
 			if(Contains(C.ltprefix,prefix))
-				return 2;
+				return C.Operator.Lt;
 			if(Contains(C.dxprefix,prefix))
-				return 3;
+				return C.Operator.Dx;
 		}
-		return 0;
+		return C.Operator.Unknown;
 	}
 
 	/***
-	 * 数组中是否包含某元素
+	 * 是否包含
 	 * @param list
 	 * @param prefix
 	 * @return

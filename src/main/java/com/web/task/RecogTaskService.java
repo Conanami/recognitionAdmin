@@ -3,6 +3,7 @@ package com.web.task;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBRecogsExample;
+import org.fuxin.caller.WaveFileResult;
 import org.fuxin.extend.TelePhone;
 import org.fuxin.extend.WaveIdentifyUtil;
 import org.slf4j.Logger;
@@ -117,13 +118,23 @@ public class RecogTaskService {
 
         private void processCommand() {
 
-            TelePhone phone = new TelePhone(this.dbRecogs.getMobile());
-            phone.identifyWave(this.dbRecogs.getDataurl());
-
-            dbRecogs.setStatus(4);//4 表示 已经识别
-            dbRecogs.setResult(phone.getStatus().getCode());
-            dbRecogs.setRecogtime(new Date());
-            recogsMapper.updateByPrimaryKey(dbRecogs);
+            try {
+                WaveFileResult wfr = WaveIdentifyUtil.indentify(this.dbRecogs.getDataurl());
+                dbRecogs.setStatus(4);//4 表示 已经识别
+                dbRecogs.setResult(wfr.getType().getCode());
+                dbRecogs.setRecogtime(new Date());
+                recogsMapper.updateByPrimaryKey(dbRecogs);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            String duu = "C:\\Users\\boshu\\Downloads\\11公开接口\\9录音\\standard";
+//            TelePhone phone = new TelePhone(this.dbRecogs.getMobile());
+//            phone.identifyWave(this.dbRecogs.getDataurl());
+//
+//            dbRecogs.setStatus(4);//4 表示 已经识别
+//            dbRecogs.setResult(phone.getStatus().getCode());
+//            dbRecogs.setRecogtime(new Date());
+//            recogsMapper.updateByPrimaryKey(dbRecogs);
         }
 
         @Override

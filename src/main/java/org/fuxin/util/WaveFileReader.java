@@ -71,33 +71,37 @@ public class WaveFileReader {
         this.initReader(filename);  
     }  
       
-    // åˆ¤æ–­æ˜¯å¦åˆ›å»ºwavè¯»å–å™¨æˆåŠŸ  
+    // ÅĞ¶ÏÊÇ·ñ´´½¨wav¶ÁÈ¡Æ÷³É¹¦  
     public boolean isSuccess() {  
         return issuccess;  
     }  
       
-    // è·å–æ¯ä¸ªé‡‡æ ·çš„ç¼–ç é•¿åº¦ï¼Œ8bitæˆ–è€…16bit  
+    // »ñÈ¡Ã¿¸ö²ÉÑùµÄ±àÂë³¤¶È£¬8bit»òÕß16bit  
     public int getBitPerSample(){  
         return this.bitspersample;  
     }  
-      
-    // è·å–é‡‡æ ·ç‡  
+
+    //»ñÈ¡ÎÄ¼şÃû
+    public String getFilename(){
+        return this.filename;
+    }
+    // »ñÈ¡²ÉÑùÂÊ  
     public long getSampleRate(){  
         return this.samplerate;  
     }  
       
-    // è·å–å£°é“ä¸ªæ•°ï¼Œ1ä»£è¡¨å•å£°é“ 2ä»£è¡¨ç«‹ä½“å£°  
+    // »ñÈ¡ÉùµÀ¸öÊı£¬1´ú±íµ¥ÉùµÀ 2´ú±íÁ¢ÌåÉù  
     public int getNumChannels(){  
         return this.numchannels;  
     }  
       
-    // è·å–æ•°æ®é•¿åº¦ï¼Œä¹Ÿå°±æ˜¯ä¸€å…±é‡‡æ ·å¤šå°‘ä¸ª  
+    // »ñÈ¡Êı¾İ³¤¶È£¬Ò²¾ÍÊÇÒ»¹²²ÉÑù¶àÉÙ¸ö  
     public int getDataLen(){  
         return this.len;  
     }  
       
-    // è·å–æ•°æ®  
-    // æ•°æ®æ˜¯ä¸€ä¸ªäºŒç»´æ•°ç»„ï¼Œ[n][m]ä»£è¡¨ç¬¬nä¸ªå£°é“çš„ç¬¬mä¸ªé‡‡æ ·å€¼  
+    // »ñÈ¡Êı¾İ  
+    // Êı¾İÊÇÒ»¸ö¶şÎ¬Êı×é£¬[n][m]´ú±íµÚn¸öÉùµÀµÄµÚm¸ö²ÉÑùÖµ  
     public int[][] getData(){  
         return this.data;  
     }  

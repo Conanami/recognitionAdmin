@@ -6,6 +6,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.fuxin.caller.C;
+import org.fuxin.caller.ClassifyWave;
+import org.fuxin.caller.StandFile;
+import org.fuxin.caller.WaveFileResult;
 import org.fuxin.util.WaveFileReader;
 import org.fuxin.util.WaveMatcher;
 import org.slf4j.Logger;
@@ -13,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by boshu on 2016/2/4.
@@ -20,8 +26,55 @@ import java.io.FileOutputStream;
 public class WaveIdentifyUtil {
     private static Logger log = LoggerFactory.getLogger(WaveIdentifyUtil.class);
 
+    private static ArrayList<StandFile> stanlist = new ArrayList<>();
+
+    public static WaveFileResult indentify(String urlstr) throws Exception{
+        if (stanlist.size()==0){
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ydkhfile),2000, C.Operator.Yd, C.Type.Kh));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ydtjfile), 3600, C.Operator.Yd, C.Type.Tj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ydgjfile), 3000, C.Operator.Yd, C.Type.Gj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ltkhfile),2600, C.Operator.Lt, C.Type.Kh));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.lttjfile), 1500, C.Operator.Lt, C.Type.Tj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ltgjfile), 2000, C.Operator.Lt, C.Type.Gj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.dxkhfile),3000, C.Operator.Dx, C.Type.Kh));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.dxtjfile), 3000, C.Operator.Dx, C.Type.Tj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.dxgjfile), 2250, C.Operator.Dx, C.Type.Gj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.lttjfile2),1500, C.Operator.Lt, C.Type.Tj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ltkhfile2), 2000, C.Operator.Lt, C.Type.Kh));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ltkhfile3), 3000, C.Operator.Lt, C.Type.Kh));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.dxkhfile2),4000, C.Operator.Dx, C.Type.Kh));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.dxgjfile2), 2500, C.Operator.Dx, C.Type.Gj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.dxgjfile3), 2000, C.Operator.Dx, C.Type.Gj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ydkhfile2),2000, C.Operator.Yd, C.Type.Kh));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ydgjfile2), 2600, C.Operator.Yd, C.Type.Gj));
+            stanlist.add(new StandFile(new WaveFileReader(C.standfolder+C.ydgjfile3), 2500, C.Operator.Yd, C.Type.Gj));
+        }
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet post = new HttpGet(urlstr);
+
+        HttpResponse httpresponse = client.execute(post);
+        HttpEntity resEntity = httpresponse.getEntity();
+        byte[] message = EntityUtils.toByteArray(resEntity);
+        File file = File.createTempFile("test", "wav");
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(message);
+        fos.flush();
+
+        //对文件进行分类
+        ClassifyWave cw= new ClassifyWave();
+        WaveFileResult wfr = cw.Filter(file, stanlist);
+
+        return wfr;
+    }
+
+
+
+
+
     public static void setWaveSampleResourceDir(String dir){
         WaveSample.resoureDir = dir;
+        C.standfolder = dir;
     }
 
     public static PhoneStatus indentify(String mobile, String urlstr){

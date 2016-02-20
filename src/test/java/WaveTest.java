@@ -4,6 +4,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.fuxin.caller.WaveFileResult;
 import org.fuxin.extend.TelePhone;
 import org.fuxin.extend.TelecomCompany;
 import org.fuxin.extend.WaveIdentifyUtil;
@@ -29,19 +30,27 @@ public class WaveTest {
 
     @Test
     public void runtest(){
-        WaveIdentifyUtil.setWaveSampleResourceDir("C:\\Users\\boshu\\Downloads\\11公开接口\\9录音\\standard");
+        WaveIdentifyUtil.setWaveSampleResourceDir("C:\\tools\\standard\\");
 
-        String urlstr = "http://sxddev.zhangguijr.com:80/imageserver/api.file.get?filename=18221822405_201602031630347027.wav";
-        String mobile = "";
-        Pattern p = Pattern.compile("filename=(.*)_");
-        Matcher m = p.matcher(urlstr);
-        if (m.find()){
-            mobile = m.group(1);
+        String urlstr = "http://monitor.taiyuedata.com:80/recognitionadmin/api.file.get?filename=13900000091_201602181010304108.wav";
+
+        try {
+            WaveFileResult wfr = WaveIdentifyUtil.indentify(urlstr);
+            log.info(""+wfr.getType().getCode());
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        log.info("mobile:"+mobile);
-        TelePhone phone = new TelePhone(mobile);
-        phone.identifyWave(urlstr);
 
-       log.info(""+phone.getStatus().getSimpleName());
+//        String mobile = "";
+//        Pattern p = Pattern.compile("filename=(.*)_");
+//        Matcher m = p.matcher(urlstr);
+//        if (m.find()){
+//            mobile = m.group(1);
+//        }
+//        log.info("mobile:"+mobile);
+//        TelePhone phone = new TelePhone(mobile);
+//        phone.identifyWave(urlstr);
+//
+//       log.info(""+phone.getStatus().getSimpleName());
     }
 }

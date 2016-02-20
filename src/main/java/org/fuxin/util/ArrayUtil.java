@@ -1,20 +1,20 @@
 package org.fuxin.util;
 
-import java.util.ArrayList;
-
 import org.fuxin.caller.Coordi;
 
+import java.util.ArrayList;
+
 /***
- * æ•°ç»„å·¥å…·ç±»
+ * Êý×é¹¤¾ß
  *  @author Administrator
  *
  */
 public class ArrayUtil {
-	/***å‰²ä¸€æ®µè·Ÿæ ‡å‡†æ ·æœ¬ä¸€æ ·é•¿çš„éŸ³é¢‘
-	 * 
+	/***
+	 * Êý×éÇÐ³öÖ¸¶¨³¤¶ÈÒ»¶Î
 	 * @param sample
-	 * @param start     èµ·å§‹ç‚¹
-	 * @param length    é•¿åº¦
+	 * @param start     
+	 * @param length   
 	 * @return
 	 */
 	public static int[] Cut(int[] sample, int start, int length) {

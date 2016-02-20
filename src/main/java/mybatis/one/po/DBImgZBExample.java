@@ -265,6 +265,146 @@ public class DBImgZBExample {
             return (Criteria) this;
         }
 
+        public Criteria andMerchidIsNull() {
+            addCriterion("merchid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidIsNotNull() {
+            addCriterion("merchid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidEqualTo(String value) {
+            addCriterion("merchid =", value, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidNotEqualTo(String value) {
+            addCriterion("merchid <>", value, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidGreaterThan(String value) {
+            addCriterion("merchid >", value, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidGreaterThanOrEqualTo(String value) {
+            addCriterion("merchid >=", value, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidLessThan(String value) {
+            addCriterion("merchid <", value, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidLessThanOrEqualTo(String value) {
+            addCriterion("merchid <=", value, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidLike(String value) {
+            addCriterion("merchid like", value, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidNotLike(String value) {
+            addCriterion("merchid not like", value, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidIn(List<String> values) {
+            addCriterion("merchid in", values, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidNotIn(List<String> values) {
+            addCriterion("merchid not in", values, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidBetween(String value1, String value2) {
+            addCriterion("merchid between", value1, value2, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidNotBetween(String value1, String value2) {
+            addCriterion("merchid not between", value1, value2, "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidIsNull() {
+            addCriterion("batchid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidIsNotNull() {
+            addCriterion("batchid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidEqualTo(String value) {
+            addCriterion("batchid =", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidNotEqualTo(String value) {
+            addCriterion("batchid <>", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidGreaterThan(String value) {
+            addCriterion("batchid >", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidGreaterThanOrEqualTo(String value) {
+            addCriterion("batchid >=", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidLessThan(String value) {
+            addCriterion("batchid <", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidLessThanOrEqualTo(String value) {
+            addCriterion("batchid <=", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidLike(String value) {
+            addCriterion("batchid like", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidNotLike(String value) {
+            addCriterion("batchid not like", value, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidIn(List<String> values) {
+            addCriterion("batchid in", values, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidNotIn(List<String> values) {
+            addCriterion("batchid not in", values, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidBetween(String value1, String value2) {
+            addCriterion("batchid between", value1, value2, "batchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidNotBetween(String value1, String value2) {
+            addCriterion("batchid not between", value1, value2, "batchid");
+            return (Criteria) this;
+        }
+
         public Criteria andGroupnameIsNull() {
             addCriterion("groupname is null");
             return (Criteria) this;
@@ -667,6 +807,16 @@ public class DBImgZBExample {
 
         public Criteria andImagenameLikeInsensitive(String value) {
             addCriterion("upper(imagename) like", value.toUpperCase(), "imagename");
+            return (Criteria) this;
+        }
+
+        public Criteria andMerchidLikeInsensitive(String value) {
+            addCriterion("upper(merchid) like", value.toUpperCase(), "merchid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchidLikeInsensitive(String value) {
+            addCriterion("upper(batchid) like", value.toUpperCase(), "batchid");
             return (Criteria) this;
         }
 

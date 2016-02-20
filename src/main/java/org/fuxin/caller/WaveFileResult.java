@@ -1,83 +1,42 @@
 package org.fuxin.caller;
 
+import org.fuxin.caller.C.Operator;
+import org.fuxin.caller.C.Type;
+
 /***
- * 记录音频文件的文件名，类别，及其它参数
+ * ���صĽ����
  * @author Administrator
  *
  */
 public class WaveFileResult {
-	public String filepath;
-	private int khresult;
-	private int tjresult;
-	private int gjresult;
-	private int finalresult=0;   
-	//0,表示正常电话
-	//1,表示空号
-	//2,表示停机
-	//3,表示关机
-	
-	public int getFinalresult() {
-		return finalresult;
+	public WaveFileResult(String path) {
+		setFilepath(path);
+		setType(C.Type.Undo);
 	}
-
-	public void setFinalresult(int finalresult) {
-		this.finalresult = finalresult;
+	public String getFilepath() {
+		return filepath;
 	}
-
-	public WaveFileResult(String filename) {
-		filepath=filename;
+	private void setFilepath(String filepath) {
+		this.filepath = filepath;
 	}
-
-	public int getKhresult() {
-		return khresult;
+	public Type getType() {
+		return type;
 	}
-
-	public void setKhresult(int khresult) {
-		this.khresult = khresult;
+	public void setType(Type type) {
+		this.type = type;
 	}
-
-	public int getTjresult() {
-		return tjresult;
-	}
-
-	public void setTjresult(int tjresult) {
-		this.tjresult = tjresult;
-	}
-
-	public int getGjresult() {
-		return gjresult;
-	}
-
-	public void setGjresult(int gjresult) {
-		this.gjresult = gjresult;
-	}
-
+	private String filepath;  //�ļ���
+	private Type type;        //����
+	private Operator oper;    //��Ӫ��
 	@Override
 	public String toString() {
-		return filepath + ", " + khresult + ", " + tjresult + ", " + gjresult
-				+ ", " + finalresult;
+		return filepath + "," + oper + "," + type;
 	}
-
-	//根据各种匹配结果计算最终结果
-	public void setFinalresult() {
-		if(khresult==0 && tjresult==2 && gjresult==2)
-		{
-			setFinalresult(1);
-		}
-		if(khresult==2 && tjresult==0 && gjresult==2)
-		{	
-			setFinalresult(2);
-		}
-		if(khresult==2 && tjresult==2 && gjresult==0)
-		{
-			setFinalresult(3);
-		}
-		if(khresult+tjresult+gjresult<3)
-			setFinalresult(4);
-		if(khresult+tjresult+gjresult>5)
-			setFinalresult(0);
-	
-		
+	public Operator getOper() {
+		return oper;
+	}
+	public void setOper(Operator oper) {
+		this.oper = oper;
 	}
 	
 	
