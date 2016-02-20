@@ -141,7 +141,11 @@ public class FileZBController {
                 response.addHeader("Content-Disposition","attachment;filename=default_not_found.png");
             }else{
                 log.info("数据库里面找到图片，返回");
-                buffer = readFile(img.getGroupname(), img.getImagename(), img.getSuffix());
+                if (IopUtils.isNotEmpty(img.getMerchid()) && IopUtils.isNotEmpty(img.getBatchid())){
+                    buffer = readFile(img.getGroupname(), img.getMerchid(), img.getBatchid(), img.getImagename(), img.getSuffix());
+                }else {
+                    buffer = readFile(img.getGroupname(), img.getImagename(), img.getSuffix());
+                }
                 response.addHeader("Content-Disposition","attachment;filename="+img.getImagename()+"."+img.getSuffix());
             }
         }
@@ -256,9 +260,6 @@ public class FileZBController {
             String url = request.getScheme() + "://" + request.getServerName()
                     + ":" + request.getServerPort() + request.getContextPath()
                     + "/api.file.get?filename=" + filename + "." + suffix
-                    + "&project="+project
-                    + "&merchid="+merchid
-                    + "&batchid="+batchid
                     ;
             response.add(url);
 
