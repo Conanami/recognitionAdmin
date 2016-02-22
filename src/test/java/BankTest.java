@@ -1,19 +1,8 @@
-import org.apache.commons.io.IOUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.RandomAccessFile;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by boshu on 2016/1/2.
@@ -42,5 +31,4 @@ public class BankTest {
         }
 
     }
-
 }

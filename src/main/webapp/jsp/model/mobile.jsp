@@ -44,6 +44,8 @@
                 return '已经拨打';
             }else if(value==4){
                 return '已经识别';
+            }else if(value==5){
+                return '录音文件丢失';
             }
             return '';
 	    }

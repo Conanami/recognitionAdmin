@@ -10,8 +10,10 @@ import com.common.util.WSResponse;
 import com.web.dto.DataZBStructure;
 import com.web.dto.DestroyResDto;
 import com.web.service.IBankService;
+import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.po.DBBatchLog;
+import mybatis.one.po.DBBatchLogExample;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBRecogsExample;
 import net.sf.json.JSONObject;
@@ -49,6 +51,9 @@ public class BankRestController {
     @Resource
     DBRecogsMapper recogsMapper;
 
+    @Resource
+    DBBatchLogMapper batchLogMapper;
+
     @ExceptionHandler(Exception.class)
     public WSResponse<Boolean> exceptionHandler(Exception ex, HttpSession httpSession) {
         WSResponse<Boolean> response = new WSResponse<Boolean>();
@@ -83,6 +88,31 @@ public class BankRestController {
         response.setTotal(bankService.totalBatchLogs(merchid, batchid));
         response.setRespDescription("批次记录查询成功");
         return response;
+    }
+
+    /**
+     * 批次记录删除
+     * @param seqid
+     * @param httpSession
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("api.batchlog.remove")
+    public DestroyResDto api_batchlog_remove(
+            @RequestParam(value = "id", required = false) Long seqid,
+            HttpSession httpSession) throws Exception{
+
+        DBBatchLog batchLog = batchLogMapper.selectByPrimaryKey(seqid);
+        DBRecogsExample recogsExample = new DBRecogsExample();
+        recogsExample.createCriteria().andBatchidEqualTo(batchLog.getBatchid());
+        recogsMapper.deleteByExample(recogsExample);
+
+        batchLogMapper.deleteByPrimaryKey(seqid);
+
+
+        DestroyResDto res = new DestroyResDto();
+        res.setSuccess(true);
+        return res;
     }
 
 

@@ -151,7 +151,8 @@ public class FileZBController {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            log.info(""+e.getMessage());
+//            e.printStackTrace();
         }
 
         return buffer;

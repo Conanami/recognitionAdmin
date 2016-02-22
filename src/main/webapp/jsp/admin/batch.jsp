@@ -14,6 +14,7 @@
 	<script type="text/javascript" src="<c:url value='/js/easyui/jquery.min.js'/>" ></script>  
     <script type="text/javascript" src="<c:url value='/js/easyui/jquery.easyui.min.js'/>" ></script>
     <script type="text/javascript" src="<c:url value='/js/jquery.form.js'/>" ></script>
+    <script type="text/javascript" src="<c:url value='/js/easyui/jquery.edatagrid.js'/>" ></script>
     <script type="text/javascript" src="<c:url value='/js/audioplayer.js'/>"></script>
 
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/form_common.css'/>" />
@@ -109,13 +110,15 @@
         function resetUploadForm(){
             $("#uploadFileForm").resetForm();
             $('#uploadFileForm').find('#colnum').textbox('setValue',1);
+            $('#uploadFileForm').find('#rowstart').textbox('setValue',1);
         }
 		
 	    $(function(){
-            $('#dg').datagrid({
+            $('#dg').edatagrid({
                 pageSize: 15,//每页显示的记录条数
                 pageList: [15,30,60],//可以设置每页记录条数的列表
-				url: "<c:url value='/api.batchlog.query'/>"
+				url: "<c:url value='/api.batchlog.query'/>",
+                destroyUrl: "<c:url value='/api.batchlog.remove'/>"
 			}); 
 		});
     </script>
@@ -180,6 +183,7 @@
 		<!-- 工具栏 -->
 		<div id="toolbar">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showImport()">导入</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#dg').edatagrid('destroyRow')">删除</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg').datagrid('reload')">reload</a>
 		</div>
 
