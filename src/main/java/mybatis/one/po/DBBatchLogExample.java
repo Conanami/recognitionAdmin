@@ -1065,6 +1065,66 @@ public class DBBatchLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andPickuptimeIsNull() {
+            addCriterion("pickuptime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeIsNotNull() {
+            addCriterion("pickuptime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeEqualTo(Date value) {
+            addCriterion("pickuptime =", value, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeNotEqualTo(Date value) {
+            addCriterion("pickuptime <>", value, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeGreaterThan(Date value) {
+            addCriterion("pickuptime >", value, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("pickuptime >=", value, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeLessThan(Date value) {
+            addCriterion("pickuptime <", value, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeLessThanOrEqualTo(Date value) {
+            addCriterion("pickuptime <=", value, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeIn(List<Date> values) {
+            addCriterion("pickuptime in", values, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeNotIn(List<Date> values) {
+            addCriterion("pickuptime not in", values, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeBetween(Date value1, Date value2) {
+            addCriterion("pickuptime between", value1, value2, "pickuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPickuptimeNotBetween(Date value1, Date value2) {
+            addCriterion("pickuptime not between", value1, value2, "pickuptime");
+            return (Criteria) this;
+        }
+
         public Criteria andMerchidLikeInsensitive(String value) {
             addCriterion("upper(merchid) like", value.toUpperCase(), "merchid");
             return (Criteria) this;

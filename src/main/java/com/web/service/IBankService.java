@@ -2,6 +2,7 @@ package com.web.service;
 
 import mybatis.one.po.DBRecogs;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IBankService {
@@ -11,7 +12,7 @@ public interface IBankService {
      * @param merchid
      * @param list
      */
-    public void insertMobiles(String merchid, String batchid, String mark, List<String> list);
+    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark, List<String> list);
 
     /**
      * 领取手机号 用于拨打电话

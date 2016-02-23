@@ -82,6 +82,15 @@
         function showImport(){
             $('#uploaddlg').dialog('open');
             $('#uploaddlg').panel({title: "导入手机号列表"});
+            var url = "<c:url value='/api.batchlog.pickuptime.query'/>";
+            $.post(url, {
+            }, function(result) {
+                if (result.respCode==0){
+                    $('#uploadFileForm').find('#pickuptime').datetimebox('setValue',result.rows[0]);
+                } else {
+                    $.messager.alert('提示', result.respDescription,'error');
+                }
+            });
         }
 
         //导出某批次的手机号以及状态数据
@@ -163,6 +172,7 @@
                 <th field="callendtime" >呼叫完成时间</th>
                 <th field="callcount" >完成呼叫数量</th>
                 <th field="recogcount" >完成识别数量</th>
+                <th field="pickuptime" >预约拨打时间</th>
                 <th field="totalcalltime" formatter="formatTimeSeconds">总呼叫时间</th>
                 <th field="opt2" formatter="showdetailcell">详情</th>
 			</tr>
@@ -187,6 +197,10 @@
                     <tr>
                         <td >从第几行开始取手机号（从1开始）:</td>
                         <td ><input id="rowstart" name="rowstart" class="easyui-textbox" value="1" style="width:100px;"/></td>
+                    </tr>
+                    <tr>
+                        <td >预约拨打时间:</td>
+                        <td ><input id="pickuptime" name="pickuptime" type="text" class="easyui-datetimebox" style="width:200px;"/>  </td>
                     </tr>
                     <tr>
                         <td >备注:</td>

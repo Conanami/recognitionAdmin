@@ -32,7 +32,7 @@ public class BankServiceImpl implements IBankService {
      * @param merchid
      * @param list
      */
-    public void insertMobiles(String merchid, String batchid, String mark,  List<String> list){
+    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark,  List<String> list){
         Date createTime = new Date();
 
         DBBatchLog batchLog = new DBBatchLog();
@@ -40,6 +40,7 @@ public class BankServiceImpl implements IBankService {
         batchLog.setBatchid(batchid);
         batchLog.setCreatetime(createTime);
         batchLog.setMark(mark);
+        batchLog.setPickuptime(pickupDate);
         batchLog.setTotalcount(list.size());
         batchLogMapper.insert(batchLog);
 

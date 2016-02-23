@@ -5,19 +5,20 @@
     <!-- 领取手机号进行电话拨打 -->
     <select id="pickup" resultType="mybatis.one.po.DBRecogs">
         SELECT
-            *
+        a.*, b.pickuptime
         FROM
-            recogs
+        recogs a
+        LEFT JOIN batchlog b ON a.batchid = b.batchid
         WHERE
-        1=1
-        <if test="merchid != null and merchid != ''" >
-            AND a.merchid = #{merchid}
-        </if>
+        (
+        ISNULL(b.pickuptime)
+        OR b.pickuptime  &lt;  NOW()
+        )
         AND (
-            ISNULL(`status`)
-            OR `status` = 1
-            OR manualresult =0
-            OR result=0
+        ISNULL(a.`status`)
+        OR a.`status` = 1
+        OR a.manualresult = 0
+        OR a.result = 0
         )
         ORDER BY
             seqid

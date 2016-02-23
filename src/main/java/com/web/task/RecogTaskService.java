@@ -34,7 +34,7 @@ public class RecogTaskService {
     /**
      * 扫描领取超过1分钟没有拨打成功的电话
      */
-    @Scheduled(cron="0 0/1 * * * ?")   //每5分钟执行一次
+    @Scheduled(cron="0 0/3 * * * ?")   //每5分钟执行一次
     public void runSacanWaitCalling(){
         log.info("---------开始扫描领取超过1分钟没有拨打成功的电话---------");
         DBRecogsExample example = new DBRecogsExample();
@@ -42,7 +42,7 @@ public class RecogTaskService {
         List<DBRecogs> list = recogsMapper.selectByExample(example);
         int count = 0;
         for (DBRecogs recogs : list){
-            if (recogs.getReceivetime().getTime() + 1*60*1000 < new Date().getTime()){
+            if (recogs.getReceivetime().getTime() + 3*60*1000 < new Date().getTime()){
                 count += 1;
                 recogs.setStatus(1);
                 recogsMapper.updateByPrimaryKey(recogs);

@@ -94,7 +94,7 @@ public class AdminLoginController {
 		}
 		// shiro 权限退出
 		SecurityUtils.getSubject().logout();
-		return "/jsp/Login.jsp";
+		return "Login";
 		
 	}
 	

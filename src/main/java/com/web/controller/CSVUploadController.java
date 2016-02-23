@@ -65,6 +65,7 @@ public class CSVUploadController {
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "colnum", required = true) Integer colnum,
             @RequestParam(value = "rowstart", required = true) Integer rowstart,
+            @RequestParam(value = "pickuptime", required = true) String pickuptime,
             @RequestParam(value = "mark", required = true) String mark,
             HttpServletRequest request, HttpSession httpSession) throws Exception {
         String type = "";
@@ -126,7 +127,12 @@ public class CSVUploadController {
                 listMobile.add(mobile);
 //            }
         }
-        bankService.insertMobiles(merchid, batchid, mark,listMobile);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date pickupDate = new Date();
+        if (IopUtils.isNotEmpty(pickuptime)){
+            pickupDate = sdf.parse(pickuptime);
+        }
+        bankService.insertMobiles(merchid, batchid, pickupDate, mark,listMobile);
         WSResponse<Boolean> response = new WSResponse<>();
         response.setRespDescription("批量提交手机号码 "+listMobile.size()+" 条 成功");
         return response;

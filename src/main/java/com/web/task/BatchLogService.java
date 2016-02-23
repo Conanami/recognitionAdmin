@@ -29,7 +29,7 @@ public class BatchLogService {
     @Resource
     DBRecogsMapper recogsMapper;
 
-    @Scheduled(fixedRate = 1*60*1000)   //每5分钟执行一次
+    @Scheduled(fixedRate = 3*60*1000)   //每5分钟执行一次
     public void run(){
         log.info("---------start batchlog analysis---------");
         DBBatchLogExample example = new DBBatchLogExample();

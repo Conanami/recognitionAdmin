@@ -22,7 +22,10 @@ import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +34,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +43,7 @@ import java.util.List;
  * Created by boshu on 2016/1/1.
  */
 @RestController
-public class BankRestController {
+public class BatchRestController {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Value("${merchmanager.xml}")
@@ -113,6 +117,29 @@ public class BankRestController {
         DestroyResDto res = new DestroyResDto();
         res.setSuccess(true);
         return res;
+    }
+
+    /**
+     * 查询最新的领取时间
+     * @return
+     */
+    @RequestMapping("api.batchlog.pickuptime.query")
+    public WSResponse<String> api_batchlog_pickuptime_query(){
+        WSResponse<String> response = new WSResponse<>();
+        DBBatchLogExample example = new DBBatchLogExample();
+        example.createCriteria().andPickuptimeIsNotNull();
+        example.setOrderByClause(" seqid desc ");
+        List<DBBatchLog> list = batchLogMapper.selectByExample(example);
+        if (list.size()>0){
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            String pickuptime = sdf.format(list.get(0).getPickuptime());
+            String nowstr = sdf.format(new Date());
+            String result = nowstr.substring(0, 11)+pickuptime.substring(11);
+            response.add(result);
+        }else{
+            response.add("");
+        }
+        return response;
     }
 
 
