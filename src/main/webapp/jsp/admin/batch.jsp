@@ -84,6 +84,29 @@
             $('#uploaddlg').panel({title: "导入手机号列表"});
         }
 
+        //导出某批次的手机号以及状态数据
+        function f_explort(){
+            var row = $('#dg').datagrid('getSelected');
+            if (row){
+                var url = "<c:url value='/api.recog.batch.exportExcel'/>";
+                ajaxLoading();
+                $.post(url, {
+                    batchid : row.batchid
+                }, function(result) {
+                    ajaxLoadEnd();
+                    if (result.respCode==0){
+                        $.messager.alert('提示', result.respDescription+'\n点击确定下载文件','info',function(r){
+                            window.location = "<c:url value='/download/'/>"+result.rows[0];
+                        });
+                    } else {
+                        $.messager.alert('提示', result.respDescription,'error');
+                    }
+                });
+            }else{
+                $.messager.alert('提示', '请先选择一笔记录','error');
+            }
+        }
+
         function submit(){
             var length = $("#file").val();
             if(length==""){
@@ -127,10 +150,10 @@
 <body style="padding:6px;">
 	<table id="dg" title="导入批次记录" style="width:auto;height:auto"
 			toolbar="#toolbar" pagination="true" idField="seqid"
-			rownumbers="true" fitColumns="true" singleSelect="true">
+			fitColumns="true" singleSelect="true">
 		<thead>
 			<tr>
-				<th field="seqid" >序号</th>
+				<th field="seqid" >批次ID</th>
 				<th field="merchid" >商户号</th>
                 <th field="batchid" >批次号码</th>
                 <th field="totalcount" >总数量</th>
@@ -139,11 +162,8 @@
                 <th field="callstarttime" >呼叫开始时间</th>
                 <th field="callendtime" >呼叫完成时间</th>
                 <th field="callcount" >完成呼叫数量</th>
-                <th field="recogstarttime" >识别开始时间</th>
-                <th field="recogendtime" >识别完成时间</th>
                 <th field="recogcount" >完成识别数量</th>
                 <th field="totalcalltime" formatter="formatTimeSeconds">总呼叫时间</th>
-                <th field="totalrecogtime" formatter="formatTimeSeconds">总识别时间</th>
                 <th field="opt2" formatter="showdetailcell">详情</th>
 			</tr>
 		</thead>
@@ -183,6 +203,7 @@
 		<!-- 工具栏 -->
 		<div id="toolbar">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showImport()">导入</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:f_explort()">导出</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#dg').edatagrid('destroyRow')">删除</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg').datagrid('reload')">reload</a>
 		</div>

@@ -64,6 +64,14 @@
             }
             return '';
         }
+
+        function format_audiourl(value, row){
+            if(value!=undefined && value.length>10){
+                return value.substring(value.indexOf("filename=")+9, value.length);
+            }else{
+                return '';
+            }
+        }
 		
 		function settingdgcell(value,rec){
 			var m = rec.seqid+","+rec.mobile;
@@ -206,8 +214,8 @@
 </head>
 
 <body style="padding:6px;">
-    <div class="easyui-layout" style="width:auto;height:30px;">
-        <label>状态:</label>
+    <div class="easyui-layout" style="width:auto;height:50px;">
+        <label style="font-size: small">状态:</label>
         <select class="easyui-combobox" id="statusSearch" name="statusSearch" editable="false" style="width:100px;">
             <option value="99">全部</option>
             <option value="1">尚未领取</option>
@@ -215,7 +223,7 @@
             <option value="3">已经拨打</option>
             <option value="4">已经识别</option>
         </select>
-        <label>语音识别结果:</label>
+        <label style="font-size: small">语音识别结果:</label>
         <select class="easyui-combobox" id="resultSearch" name="resultSearch" editable="false" style="width:100px;">
             <option value="99">全部</option>
             <option value="-1">尚未处理</option>
@@ -225,7 +233,7 @@
             <option value="3">空号</option>
             <option value="4">关机</option>
         </select>
-        <label>人工分析结果:</label>
+        <label style="font-size: small">人工分析结果:</label>
         <select class="easyui-combobox" id="manualresultSearch" name="manualresultSearch" editable="false" style="width:100px;">
             <option value="99">全部</option>
             <option value="-1">尚未处理</option>
@@ -235,9 +243,10 @@
             <option value="3">空号</option>
             <option value="4">关机</option>
         </select>
-        <label>手机号码:</label>
+        <label style="font-size: small">手机号码:</label>
         <input id="mobileSearch" class="easyui-textbox"  placeholder="请输入手机号码"/>
 
+        <br />
         <a href="#" class="easyui-linkbutton" iconCls="icon-query" plain="true" onclick="javascript:querySearch()">查询</a>
         <a href="#" class="easyui-linkbutton" iconCls="icon-query" plain="true" onclick="javascript:f_explort()">导出全部号码</a>
     </div>
@@ -246,16 +255,12 @@
 			rownumbers="true" fitColumns="true" singleSelect="true">
 		<thead>
 			<tr>
-				<th field="seqid" >序号</th>
                 <th field="mobile" >被叫号码</th>
-                <th field="zjmobile" >主叫号码</th>
                 <th field="status" formatter="format_status">状态</th>
-                <th field="result" formatter="format_result">语音识别结果</th>
-                <th field="manualresult" formatter="format_result">人工分析结果</th>
-                <th field="dataurl" >录音文件地址</th>
-                <th field="receivetime" >领取时间</th>
+                <th field="result" formatter="format_result">识别结果</th>
+                <th field="manualresult" formatter="format_result">人工结果</th>
+                <th field="dataurl" formatter="format_audiourl">录音文件</th>
                 <th field="calltime" >拨打时间</th>
-                <th field="recogtime" >识别时间</th>
 			</tr>
 		</thead>
 	</table>
@@ -334,6 +339,7 @@
                         <option value="4">关机</option>
                     </select>
                 </div>
+                <label>下载录音文件需要2-3秒，请耐心等待播放键可用</label>
 	        </form>
 	    </div>
 

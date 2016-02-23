@@ -56,7 +56,7 @@ public class BankRestController {
 
     @ExceptionHandler(Exception.class)
     public WSResponse<Boolean> exceptionHandler(Exception ex, HttpSession httpSession) {
-        WSResponse<Boolean> response = new WSResponse<Boolean>();
+        WSResponse<Boolean> response = new WSResponse<>();
         log.error("Exception异常：" + ex);
         ExceptionFormatter.setResponse(response, ex);
         return response;
@@ -362,7 +362,7 @@ public class BankRestController {
         List<String> fields = dt.getFields();
 
         log.info("cvs文件开始创建");
-        File file = IopUtils.createDownloadFile("号码列表","csv");
+        File file = IopUtils.createDownloadFile("mobile","csv");
         FileOutputStream fos = new FileOutputStream(file);
         OutputStreamWriter ow = new OutputStreamWriter(fos, "gb2312");
         Writer writer = ow;
@@ -399,7 +399,7 @@ public class BankRestController {
 
         WSResponse<String> response = new WSResponse<>();
         response.add(file.getName());
-        response.setRespDescription("生成总表csv文件成功");
+        response.setRespDescription("导出文件成功");
         return response;
     }
 }
