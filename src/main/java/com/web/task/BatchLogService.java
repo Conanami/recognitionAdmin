@@ -31,7 +31,7 @@ public class BatchLogService {
 
     @Scheduled(fixedRate = 3*60*1000)   //每5分钟执行一次
     public void run(){
-        log.info("---------start batchlog analysis---------");
+//        log.info("---------start batchlog analysis---------");
         DBBatchLogExample example = new DBBatchLogExample();
         example.createCriteria().andBatchidIsNotNull();
         List<DBBatchLog> dbBatchLogs = batchLogMapper.selectByExample(example);
@@ -43,7 +43,7 @@ public class BatchLogService {
                 ex.setOrderByClause("calltime asc");
                 List<DBRecogs> dbRecogsList = recogsMapper.selectByExample(ex);
                 batchLog.setCallcount(dbRecogsList.size());
-                log.info("batchid："+batchLog.getBatchid()+"  call complete count:"+batchLog.getCallcount());
+//                log.info("batchid："+batchLog.getBatchid()+"  call complete count:"+batchLog.getCallcount());
                 Date start = null;
                 Date end = null;
                 if (dbRecogsList.size()>0){
@@ -69,7 +69,7 @@ public class BatchLogService {
                 ex.setOrderByClause("recogtime asc");
                 List<DBRecogs> dbRecogsList = recogsMapper.selectByExample(ex);
                 batchLog.setRecogcount(dbRecogsList.size());
-                log.info("batchid："+batchLog.getBatchid()+"  recog complete count:"+batchLog.getRecogcount());
+//                log.info("batchid："+batchLog.getBatchid()+"  recog complete count:"+batchLog.getRecogcount());
                 Date start = null;
                 Date end = null;
                 if (dbRecogsList.size()>0){
@@ -89,6 +89,6 @@ public class BatchLogService {
                 batchLogMapper.updateByPrimaryKey(batchLog);
             }
         }
-        log.info("---------complete batchlog analysis---------");
+//        log.info("---------complete batchlog analysis---------");
     }
 }

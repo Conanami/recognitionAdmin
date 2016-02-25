@@ -8,6 +8,7 @@ import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.po.DBBatchLog;
 import mybatis.one.po.DBRecogs;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.List;
  * Created by boshu on 2016/1/1.
  */
 @Service
+@Transactional(rollbackFor = {Exception.class, RuntimeException.class})
 public class BankServiceImpl implements IBankService {
     @Resource
     DBRecogsMapper recogsMapper;

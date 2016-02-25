@@ -36,7 +36,7 @@ public class RecogTaskService {
      */
     @Scheduled(cron="0 0/3 * * * ?")   //每5分钟执行一次
     public void runSacanWaitCalling(){
-        log.info("---------开始扫描领取超过1分钟没有拨打成功的电话---------");
+//        log.info("---------开始扫描领取超过1分钟没有拨打成功的电话---------");
         DBRecogsExample example = new DBRecogsExample();
         example.createCriteria().andStatusEqualTo(2);  // 1 表示 尚未领取 ，2  表示已经领取， 3 表示 已经拨打， 4 表示 已经识别。
         List<DBRecogs> list = recogsMapper.selectByExample(example);
@@ -46,10 +46,10 @@ public class RecogTaskService {
                 count += 1;
                 recogs.setStatus(1);
                 recogsMapper.updateByPrimaryKey(recogs);
-                log.info(recogs.getMobile()+" 状态由 已经领取 变更为 尚未领取");
+//                log.info(recogs.getMobile()+" 状态由 已经领取 变更为 尚未领取");
             }
         }
-        log.info("扫描到已经领取的电话数量:"+list.size()+"  状态变更为尚未领取的数量:"+count);
-        log.info("---------完成扫描---------");
+//        log.info("扫描到已经领取的电话数量:"+list.size()+"  状态变更为尚未领取的数量:"+count);
+//        log.info("---------完成扫描---------");
     }
 }
