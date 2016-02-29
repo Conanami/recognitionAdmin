@@ -1,5 +1,6 @@
 package com.web.service;
 
+import com.web.dto.DtoDBRecogs;
 import mybatis.one.po.DBRecogs;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ public interface IBankService {
      * @param merchid
      * @throws Exception
      */
-	public DBRecogs pickup(String merchid) throws Exception;
+	public DtoDBRecogs pickup(String merchid) throws Exception;
 
     /**
      * 保存录音文件

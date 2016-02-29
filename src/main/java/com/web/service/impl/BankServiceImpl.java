@@ -1,6 +1,8 @@
 package com.web.service.impl;
 
 import com.common.exception.WException;
+import com.common.util.IopUtils;
+import com.web.dto.DtoDBRecogs;
 import com.web.service.IBankService;
 import mybatis.one.mapper.CRecogsMapper;
 import mybatis.one.mapper.DBBatchLogMapper;
@@ -50,7 +52,11 @@ public class BankServiceImpl implements IBankService {
             DBRecogs recogs = new DBRecogs();
             recogs.setMerchid(merchid);
             recogs.setBatchid(batchid);
-            recogs.setMobile(list.get(i));
+            String mobile = list.get(i);
+            if (mobile.length()>40){
+                mobile = mobile.substring(0,40);
+            }
+            recogs.setMobile(mobile);
             recogs.setCreatetime(createTime);
             recogsMapper.insert(recogs);
         }
@@ -60,17 +66,35 @@ public class BankServiceImpl implements IBankService {
      * @param merchid
      * @throws Exception
      */
-    public DBRecogs pickup(String merchid) throws Exception{
+    public DtoDBRecogs pickup(String merchid) throws Exception{
         //status 状态 空 或者 1 表示 尚未 领取 ，2  表示已经领取， 3 表示 已经拨打， 4 表示 已经识别。
-        DBRecogs recogs = cRecogsMapper.pickup(merchid);
+        DtoDBRecogs recogs = cRecogsMapper.pickup(merchid);
         if (recogs==null){
             throw new WException(500).setMessage("没有待识别的记录");
+        }
+        {
+            //过滤手机号码中的非数字字符
+            String str = recogs.getMobile();
+            String tmpStr="";
+            if(str.length()>0){
+                for(int i=0;i<str.length();i++){
+                    String tmp=""+str.charAt(i);
+                    if((tmp).matches("[0-9.]")){
+                        tmpStr+=tmp;
+                    }
+                }
+            }
+            recogs.setMobile(tmpStr);
+        }
+        if (IopUtils.isEmpty(recogs.getMobile())){
+            throw new WException(500).setMessage("当前记录手机号为空");
         }
         recogs.setStatus(2);
         recogs.setResult(-1);
         recogs.setManualresult(-1);
         recogs.setReceivetime(new Date());
         recogsMapper.updateByPrimaryKey(recogs);
+
         return recogs;
     }
 

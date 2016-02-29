@@ -1,5 +1,6 @@
 package mybatis.one.mapper;
 
+import com.web.dto.DtoDBRecogs;
 import mybatis.one.po.DBRecogs;
 import org.apache.ibatis.annotations.Param;
 
@@ -48,5 +49,5 @@ public interface CRecogsMapper {
      * @param merchid
      * @return
      */
-    public DBRecogs pickup(@Param("merchid") String merchid);
+    public DtoDBRecogs pickup(@Param("merchid") String merchid);
 }

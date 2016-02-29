@@ -9,6 +9,7 @@ import com.common.util.MerchValidateUtil;
 import com.common.util.WSResponse;
 import com.web.dto.DataZBStructure;
 import com.web.dto.DestroyResDto;
+import com.web.dto.DtoDBRecogs;
 import com.web.service.IBankService;
 import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
@@ -153,7 +154,7 @@ public class BatchRestController {
      * @throws Exception
      */
     @RequestMapping("api.pickup.mobile")
-    public WSResponse<DBRecogs> api_pickup_mobile(
+    public WSResponse<DtoDBRecogs> api_pickup_mobile(
             @RequestParam(value = "merchid", required = true) String merchId,
             @RequestParam(value = "signinfo", required = true) String signInfo,
             HttpServletRequest request,
@@ -169,9 +170,8 @@ public class BatchRestController {
             throw new WException(ExceptionConst.SIGN_VALID_FAIL.intValue());
         }
 
-        WSResponse<DBRecogs> response = new WSResponse<>();
-
-        DBRecogs recogs = bankService.pickup(null);
+        WSResponse<DtoDBRecogs> response = new WSResponse<>();
+        DtoDBRecogs recogs = bankService.pickup(null);
         response.add(recogs);
         response.setRespDescription("领取手机号成功");
         return response;

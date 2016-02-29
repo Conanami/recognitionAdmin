@@ -3,9 +3,9 @@
 <mapper namespace="mybatis.one.mapper.CRecogsMapper">
 
     <!-- 领取手机号进行电话拨打 -->
-    <select id="pickup" resultType="mybatis.one.po.DBRecogs">
+    <select id="pickup" resultType="com.web.dto.DtoDBRecogs">
         SELECT
-        a.*, b.pickuptime
+        a.*, b.pickuptime, b.mark
         FROM
         recogs a
         LEFT JOIN batchlog b ON a.batchid = b.batchid
