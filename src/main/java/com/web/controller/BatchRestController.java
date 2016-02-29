@@ -12,11 +12,9 @@ import com.web.dto.DestroyResDto;
 import com.web.dto.DtoDBRecogs;
 import com.web.service.IBankService;
 import mybatis.one.mapper.DBBatchLogMapper;
+import mybatis.one.mapper.DBDeviceLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
-import mybatis.one.po.DBBatchLog;
-import mybatis.one.po.DBBatchLogExample;
-import mybatis.one.po.DBRecogs;
-import mybatis.one.po.DBRecogsExample;
+import mybatis.one.po.*;
 import net.sf.json.JSONObject;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -58,6 +56,9 @@ public class BatchRestController {
 
     @Resource
     DBBatchLogMapper batchLogMapper;
+
+    @Resource
+    DBDeviceLogMapper deviceLogMapper;
 
     @ExceptionHandler(Exception.class)
     public WSResponse<Boolean> exceptionHandler(Exception ex, HttpSession httpSession) {
@@ -143,6 +144,29 @@ public class BatchRestController {
         return response;
     }
 
+    /**
+     * 离线时间查询
+     * @param request
+     * @return
+     */
+    @RequestMapping("api.offline.status.query")
+    public WSResponse<Long> api_offline_time(
+            HttpServletRequest request) throws Exception{
+
+        Long interval = 1000l;
+        DBDeviceLogExample example = new DBDeviceLogExample();
+        example.createCriteria().andLasttimeIsNotNull();
+        example.setOrderByClause(" lasttime desc ");
+        List<DBDeviceLog> list = deviceLogMapper.selectByExample(example);
+        if (list.size()>0){
+            DBDeviceLog deviceLog = list.get(0);
+            interval = (new Date().getTime() - deviceLog.getLasttime().getTime())/ 1000;
+        }
+        WSResponse<Long> response = new WSResponse<>();
+        response.add(interval);
+        response.setRespDescription("查询时间成功");
+        return response;
+    }
 
     /**
      * 获取手机号
@@ -156,6 +180,7 @@ public class BatchRestController {
     @RequestMapping("api.pickup.mobile")
     public WSResponse<DtoDBRecogs> api_pickup_mobile(
             @RequestParam(value = "merchid", required = true) String merchId,
+            @RequestParam(value = "UniqueID", required = true) String UniqueID,
             @RequestParam(value = "signinfo", required = true) String signInfo,
             HttpServletRequest request,
             HttpSession httpSession) throws Exception{
@@ -170,10 +195,25 @@ public class BatchRestController {
             throw new WException(ExceptionConst.SIGN_VALID_FAIL.intValue());
         }
 
+        {
+            //更新访问记录
+            DBDeviceLog deviceLog = deviceLogMapper.selectByPrimaryKey(UniqueID);
+            if (deviceLog==null){
+                deviceLog = new DBDeviceLog();
+                deviceLog.setUniqueid(UniqueID);
+                deviceLogMapper.insert(deviceLog);
+            }
+            deviceLog.setLasttime(new Date());
+            deviceLogMapper.updateByPrimaryKey(deviceLog);
+        }
+
         WSResponse<DtoDBRecogs> response = new WSResponse<>();
         DtoDBRecogs recogs = bankService.pickup(null);
         response.add(recogs);
         response.setRespDescription("领取手机号成功");
+
+
+
         return response;
     }
 

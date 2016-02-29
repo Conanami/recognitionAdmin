@@ -18,7 +18,6 @@
         ISNULL(a.`status`)
         OR a.`status` = 1
         OR a.manualresult = 0
-        OR a.result = 0
         )
         ORDER BY
             seqid

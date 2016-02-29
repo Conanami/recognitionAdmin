@@ -144,6 +144,25 @@
             $('#uploadFileForm').find('#colnum').textbox('setValue',1);
             $('#uploadFileForm').find('#rowstart').textbox('setValue',1);
         }
+
+        //查询离线状态
+        function queryOfflineStatus(){
+            var url = "<c:url value='/api.offline.status.query'/>";
+            $.post(url, {
+            }, function(result) {
+                if (result.respCode==0){
+                    var interval = result.rows[0];
+                    if (interval<30){
+                        $("#offlinestatus").text("识别手机端应用程序在线").css({"color":"green"});
+                    }else{
+                        $("#offlinestatus").text("识别手机端应用程序离线").css({"color":"red"});
+                    }
+                } else {
+                    $("#offlinestatus").text("查询手机端应用异常"+result.respDescription);
+                }
+                setTimeout("queryOfflineStatus()",3000);
+            });
+        }
 		
 	    $(function(){
             $('#dg').edatagrid({
@@ -151,12 +170,17 @@
                 pageList: [15,30,60],//可以设置每页记录条数的列表
 				url: "<c:url value='/api.batchlog.query'/>",
                 destroyUrl: "<c:url value='/api.batchlog.remove'/>"
-			}); 
+			});
+
+            queryOfflineStatus();
 		});
     </script>
 </head>
 
 <body style="padding:6px;">
+    <div class="easyui-layout" style="width:auto;height:30px;">
+        <label id="offlinestatus" style="font-size: small">状态:</label>
+    </div>
 	<table id="dg" title="导入批次记录" style="width:auto;height:auto"
 			toolbar="#toolbar" pagination="true" idField="seqid"
 			fitColumns="true" singleSelect="true">

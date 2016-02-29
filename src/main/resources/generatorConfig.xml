@@ -20,5 +20,6 @@
 	    <table  tableName="recogs" domainObjectName="DBRecogs" />
         <table  tableName="batchlog" domainObjectName="DBBatchLog" />
         <table  tableName="imgzb" domainObjectName="DBImgZB" />
+        <table  tableName="devicelog" domainObjectName="DBDeviceLog" />
 	</context>
 </generatorConfiguration>

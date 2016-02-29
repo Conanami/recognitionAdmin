@@ -162,7 +162,7 @@
  
   <div region="center" title="">
     <div class="easyui-tabs" fit="true" border="false" id="tabs">
-      <div title="我的主页"></div>
+      <div title="我的主页" href="admin_index.jsp"></div>
     </div>
   </div>
   <div region="west" class="west" title="主要菜单">
