@@ -10,6 +10,7 @@ import java.util.Date;
 public class DtoDBRecogs extends DBRecogs {
     private Date pickuptime;
     private String mark;
+    private Long orderid;
 
     public String getMark() {
         return mark;
@@ -25,5 +26,13 @@ public class DtoDBRecogs extends DBRecogs {
 
     public void setPickuptime(Date pickuptime) {
         this.pickuptime = pickuptime;
+    }
+
+    public Long getOrderid() {
+        return orderid;
+    }
+
+    public void setOrderid(Long orderid) {
+        this.orderid = orderid;
     }
 }

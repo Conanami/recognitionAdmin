@@ -46,6 +46,8 @@
                 return '已经识别';
             }else if(value==5){
                 return '录音文件丢失';
+            }else if(value==9){
+                return '号码异常';
             }
             return '';
 	    }

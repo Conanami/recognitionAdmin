@@ -9,6 +9,7 @@ import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.po.DBBatchLog;
 import mybatis.one.po.DBRecogs;
+import mybatis.one.po.DBRecogsExample;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,7 +87,16 @@ public class BankServiceImpl implements IBankService {
             }
             recogs.setMobile(tmpStr);
         }
-        if (IopUtils.isEmpty(recogs.getMobile())){
+        if (IopUtils.isEmpty(recogs.getMobile()) || recogs.getMobile().length()>11){
+            recogs.setStatus(9); // 9 为 状态 号码异常
+            recogs.setResult(-1);
+            recogs.setManualresult(-1);
+            recogs.setReceivetime(new Date());
+            recogs.setCalltime(new Date());
+            recogs.setRecogtime(new Date());
+            recogs.setDataurl(null);
+            updateRecogs(recogs);
+
             throw new WException(500).setMessage("当前记录手机号为空");
         }
         recogs.setStatus(2);
@@ -95,7 +105,22 @@ public class BankServiceImpl implements IBankService {
         recogs.setReceivetime(new Date());
         recogsMapper.updateByPrimaryKey(recogs);
 
+        {
+            //查询当前记录 在批次里面的顺序号，从 1开始
+            DBRecogsExample example = new DBRecogsExample();
+            example.createCriteria().andBatchidEqualTo(recogs.getBatchid());
+            example.setOrderByClause("seqid asc ");
+            List<DBRecogs> list = recogsMapper.selectByExample(example);
+            if (list.size()>0){
+                Long startid = list.get(0).getSeqid();
+                recogs.setOrderid(recogs.getSeqid()-startid+1);
+            }
+        }
         return recogs;
+    }
+
+    private void updateRecogs(DBRecogs recogs){
+        recogsMapper.updateByPrimaryKey(recogs);
     }
 
     /**
