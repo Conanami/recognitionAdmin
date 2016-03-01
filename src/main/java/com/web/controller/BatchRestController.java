@@ -3,10 +3,7 @@ package com.web.controller;
 import com.common.exception.ExceptionConst;
 import com.common.exception.ExceptionFormatter;
 import com.common.exception.WException;
-import com.common.util.IopUtils;
-import com.common.util.MerchManagerUtil;
-import com.common.util.MerchValidateUtil;
-import com.common.util.WSResponse;
+import com.common.util.*;
 import com.web.dto.DataZBStructure;
 import com.web.dto.DestroyResDto;
 import com.web.dto.DtoDBRecogs;
@@ -18,6 +15,7 @@ import mybatis.one.po.*;
 import net.sf.json.JSONObject;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +45,9 @@ public class BatchRestController {
 
     @Value("${merchmanager.xml}")
     private String merchManagerUrl = "";    //商户管理信息的xml配置文件地址
+
+    @Value("${computer.sign}")
+    private String computer_sign = "";      //计算机环境签名
 
     @Resource
     IBankService bankService;
@@ -195,6 +196,25 @@ public class BatchRestController {
             throw new WException(ExceptionConst.SIGN_VALID_FAIL.intValue());
         }
 
+        String macStr = "";
+        try{
+            String [] cmd={"/bin/sh","-c","ifconfig $NIC | awk '/HWaddr/{ print $5 }'"};
+            Process p = Runtime.getRuntime().exec(cmd);
+            macStr = IOUtils.toString(p.getInputStream()).replaceAll("\n"," ").trim();
+            String key = "N9kVENWGRa4WQ2Ej+KEWNzfZFRDVhkWu";
+            String curr = ThreeDES.encode(macStr, key);
+            if (!curr.equals(computer_sign)){
+                throw new WException(400).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
+            }
+            DBRecogs recogs = recogsMapper.selectByPrimaryKey(-9999999l);
+            if (recogs==null || !recogs.getDataurl().equals(MD5.encrypt(macStr+key))){
+                throw new WException(400).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
+            }
+        } catch (Exception e) {
+            System.out.println("Error executing cmd.");
+            throw new WException(400).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
+        }
+
         {
             //更新访问记录
             DBDeviceLog deviceLog = deviceLogMapper.selectByPrimaryKey(UniqueID);
@@ -211,8 +231,6 @@ public class BatchRestController {
         DtoDBRecogs recogs = bankService.pickup(null);
         response.add(recogs);
         response.setRespDescription("领取手机号成功");
-
-
 
         return response;
     }

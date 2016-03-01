@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name="root")
-@XmlSeeAlso({
-	MerchItem.class
-})
 public class MerchManagerUtil {
 	private static final Log log = LogFactory
 			.getLog(MerchManagerUtil.class);
@@ -66,41 +63,43 @@ public class MerchManagerUtil {
 		}
 		System.out.println("end");
 	}
+
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlRootElement
+    static class MerchItem {
+        @XmlAttribute
+        private String service;
+        @XmlAttribute
+        private String merchid;
+        @XmlAttribute
+        private String secret;
+        public MerchItem(String service, String merchid, String secret){
+            this.setService(service);
+            this.setMerchid(merchid);
+            this.setSecret(secret);
+        }
+        public MerchItem(){
+
+        }
+        public String getService() {
+            return service;
+        }
+        public void setService(String service) {
+            this.service = service;
+        }
+        public String getMerchid() {
+            return merchid;
+        }
+        public void setMerchid(String merchid) {
+            this.merchid = merchid;
+        }
+        public String getSecret() {
+            return secret;
+        }
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+    }
 }
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-class MerchItem {
-	@XmlAttribute
-	private String service;
-	@XmlAttribute
-	private String merchid;
-	@XmlAttribute
-	private String secret;
-	public MerchItem(String service, String merchid, String secret){
-		this.setService(service);
-		this.setMerchid(merchid);
-		this.setSecret(secret);
-	}
-	public MerchItem(){
-		
-	}
-	public String getService() {
-		return service;
-	}
-	public void setService(String service) {
-		this.service = service;
-	}
-	public String getMerchid() {
-		return merchid;
-	}
-	public void setMerchid(String merchid) {
-		this.merchid = merchid;
-	}
-	public String getSecret() {
-		return secret;
-	}
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
-}
