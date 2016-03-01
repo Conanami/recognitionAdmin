@@ -100,6 +100,16 @@
 	            tabs.tabs("close", closeTabsTitle[i]);
 	        }
 	    }
+
+        {
+            //添加默认窗口
+            var content = '<iframe scrolling="auto" frameborder="0"  src="admin_index.jsp" style="width:100%;height:100%;"></iframe>';
+            $('#tabs').tabs('add',{
+                title:"我的主页",
+                content:content,
+                closable:false
+            });
+        }
 	});
 
 	
@@ -162,7 +172,6 @@
  
   <div region="center" title="">
     <div class="easyui-tabs" fit="true" border="false" id="tabs">
-      <div title="我的主页" href="admin_index.jsp"></div>
     </div>
   </div>
   <div region="west" class="west" title="主要菜单">

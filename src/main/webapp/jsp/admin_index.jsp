@@ -26,14 +26,15 @@
         //查询离线状态
         function queryOfflineStatus(){
             var url = "<c:url value='/api.offline.status.query'/>";
+            $("#offlinestatus").text("正在查询...").css({"color":"black", "font-weight":"10"});
             $.post(url, {
             }, function(result) {
                 if (result.respCode==0){
                     var interval = result.rows[0];
                     if (interval<30){
-                        $("#offlinestatus").text("识别手机端应用程序在线").css({"color":"green"});
+                        $("#offlinestatus").text("识别手机端应用程序在线").css({"color":"green", "font-weight":"600"});
                     }else{
-                        $("#offlinestatus").text("识别手机端应用程序离线").css({"color":"red"});
+                        $("#offlinestatus").text("识别手机端应用程序离线").css({"color":"red", "font-weight":"600"});
                     }
                 } else {
                     $("#offlinestatus").text("查询手机端应用异常"+result.respDescription);
@@ -51,7 +52,6 @@
 <body style="padding:6px;">
     <div class="easyui-layout" style="width:auto;height:30px;">
         <label id="offlinestatus" style="font-size: small">状态:</label>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-query" plain="true" onclick="javascript:queryOfflineStatus()">查询</a>
     </div>
 </body>
 </html>
