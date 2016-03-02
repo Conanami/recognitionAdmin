@@ -17,7 +17,7 @@
         AND (
         ISNULL(a.`status`)
         OR a.`status` = 1
-        OR a.manualresult = 0
+        OR a.manualresult = 8
         )
         ORDER BY
             seqid

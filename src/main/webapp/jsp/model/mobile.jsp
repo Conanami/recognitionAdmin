@@ -63,6 +63,10 @@
                 return '关机';
             }else if(value==0){
                 return '未知';
+            }else if(value==8){
+                return '需要重新拨打';
+            }else if(value==9){
+                return '需要重新识别';
             }
             return '';
         }
@@ -240,6 +244,8 @@
             <option value="99">全部</option>
             <option value="-1">尚未处理</option>
             <option value="0">未知</option>
+            <option value="8">需要重新拨打</option>
+            <option value="9">需要重新识别</option>
             <option value="1">正常</option>
             <option value="2">欠费停机</option>
             <option value="3">空号</option>
@@ -335,6 +341,8 @@
                     <select class="easyui-combobox" id="manualresult" name="manualresult" editable="false" style="width:200px;">
                         <option value="-1">无</option>
                         <option value="0">未知</option>
+                        <option value="8">需要重新拨打</option>
+                        <option value="9">需要重新识别</option>
                         <option value="1">正常</option>
                         <option value="2">欠费停机</option>
                         <option value="3">空号</option>
