@@ -229,7 +229,13 @@
 			<scope>${scope.type}</scope>
 		</dependency>
 
-		<dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>4.2</version>
+        </dependency>
+
+        <dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>5.2.1.Final</version>
@@ -394,7 +400,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<version>1.1</version>
 			    <configuration>
-                    <url>http://192.168.1.100/manager/text</url>
+                    <url>http://192.168.0.6/manager/text</url>
                     <username>tomcat</username>
                     <password>jx940c59aw4w5lf2</password>
                     <!--
