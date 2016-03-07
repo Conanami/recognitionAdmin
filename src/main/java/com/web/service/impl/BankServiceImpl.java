@@ -46,9 +46,8 @@ public class BankServiceImpl implements IBankService {
         batchLog.setCreatetime(createTime);
         batchLog.setMark(mark);
         batchLog.setPickuptime(pickupDate);
-        batchLog.setTotalcount(list.size());
-        batchLogMapper.insert(batchLog);
 
+        int k=0;
         for (int i=0;i<list.size();i++){
             DBRecogs recogs = new DBRecogs();
             recogs.setMerchid(merchid);
@@ -60,7 +59,12 @@ public class BankServiceImpl implements IBankService {
             recogs.setMobile(mobile);
             recogs.setCreatetime(createTime);
             recogsMapper.insert(recogs);
+            k++;
         }
+
+        batchLog.setTotalcount(k);
+        batchLogMapper.insert(batchLog);
+
     }
     /**
      * 领取手机号 用于拨打电话
@@ -80,7 +84,7 @@ public class BankServiceImpl implements IBankService {
             if(str.length()>0){
                 for(int i=0;i<str.length();i++){
                     String tmp=""+str.charAt(i);
-                    if((tmp).matches("[0-9.]")){
+                    if((tmp).matches("[0-9.]") || tmp.equals("-")){
                         tmpStr+=tmp;
                     }
                 }

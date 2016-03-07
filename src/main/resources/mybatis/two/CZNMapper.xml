@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.two.mapper.CZNMapper">
+
+    <!-- 查询电话号码 -->
+    <select id="queryTel" resultType="com.web.dto.MTMDataDto">
+        select ptel,ptel1 from mtmcontact where case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N')
+    </select>
+
+</mapper>
