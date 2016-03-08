@@ -115,8 +115,6 @@ public class CSVUploadController {
 
         colnum = colnum -1 ;//传入的默认从1开始， 实际使用的从0开始
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmmss");
-        String batchid = simpleDateFormat.format(new Date())+"_"+ RandomUtils.nextInt(100);
         List<String> listMobile = new ArrayList<>();
         List<List<String>> lists = readListFromCsvFile(file.getInputStream(), format);
         for (int i=rowstart-1;i<lists.size();i++){
@@ -132,7 +130,7 @@ public class CSVUploadController {
         if (IopUtils.isNotEmpty(pickuptime)){
             pickupDate = sdf.parse(pickuptime);
         }
-        bankService.insertMobiles(merchid, batchid, pickupDate, mark);
+        bankService.insertMobiles(merchid, pickupDate, mark);
         WSResponse<Boolean> response = new WSResponse<>();
         response.setRespDescription("批量提交手机号码 "+listMobile.size()+" 条 成功");
         return response;

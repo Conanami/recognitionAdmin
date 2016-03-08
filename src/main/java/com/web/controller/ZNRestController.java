@@ -80,8 +80,6 @@ public class ZNRestController {
 
         httpSession.setAttribute("api.zn.mobile.sync.message", "开始导入...");
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmmss");
-        String batchid = simpleDateFormat.format(new Date())+"_"+ RandomUtils.nextInt(100);
         List<String> listMobile = new ArrayList<>();
         int k=0;
         for (MTMDataDto mtmDataDto : list) {
@@ -103,7 +101,7 @@ public class ZNRestController {
         if (IopUtils.isEmpty(mark)){
             mark = "兆能导入";
         }
-        bankService.insertMobiles(merchid, batchid, pickupDate, mark);
+        bankService.insertMobiles(merchid, pickupDate, mark);
         httpSession.removeAttribute("api.zn.mobile.sync.message");
 
         response.setRespDescription("取得电话号码成功");

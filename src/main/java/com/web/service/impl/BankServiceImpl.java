@@ -9,12 +9,14 @@ import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.mapper.DBTmpPhoneMapper;
 import mybatis.one.po.*;
+import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,7 +74,7 @@ public class BankServiceImpl implements IBankService {
      * 从临时表获取数据 插入批次表，批次详情表
      * @param merchid
      */
-    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark){
+    public void insertMobiles(String merchid, Date pickupDate, String mark){
 
         List<DBTmpPhone> dbTmpPhones = new ArrayList<>();
         {
@@ -83,24 +85,35 @@ public class BankServiceImpl implements IBankService {
 
         Date createTime = new Date();
 
-        DBBatchLog batchLog = new DBBatchLog();
-        batchLog.setMerchid(merchid);
-        batchLog.setBatchid(batchid);
-        batchLog.setCreatetime(createTime);
-        batchLog.setMark(mark);
-        batchLog.setPickuptime(pickupDate);
-        batchLog.setTotalcount(dbTmpPhones.size());
+        // 2000笔数据 定义为一个批次
+        int count = (int) Math.ceil(dbTmpPhones.size()*1.0f / 2000.0f);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmmss");
+        for (int k=0;k<count;k++){
+            String batchid = simpleDateFormat.format(new Date())+"_"+k+"_"+ RandomUtils.nextInt(100);
+            DBBatchLog batchLog = new DBBatchLog();
+            batchLog.setMerchid(merchid);
+            batchLog.setBatchid(batchid);
+            batchLog.setCreatetime(createTime);
+            batchLog.setMark(mark+"_"+k);
+            // 每天只预约2000个，多余的延后到明天这个时间点 继续拨打
+            batchLog.setPickuptime(new Date(pickupDate.getTime() + 24*60*60*1000*k));
 
-        for (int i=0;i<dbTmpPhones.size();i++){
-            DBRecogs recogs = new DBRecogs();
-            recogs.setMerchid(merchid);
-            recogs.setBatchid(batchid);
-            recogs.setMobile(dbTmpPhones.get(i).getPhone());
-            recogs.setCreatetime(createTime);
-            recogsMapper.insert(recogs);
+            int mm = 0;
+            for (int i=0;i<2000;i++){
+                if (dbTmpPhones.size()<=i+2000*k){
+                    break;
+                }
+                DBRecogs recogs = new DBRecogs();
+                recogs.setMerchid(merchid);
+                recogs.setBatchid(batchid);
+                recogs.setMobile(dbTmpPhones.get(i+2000*k).getPhone());
+                recogs.setCreatetime(createTime);
+                recogsMapper.insert(recogs);
+                mm ++;
+            }
+            batchLog.setTotalcount(mm);
+            batchLogMapper.insert(batchLog);
         }
-        batchLogMapper.insert(batchLog);
-
     }
     /**
      * 领取手机号 用于拨打电话

@@ -18,7 +18,7 @@ public interface IBankService {
      * 批量插入手机号码
      * @param merchid
      */
-    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark);
+    public void insertMobiles(String merchid, Date pickupDate, String mark);
 
     /**
      * 领取手机号 用于拨打电话
