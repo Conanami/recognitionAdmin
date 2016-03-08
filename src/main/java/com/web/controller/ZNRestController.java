@@ -85,17 +85,15 @@ public class ZNRestController {
         List<String> listMobile = new ArrayList<>();
         int k=0;
         for (MTMDataDto mtmDataDto : list) {
-            String ptel = mtmDataDto.getPtel();
-            String ptel1 = mtmDataDto.getPtel1();
-            if (IopUtils.isNotEmpty(ptel) && checkMobileExist(merchid,  ptel)==false){
+            String ptel = mtmDataDto.getPhone();
+            if (IopUtils.isNotEmpty(ptel) ){
                 listMobile.add(ptel);
-            }
-            if (IopUtils.isNotEmpty(ptel1) && checkMobileExist(merchid,  ptel1)==false){
-                listMobile.add(ptel1);
             }
             k++;
             httpSession.setAttribute("api.zn.mobile.sync.message", k+"/"+list.size()+"");
         }
+        //先将数据全部插入临时表
+        bankService.insertTmp(merchid, listMobile);
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         Date pickupDate = new Date();
@@ -105,11 +103,9 @@ public class ZNRestController {
         if (IopUtils.isEmpty(mark)){
             mark = "兆能导入";
         }
-        bankService.insertMobiles(merchid, batchid, pickupDate, mark,listMobile);
+        bankService.insertMobiles(merchid, batchid, pickupDate, mark);
         httpSession.removeAttribute("api.zn.mobile.sync.message");
 
-//        response.setRows(bankService.selectBatchLogs(merchid, batchid, (page-1)*pagesize, pagesize));
-//        response.setTotal(bankService.totalBatchLogs(merchid, batchid));
         response.setRespDescription("取得电话号码成功");
         return response;
     }

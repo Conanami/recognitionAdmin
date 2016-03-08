@@ -122,17 +122,17 @@ public class CSVUploadController {
         for (int i=rowstart-1;i<lists.size();i++){
             List<String> list = lists.get(i);
             String mobile = list.get(colnum);
-            //去掉了手机号的数字检查
-//            if (isNumeric(mobile)){
-                listMobile.add(mobile);
-//            }
+            listMobile.add(mobile);
         }
+        //先插入临时表
+        bankService.insertTmp(merchid, listMobile);
+
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         Date pickupDate = new Date();
         if (IopUtils.isNotEmpty(pickuptime)){
             pickupDate = sdf.parse(pickuptime);
         }
-        bankService.insertMobiles(merchid, batchid, pickupDate, mark,listMobile);
+        bankService.insertMobiles(merchid, batchid, pickupDate, mark);
         WSResponse<Boolean> response = new WSResponse<>();
         response.setRespDescription("批量提交手机号码 "+listMobile.size()+" 条 成功");
         return response;

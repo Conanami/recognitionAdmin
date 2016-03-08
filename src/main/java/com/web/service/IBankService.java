@@ -9,11 +9,16 @@ import java.util.List;
 public interface IBankService {
 
     /**
-     * 批量插入手机号码
+     * 将数据插入临时表
      * @param merchid
      * @param list
      */
-    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark, List<String> list);
+    public void  insertTmp(String merchid, List<String> list);
+    /**
+     * 批量插入手机号码
+     * @param merchid
+     */
+    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark);
 
     /**
      * 领取手机号 用于拨打电话

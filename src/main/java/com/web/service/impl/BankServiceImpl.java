@@ -7,13 +7,15 @@ import com.web.service.IBankService;
 import mybatis.one.mapper.CRecogsMapper;
 import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
-import mybatis.one.po.DBBatchLog;
-import mybatis.one.po.DBRecogs;
-import mybatis.one.po.DBRecogsExample;
+import mybatis.one.mapper.DBTmpPhoneMapper;
+import mybatis.one.po.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +25,8 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
 public class BankServiceImpl implements IBankService {
+    private Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Resource
     DBRecogsMapper recogsMapper;
 
@@ -32,12 +36,51 @@ public class BankServiceImpl implements IBankService {
     @Resource
     DBBatchLogMapper batchLogMapper;
 
+    @Resource
+    DBTmpPhoneMapper tmpPhoneMapper;
+
     /**
-     * 批量插入手机号码
+     * 将数据插入临时表
      * @param merchid
      * @param list
      */
-    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark,  List<String> list){
+    public void  insertTmp(String merchid, List<String> list){
+        {
+            DBTmpPhoneExample example = new DBTmpPhoneExample();
+            example.createCriteria().andMerchidEqualTo(merchid);
+            tmpPhoneMapper.deleteByExample(example);
+        }
+        for (String phone : list) {
+            DBTmpPhone tmpPhone = new DBTmpPhone();
+            tmpPhone.setMerchid(merchid);
+            if (phone.length()>20){
+                phone = phone.substring(0,20);
+            }
+            String tmpStr = "";
+            for(int i=0;i<phone.length();i++){
+                String tmp=""+phone.charAt(i);
+                if((tmp).matches("[0-9.]") || tmp.equals("-")){
+                    tmpStr+=tmp;
+                }
+            }
+            tmpPhone.setPhone(tmpStr);
+            tmpPhoneMapper.insert(tmpPhone);
+        }
+    }
+
+    /**
+     * 从临时表获取数据 插入批次表，批次详情表
+     * @param merchid
+     */
+    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark){
+
+        List<DBTmpPhone> dbTmpPhones = new ArrayList<>();
+        {
+            DBTmpPhoneExample example = new DBTmpPhoneExample();
+            example.createCriteria().andMerchidEqualTo(merchid);
+            dbTmpPhones = tmpPhoneMapper.selectByExample(example);
+        }
+
         Date createTime = new Date();
 
         DBBatchLog batchLog = new DBBatchLog();
@@ -46,23 +89,16 @@ public class BankServiceImpl implements IBankService {
         batchLog.setCreatetime(createTime);
         batchLog.setMark(mark);
         batchLog.setPickuptime(pickupDate);
+        batchLog.setTotalcount(dbTmpPhones.size());
 
-        int k=0;
-        for (int i=0;i<list.size();i++){
+        for (int i=0;i<dbTmpPhones.size();i++){
             DBRecogs recogs = new DBRecogs();
             recogs.setMerchid(merchid);
             recogs.setBatchid(batchid);
-            String mobile = list.get(i);
-            if (mobile.length()>40){
-                mobile = mobile.substring(0,40);
-            }
-            recogs.setMobile(mobile);
+            recogs.setMobile(dbTmpPhones.get(i).getPhone());
             recogs.setCreatetime(createTime);
             recogsMapper.insert(recogs);
-            k++;
         }
-
-        batchLog.setTotalcount(k);
         batchLogMapper.insert(batchLog);
 
     }
@@ -91,7 +127,9 @@ public class BankServiceImpl implements IBankService {
             }
             recogs.setMobile(tmpStr);
         }
-        if (IopUtils.isEmpty(recogs.getMobile()) || recogs.getMobile().length()>11){
+        if (IopUtils.isEmpty(recogs.getMobile())
+                || recogs.getMobile().length()>13
+                || recogs.getMobile().length()<7){
             recogs.setStatus(9); // 9 为 状态 号码异常
             recogs.setResult(-1);
             recogs.setManualresult(-1);

@@ -4,7 +4,12 @@
 
     <!-- 查询电话号码 -->
     <select id="queryTel" resultType="com.web.dto.MTMDataDto">
-        select ptel,ptel1 from mtmcontact where case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N')
+        select DISTINCT ptel as phone from mtmcontact
+            where case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N') and (TelCk=NULL or TelCk='')
+        Union All
+        select DISTINCT ptel1 as phone from mtmcontact
+            where case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N') and (Tel1Ck=NULL or Tel1Ck='')
+
     </select>
 
 </mapper>

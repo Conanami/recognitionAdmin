@@ -21,6 +21,7 @@
         <table  tableName="batchlog" domainObjectName="DBBatchLog" />
         <table  tableName="imgzb" domainObjectName="DBImgZB" />
         <table  tableName="devicelog" domainObjectName="DBDeviceLog" />
+        <table  tableName="tmpPhone" domainObjectName="DBTmpPhone" />
 	</context>
 
     -->
