@@ -50,4 +50,10 @@ public interface CRecogsMapper {
      * @return
      */
     public DtoDBRecogs pickup(@Param("merchid") String merchid);
+
+    /**
+     * 查询 兆能资产 需要写回的数据
+     * @return
+     */
+    public List<DBRecogs> queryRecogResult();
 }

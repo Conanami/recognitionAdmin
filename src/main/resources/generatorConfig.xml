@@ -3,37 +3,13 @@
 <generatorConfiguration>
 
     <!--
-
-    <classPathEntry location="C:\tools\mysql-connector-java-5.1.25-bin.jar"/>
+<classPathEntry location="C:\tools\sqljdbc_4.2\chs\sqljdbc42.jar"/>
 	<context id="context1">
 	<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"></plugin>
 	<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
 	<commentGenerator>
             <property name="suppressDate" value="true" />
         </commentGenerator>
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost/recog?characterEncoding=UTF8" userId="recog" password="qwer1234(*)" />
-		<javaModelGenerator targetPackage="mybatis.one.po" targetProject="src/main/java" />
-		<sqlMapGenerator targetPackage="mybatis.one" targetProject="src/main/resources" />
-		<javaClientGenerator targetPackage="mybatis.one.mapper" targetProject="src/main/java" type="XMLMAPPER" />
-
-	    <table  tableName="recogs" domainObjectName="DBRecogs" />
-        <table  tableName="batchlog" domainObjectName="DBBatchLog" />
-        <table  tableName="imgzb" domainObjectName="DBImgZB" />
-        <table  tableName="devicelog" domainObjectName="DBDeviceLog" />
-        <table  tableName="tmpPhone" domainObjectName="DBTmpPhone" />
-	</context>
-
-    -->
-
-
-	<classPathEntry location="C:\tools\sqljdbc_4.2\chs\sqljdbc42.jar"/>
-	<context id="context1">
-	<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"></plugin>  
-	<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
-	<commentGenerator>
-            <property name="suppressDate" value="true" />  
-        </commentGenerator> 
 		<jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver"
 			connectionURL="jdbc:sqlserver://192.168.0.18:1433;database=Prometheus;integratedSecurity=false"
                         userId="ZH" password="ZH" />
@@ -42,5 +18,36 @@
 		<javaClientGenerator targetPackage="mybatis.two.mapper" targetProject="src/main/java" type="XMLMAPPER" />
 
 	    <table  tableName="MTMCaseData" domainObjectName="DBMTMCaseData" />
+        <table  tableName="mtmcontact" domainObjectName="DBMTMContact" />
+
 	</context>
+
+
+
+    -->
+    <classPathEntry location="C:\tools\mysql-connector-java-5.1.25-bin.jar"/>
+    <context id="context1">
+        <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"></plugin>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+        <commentGenerator>
+            <property name="suppressDate" value="true" />
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.0.6/recog?characterEncoding=UTF8" userId="recog" password="qwer1234(*)" />
+        <javaModelGenerator targetPackage="mybatis.one.po" targetProject="src/main/java" />
+        <sqlMapGenerator targetPackage="mybatis.one" targetProject="src/main/resources" />
+        <javaClientGenerator targetPackage="mybatis.one.mapper" targetProject="src/main/java" type="XMLMAPPER" />
+
+        <!--
+        <table  tableName="recogs" domainObjectName="DBRecogs" />
+        <table  tableName="batchlog" domainObjectName="DBBatchLog" />
+        <table  tableName="imgzb" domainObjectName="DBImgZB" />
+        <table  tableName="devicelog" domainObjectName="DBDeviceLog" />
+        <table  tableName="tmpPhone" domainObjectName="DBTmpPhone" />
+        -->
+
+        <table  tableName="znupdateinfo" domainObjectName="DBZNUpdateInfo" />
+    </context>
+
+
 </generatorConfiguration>

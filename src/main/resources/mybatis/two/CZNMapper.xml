@@ -6,10 +6,24 @@
     <select id="queryTel" resultType="com.web.dto.MTMDataDto">
         select DISTINCT ptel as phone from mtmcontact
             where case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N') and (TelCk=NULL or TelCk='')
-        Union All
+        Union
         select DISTINCT ptel1 as phone from mtmcontact
             where case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N') and (Tel1Ck=NULL or Tel1Ck='')
 
+    </select>
+
+    <select id="queryContact" resultType="java.util.Map">
+        SELECT * FROM MTMContact WHERE PTel LIKE #{phonelikestring} AND (TelCk=NULL or TelCk='')
+    </select>
+
+    <select id="queryContact1" resultType="java.util.Map">
+        SELECT * FROM MTMContact WHERE PTel1 LIKE #{phonelikestring} AND (Tel1Ck=NULL or Tel1Ck='')
+    </select>
+
+    <!-- 更新联系人表 -->
+    <select id="updateContact">
+        update mtmcontact set TelCk=#{result} where ptel like #{phonelikestring} and (TelCk=NULL or TelCk='')
+        update mtmcontact set Tel1Ck=#{result}  where ptel1 like #{phonelikestring} and (Tel1Ck=NULL or Tel1Ck='')
     </select>
 
 </mapper>

@@ -204,6 +204,10 @@
                         <td >备注:</td>
                         <td ><input type='easyui-textbox' name="mark" id="mark" data-options="multiline:true" style="height:60px"/></td>
                     </tr>
+                    <tr>
+                        <td >案件前几位:</td>
+                        <td ><input type='easyui-textbox' name="casenostart" id="casenostart" style="height:60px"/></td>
+                    </tr>
                 </table>
             </form>
             <div style="text-align:center;padding:5px">

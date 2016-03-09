@@ -1,11 +1,16 @@
 package com.web.task;
 
+import mybatis.one.mapper.CRecogsMapper;
 import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
-import mybatis.one.po.DBBatchLog;
-import mybatis.one.po.DBBatchLogExample;
-import mybatis.one.po.DBRecogs;
-import mybatis.one.po.DBRecogsExample;
+import mybatis.one.mapper.DBZNUpdateInfoMapper;
+import mybatis.one.po.*;
+import mybatis.two.mapper.CZNMapper;
+import mybatis.two.mapper.DBMTMContactMapper;
+import mybatis.two.po.DBMTMCaseData;
+import mybatis.two.po.DBMTMCaseDataExample;
+import mybatis.two.po.DBMTMContact;
+import mybatis.two.po.DBMTMContactExample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 处理批次的拨打时间，识别时间的统计
@@ -28,6 +34,18 @@ public class BatchLogService {
 
     @Resource
     DBRecogsMapper recogsMapper;
+
+    @Resource
+    CRecogsMapper cRecogsMapper;
+
+    @Resource
+    CZNMapper cznMapper;
+
+    @Resource
+    DBMTMContactMapper contactMapper;
+
+    @Resource
+    DBZNUpdateInfoMapper znUpdateInfoMapper;
 
     @Scheduled(fixedRate = 3*60*1000)   //每5分钟执行一次
     public void run(){
@@ -90,5 +108,59 @@ public class BatchLogService {
             }
         }
 //        log.info("---------complete batchlog analysis---------");
+    }
+
+
+    public  List<Map<String, String>> queryContact(String mobile){
+        List<Map<String, String>> dbmtmContacts = cznMapper.queryContact("%"+mobile);
+        List<Map<String, String>> dbmtmContacts1 = cznMapper.queryContact("%"+mobile);
+        dbmtmContacts.addAll(dbmtmContacts1);
+
+        return dbmtmContacts;
+    }
+
+    //将 识别完的数据，更新回 兆能资产的数据库
+    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
+    public void updateZNDB(){
+        List<DBRecogs> list = cRecogsMapper.queryRecogResult();
+        for (int i = 0; i < list.size(); i++) {
+            DBRecogs recogs = list.get(i);
+
+            log.info("will update mtmcontact phone: "+recogs.getMobile());
+            List<Map<String, String>> dbmtmContacts = queryContact(recogs.getMobile());
+            log.info("will update mtmcontact phone: "+recogs.getMobile()+" size: "+dbmtmContacts.size());
+
+//            switch (recogs.getResult()){
+//                case 2:
+//                    cznMapper.updateContact("006", "%"+recogs.getMobile());
+//                    break;
+//                case 3:
+//                    cznMapper.updateContact("008", "%"+recogs.getMobile());
+//                    break;
+//                case 4:
+//                    cznMapper.updateContact("012", "%"+recogs.getMobile());
+//                    break;
+//            }
+
+            dbmtmContacts = queryContact(recogs.getMobile());
+
+            //更新对应状态记录
+            recogs.setStatus(8);  //8代表已经写回数据库
+            recogsMapper.updateByPrimaryKey(recogs);
+
+            for (Map<String, String> contact : dbmtmContacts) {
+                DBZNUpdateInfo dbznUpdateInfo = new DBZNUpdateInfo();
+                dbznUpdateInfo.setCaseno(contact.get("Case_No"));
+                dbznUpdateInfo.setPtel(contact.get("PTel"));
+                dbznUpdateInfo.setPtel1(contact.get("PTel1"));
+                dbznUpdateInfo.setTelck(contact.get("TelCK"));
+                dbznUpdateInfo.setTel1ck(contact.get("Tel1CK"));
+                dbznUpdateInfo.setPname(contact.get("PName"));
+                dbznUpdateInfo.setBatchid(recogs.getBatchid());
+                dbznUpdateInfo.setPhone(recogs.getMobile());
+                dbznUpdateInfo.setCreatetime(new Date());
+                znUpdateInfoMapper.insert(dbznUpdateInfo);
+            }
+        }
     }
 }

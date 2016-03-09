@@ -124,4 +124,12 @@
         </if>
     </select>
 
+    <!-- 查询兆能资产 需要写回的数据 -->
+    <select id="queryRecogResult" resultType="mybatis.one.po.DBRecogs">
+        SELECT DISTINCT a.* FROM  recogs a WHERE 1=1
+        AND a.merchid = 'znadmin'
+        AND a.status = 4
+        AND (a.result =2 OR a.result=3 OR a.result=4)
+    </select>
+
 </mapper>
