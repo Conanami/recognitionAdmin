@@ -5,6 +5,7 @@ package com.web.dto;
  */
 public class MTMDataDto {
     private String phone;
+    private String case_no;
 
     public String getPhone() {
         return phone;
@@ -12,5 +13,13 @@ public class MTMDataDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getCase_no() {
+        return case_no;
+    }
+
+    public void setCase_no(String case_no) {
+        this.case_no = case_no;
     }
 }

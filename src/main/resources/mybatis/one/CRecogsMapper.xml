@@ -19,6 +19,7 @@
         OR a.`status` = 1
         OR a.manualresult = 8
         )
+        AND ISNULL(b.batchid)=FALSE
         ORDER BY
             seqid
         LIMIT 0,

@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by boshu on 2016/3/7.
  */
 public interface CZNMapper {
-    public List<MTMDataDto> queryTel();
+    public List<MTMDataDto> queryTel(@Param("casenostart") String casenostart );
 
     public List<Map<String, String>> queryContact(@Param("phonelikestring") String phonelikestring);
     public List<Map<String, String>> queryContact1(@Param("phonelikestring") String phonelikestring);

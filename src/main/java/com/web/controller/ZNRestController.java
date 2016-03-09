@@ -62,6 +62,7 @@ public class ZNRestController {
             @RequestParam(value = "merchid", required = false) String merchid,
             @RequestParam(value = "pickuptime", required = true) String pickuptime,
             @RequestParam(value = "mark", required = false) String mark,
+            @RequestParam(value = "casenostart", required = true) String casenostart,
             HttpSession httpSession) throws Exception{
 
         if (IopUtils.isEmpty(merchid)) {
@@ -76,7 +77,7 @@ public class ZNRestController {
         WSResponse<Boolean> response = new WSResponse<>();
         httpSession.setAttribute("api.zn.mobile.sync.message", "开始查询...");
 
-        List<MTMDataDto> list = cznMapper.queryTel();
+        List<MTMDataDto> list = cznMapper.queryTel(casenostart+"%");
 
         httpSession.setAttribute("api.zn.mobile.sync.message", "开始导入...");
 

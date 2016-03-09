@@ -4,12 +4,15 @@
 
     <!-- 查询电话号码 -->
     <select id="queryTel" resultType="com.web.dto.MTMDataDto">
-        select DISTINCT ptel as phone from mtmcontact
-            where case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N') and (TelCk=NULL or TelCk='')
+        SELECT DISTINCT a.* FROM
+        (
+        select DISTINCT ptel as phone, case_no from mtmcontact
+        where case_no LIKE #{casenostart} AND case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N') and (TelCk=NULL or TelCk='')
         Union
-        select DISTINCT ptel1 as phone from mtmcontact
-            where case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N') and (Tel1Ck=NULL or Tel1Ck='')
-
+        select DISTINCT ptel1 as phone, case_no from mtmcontact
+        where case_no LIKE #{casenostart} AND case_no in (Select case_no FROM MTMCaseData WHERE case_type = 'N') and (Tel1Ck=NULL or Tel1Ck='')
+        ) as a  WHERE a.phone &lt;&gt; ''
+        ORDER BY a.case_no
     </select>
 
     <select id="queryContact" resultType="java.util.Map">

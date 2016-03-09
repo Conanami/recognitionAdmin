@@ -206,7 +206,7 @@
                     </tr>
                     <tr>
                         <td >案件前几位:</td>
-                        <td ><input type='easyui-textbox' name="casenostart" id="casenostart" style="height:60px"/></td>
+                        <td ><input type='easyui-textbox' name="casenostart" id="casenostart" /></td>
                     </tr>
                 </table>
             </form>
