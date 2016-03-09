@@ -116,6 +116,30 @@
             }
         }
 
+        // 导出学习的excel
+        function f_explortLearn(){
+            var row = $('#dg').datagrid('getSelected');
+            if (row){
+                var url = "<c:url value='/api.auto.learn.exportExcel'/>";
+                ajaxLoading();
+                $.post(url, {
+                    batchid : row.batchid
+                }, function(result) {
+                    ajaxLoadEnd();
+                    if (result.respCode==0){
+                        $.messager.alert('提示', result.respDescription+'\n点击确定下载文件','info',function(r){
+                            window.location = "<c:url value='/download/'/>"+result.rows[0];
+                        });
+                    } else {
+                        $.messager.alert('提示', result.respDescription,'error');
+                    }
+                });
+            }else{
+                $.messager.alert('提示', '请先选择一笔记录','error');
+            }
+        }
+
+
         function submit(){
             var length = $("#file").val();
             if(length==""){
@@ -219,6 +243,7 @@
 		<div id="toolbar">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showImport()">导入</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:f_explort()">导出</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:f_explortLearn()">导出训练excel</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#dg').edatagrid('destroyRow')">删除</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg').datagrid('reload')">reload</a>
 		</div>

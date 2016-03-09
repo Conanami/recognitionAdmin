@@ -18,14 +18,14 @@ public class DataZBStructure {
 	@XmlElement(name="item")
 	public List<FieldFormat> list = new ArrayList<>();
 	
-	public void read() {
+	public void read(String filename) {
 		if (this.list.size()==0) {
 			try {
 				JAXBContext context = JAXBContext.newInstance(DataZBStructure.class);
 				Unmarshaller unmarshaller = context.createUnmarshaller();
 				DataZBStructure obj = (DataZBStructure) unmarshaller.unmarshal(Thread
 						.currentThread().getContextClassLoader()
-						.getResourceAsStream("zb_structure.xml"));
+						.getResourceAsStream(filename));
 				this.list = obj.list;
 			} catch (Exception e) {
 				log.error(e);

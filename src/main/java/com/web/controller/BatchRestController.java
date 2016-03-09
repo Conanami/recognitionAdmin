@@ -442,7 +442,7 @@ public class BatchRestController {
         List<DBRecogs> list = recogsMapper.selectByExample(example);
 
         DataZBStructure dt = new DataZBStructure();
-        dt.read();
+        dt.read("zb_structure.xml");
         List<String> titles = dt.getTitles();
         List<String> fields = dt.getFields();
 

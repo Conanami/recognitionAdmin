@@ -39,5 +39,51 @@ public class MobileUtil {
 		}
 		return false;
 	}
+
+    //移动的号段
+    public static String[] ydprefix={"134","135","136","137",
+            "138","139","150","151","152",
+            "157","158","159","182","183",
+            "184","187","178","188","147"};
+    //联通的号段
+    public static String[] ltprefix={"130","131","132","145",
+            "155","156","176","185","186"};
+
+    //电信的号段
+    public static String[] dxprefix={"133","153","177","180","181","189"};
+
+    /**
+     * 判断运营商
+     * @param substring
+     * @return
+     */
+    public static String findOp(String substring) {
+        if (substring.length()<4) return "";
+        substring = substring.substring(0,3);
+
+        String prefix = substring.substring(0,3);
+        //System.out.println(prefix);
+        if(Contains(ydprefix,prefix))
+            return "yd";
+        if(Contains(ltprefix,prefix))
+            return "lt";
+        if(Contains(dxprefix,prefix))
+            return "dx";
+        else
+            return "dx";
+    }
+
+    /***
+     * 是否包含
+     * @param list
+     * @param prefix
+     * @return
+     */
+    private static boolean Contains(Object[] list, Object prefix) {
+        // TODO Auto-generated method stub
+        for(int i=0;i<list.length;++i)
+            if(list[i].equals(prefix)) return true;
+        return false;
+    }
 	
 }

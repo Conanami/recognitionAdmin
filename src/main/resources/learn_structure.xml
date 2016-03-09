@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- 导出的号码列表 结构描述 -->
+<root>
+    <item field="mobile" title="手机号码"/>
+    <item field="filename" title="文件名称"/>
+    <item field="operate" title="运营商"/>
+    <item field="type" title="号码状态类别"/>
+    <!--
+    <item field="result" title="结果id"/>
+    <item field="seqid" title="序号"/>
+    -->
+</root>
