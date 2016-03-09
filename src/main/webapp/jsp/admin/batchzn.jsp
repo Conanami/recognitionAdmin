@@ -153,7 +153,7 @@
         function resetUploadForm(){
             $("#uploadFileForm").resetForm();
         }
-		
+
 	    $(function(){
             $('#dg').edatagrid({
                 pageSize: 15,//每页显示的记录条数
@@ -220,6 +220,7 @@
 		<div id="toolbar">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showImport()">从客户系统取得号码</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:f_explort()">导出</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#dg').edatagrid('destroyRow')">删除</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg').datagrid('reload')">reload</a>
 		</div>
 

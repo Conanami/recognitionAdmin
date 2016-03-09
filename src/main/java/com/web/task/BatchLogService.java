@@ -130,17 +130,17 @@ public class BatchLogService {
             List<Map<String, String>> dbmtmContacts = queryContact(recogs.getMobile());
             log.info("will update mtmcontact phone: "+recogs.getMobile()+" size: "+dbmtmContacts.size());
 
-//            switch (recogs.getResult()){
-//                case 2:
-//                    cznMapper.updateContact("006", "%"+recogs.getMobile());
-//                    break;
-//                case 3:
-//                    cznMapper.updateContact("008", "%"+recogs.getMobile());
-//                    break;
-//                case 4:
-//                    cznMapper.updateContact("012", "%"+recogs.getMobile());
-//                    break;
-//            }
+            switch (recogs.getResult()){
+                case 2:
+                    cznMapper.updateContact("006", "%"+recogs.getMobile());
+                    break;
+                case 3:
+                    cznMapper.updateContact("008", "%"+recogs.getMobile());
+                    break;
+                case 4:
+                    cznMapper.updateContact("012", "%"+recogs.getMobile());
+                    break;
+            }
 
             dbmtmContacts = queryContact(recogs.getMobile());
 

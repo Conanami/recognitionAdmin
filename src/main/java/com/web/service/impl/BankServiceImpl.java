@@ -78,9 +78,10 @@ public class BankServiceImpl implements IBankService {
 
         List<DBTmpPhone> dbTmpPhones = new ArrayList<>();
         {
-            DBTmpPhoneExample example = new DBTmpPhoneExample();
-            example.createCriteria().andMerchidEqualTo(merchid);
-            dbTmpPhones = tmpPhoneMapper.selectByExample(example);
+            dbTmpPhones = cRecogsMapper.selectTmpPhone(merchid);
+//            DBTmpPhoneExample example = new DBTmpPhoneExample();
+//            example.createCriteria().andMerchidEqualTo(merchid);
+//            dbTmpPhones = tmpPhoneMapper.selectByExample(example);
         }
 
         Date createTime = new Date();
@@ -108,6 +109,9 @@ public class BankServiceImpl implements IBankService {
                 recogs.setBatchid(batchid);
                 recogs.setMobile(dbTmpPhones.get(i+2000*k).getPhone());
                 recogs.setCreatetime(createTime);
+                {
+
+                }
                 recogsMapper.insert(recogs);
                 mm ++;
             }

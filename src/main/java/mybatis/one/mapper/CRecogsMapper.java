@@ -2,6 +2,7 @@ package mybatis.one.mapper;
 
 import com.web.dto.DtoDBRecogs;
 import mybatis.one.po.DBRecogs;
+import mybatis.one.po.DBTmpPhone;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -56,4 +57,11 @@ public interface CRecogsMapper {
      * @return
      */
     public List<DBRecogs> queryRecogResult();
+
+    /**
+     * 查询临时表的数据
+     * @param merchid
+     * @return
+     */
+    public List<DBTmpPhone> selectTmpPhone(@Param("merchid") String merchid);
 }

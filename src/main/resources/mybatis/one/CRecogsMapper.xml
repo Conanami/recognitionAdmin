@@ -133,4 +133,23 @@
         AND (a.result =2 OR a.result=3 OR a.result=4)
     </select>
 
+    <!-- 查询临时表的数据 -->
+    <select id="selectTmpPhone" resultType="mybatis.one.po.DBTmpPhone">
+        SELECT
+            a.*
+        FROM
+            tmpPhone a
+        WHERE
+            merchid = #{merchid} AND
+            a.phone NOT IN (
+                SELECT
+                    mobile
+                FROM
+                    recogs
+                WHERE
+                    merchid = #{merchid}
+                AND ISNULL(calltime)
+            )
+    </select>
+
 </mapper>
