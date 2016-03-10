@@ -154,6 +154,39 @@
             $("#uploadFileForm").resetForm();
         }
 
+        //显示 批次修改界面
+        function showEdit(){
+            var row = $('#dg').datagrid('getSelected');
+            if (row){
+                $('#editdlg').dialog('open');
+                $('#editdlg').panel({title: "修改批次信息"});
+                $("#editForm").find("[name='seqid']").val(row.seqid);
+                $("#editForm").find("[name='batchid']").text(row.batchid);
+                $("#editForm").find("[name='mark']").val(row.mark);
+                $("#editForm").find("[textboxname='pickuptime']").datetimebox('setValue', row.pickuptime);
+            }else{
+                $.messager.alert('提示', '请先选择一笔记录','error');
+            }
+        }
+
+        function submitEdit(){
+            $('#editdlg').dialog('close');
+            ajaxLoading();
+            var url = "<c:url value='/api.batchlog.update'/>";
+            $.post(url, {
+                seqid : $("#editForm").find("[name='seqid']").val(),
+                mark :  $("#editForm").find("[name='mark']").val(),
+                pickuptime : $("#editForm").find("[textboxname='pickuptime']").datetimebox('getValue')
+            }, function(result) {
+                if (result.respCode==0){
+                    ajaxLoadEnd();
+                }else {
+                    $.messager.alert('提示', result.respDescription,'error');
+                }
+            });
+        }
+
+
 	    $(function(){
             $('#dg').edatagrid({
                 pageSize: 15,//每页显示的记录条数
@@ -216,10 +249,36 @@
             </div>
         </div>
 
+        <div id="editdlg" class="easyui-dialog" title="" closed="true" data-options="iconCls:'icon-save'" style="width:600px;height:500px;padding:10px">
+            <div>&nbsp;</div>
+            <form  id="editForm" method="POST">
+                <input type="hidden" name="seqid"/>
+                <table cellpadding="5" width="100%">
+                    <tr>
+                        <td >批次号:</td>
+                        <td ><label name="batchid"></label></td>
+                    </tr>
+                    <tr>
+                        <td >预约拨打时间:</td>
+                        <td ><input name="pickuptime" type="text" class="easyui-datetimebox" style="width:200px;"/>  </td>
+                    </tr>
+                    <tr>
+                        <td >备注:</td>
+                        <td ><input type='easyui-textbox' name="mark" data-options="multiline:true" style="height:60px"/></td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitEdit()">Submit</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="resetEditForm()">Clear</a>
+            </div>
+        </div>
+
 		<!-- 工具栏 -->
 		<div id="toolbar">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showImport()">从客户系统取得号码</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:f_explort()">导出</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showEdit()">编辑</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#dg').edatagrid('destroyRow')">删除</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg').datagrid('reload')">reload</a>
 		</div>

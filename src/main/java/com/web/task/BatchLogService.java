@@ -113,7 +113,7 @@ public class BatchLogService {
 
     public  List<Map<String, String>> queryContact(String mobile){
         List<Map<String, String>> dbmtmContacts = cznMapper.queryContact("%"+mobile);
-        List<Map<String, String>> dbmtmContacts1 = cznMapper.queryContact("%"+mobile);
+        List<Map<String, String>> dbmtmContacts1 = cznMapper.queryContact1("%"+mobile);
         dbmtmContacts.addAll(dbmtmContacts1);
 
         return dbmtmContacts;
@@ -130,28 +130,29 @@ public class BatchLogService {
             List<Map<String, String>> dbmtmContacts = queryContact(recogs.getMobile());
             log.info("will update mtmcontact phone: "+recogs.getMobile()+" size: "+dbmtmContacts.size());
 
-            switch (recogs.getResult()){
-                case 1:         //表示正常
-                    cznMapper.updateContact("019", "%"+recogs.getMobile());
-                    break;
-                case 2:         //欠费停机
-                    cznMapper.updateContact("006", "%"+recogs.getMobile());
-                    break;
-                case 3:         //空号
-                    cznMapper.updateContact("008", "%"+recogs.getMobile());
-                    break;
-                case 4:         //关机
-                    cznMapper.updateContact("012", "%"+recogs.getMobile());
-                    break;
-            }
-
-            dbmtmContacts = queryContact(recogs.getMobile());
+//            switch (recogs.getResult()){
+//                case 1:         //表示正常
+//                    cznMapper.updateContact("019", "%"+recogs.getMobile());
+//                    break;
+//                case 2:         //欠费停机
+//                    cznMapper.updateContact("006", "%"+recogs.getMobile());
+//                    break;
+//                case 3:         //空号
+//                    cznMapper.updateContact("008", "%"+recogs.getMobile());
+//                    break;
+//                case 4:         //关机
+//                    cznMapper.updateContact("012", "%"+recogs.getMobile());
+//                    break;
+//            }
 
             //更新对应状态记录
             recogs.setStatus(8);  //8代表已经写回数据库
             recogsMapper.updateByPrimaryKey(recogs);
 
             for (Map<String, String> contact : dbmtmContacts) {
+                String case_no = contact.get("Case_No");
+                contact = cznMapper.queryContactByCaseNo(case_no);
+
                 DBZNUpdateInfo dbznUpdateInfo = new DBZNUpdateInfo();
                 dbznUpdateInfo.setCaseno(contact.get("Case_No"));
                 dbznUpdateInfo.setPtel(contact.get("PTel"));

@@ -23,6 +23,10 @@
         SELECT * FROM MTMContact WHERE PTel1 LIKE #{phonelikestring} AND (Tel1Ck=NULL or Tel1Ck='')
     </select>
 
+    <select id="queryContactByCaseNo" resultType="java.util.Map">
+        SELECT * FROM MTMContact WHERE case_no = #{case_no}
+    </select>
+
     <!-- 更新联系人表 -->
     <select id="updateContact">
         update mtmcontact set TelCk=#{result} where ptel like #{phonelikestring} and (TelCk=NULL or TelCk='')

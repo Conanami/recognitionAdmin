@@ -97,6 +97,17 @@ public class BatchRestController {
         return response;
     }
 
+    @RequestMapping("api.batchlog.update")
+    public DBBatchLog api_batchlog_edit(DBBatchLog batchLogParam, HttpSession httpSession){
+        DBBatchLog batchLog = new DBBatchLog();
+        batchLog.setSeqid(batchLogParam.getSeqid());
+        batchLog.setPickuptime(batchLogParam.getPickuptime());
+        batchLog.setMark(batchLogParam.getMark());
+        batchLogMapper.updateByPrimaryKeySelective(batchLog);
+        return  batchLogMapper.selectByPrimaryKey(batchLog.getSeqid());
+    }
+
+
     /**
      * 批次记录删除
      * @param seqid
