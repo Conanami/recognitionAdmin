@@ -131,13 +131,16 @@ public class BatchLogService {
             log.info("will update mtmcontact phone: "+recogs.getMobile()+" size: "+dbmtmContacts.size());
 
             switch (recogs.getResult()){
-                case 2:
+                case 1:         //表示正常
+                    cznMapper.updateContact("019", "%"+recogs.getMobile());
+                    break;
+                case 2:         //欠费停机
                     cznMapper.updateContact("006", "%"+recogs.getMobile());
                     break;
-                case 3:
+                case 3:         //空号
                     cznMapper.updateContact("008", "%"+recogs.getMobile());
                     break;
-                case 4:
+                case 4:         //关机
                     cznMapper.updateContact("012", "%"+recogs.getMobile());
                     break;
             }
