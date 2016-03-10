@@ -18,7 +18,8 @@ public interface CZNMapper {
     public List<Map<String, String>> queryContact1(@Param("phonelikestring") String phonelikestring);
 
     // 根据案件号查询合约
-    public Map<String, String> queryContactByCaseNo(@Param("case_no") String case_no);
+    public Map<String, String> queryContactByCaseNo(@Param("case_no") String case_no,
+                                                          @Param("serino") String serino);
 
     public void updateContact(@Param("result") String result,
                               @Param("phonelikestring") String phonelikestring);

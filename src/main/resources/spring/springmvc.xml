@@ -58,7 +58,7 @@
         <property name="formatters">
             <set>
                 <bean class="com.common.formatter.DateFormatter">
-                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd" />
+                    <constructor-arg type="java.lang.String" value="MM/dd/yyyy HH:mm:ss" />
                 </bean>
             </set>
         </property>

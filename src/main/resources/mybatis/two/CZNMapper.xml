@@ -24,7 +24,7 @@
     </select>
 
     <select id="queryContactByCaseNo" resultType="java.util.Map">
-        SELECT * FROM MTMContact WHERE case_no = #{case_no}
+        SELECT * FROM MTMContact WHERE case_no = #{case_no} AND serino = #{serino}
     </select>
 
     <!-- 更新联系人表 -->

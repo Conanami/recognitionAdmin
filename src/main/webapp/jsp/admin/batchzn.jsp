@@ -129,7 +129,6 @@
                     }else{
                         $.messager.alert('提示', result.respDescription,'info');
                         $('#dg').datagrid('reload');
-                        resetUploadForm();
                     }
                 }});
 
@@ -178,8 +177,10 @@
                 mark :  $("#editForm").find("[name='mark']").val(),
                 pickuptime : $("#editForm").find("[textboxname='pickuptime']").datetimebox('getValue')
             }, function(result) {
-                if (result.respCode==0){
-                    ajaxLoadEnd();
+                ajaxLoadEnd();
+                if (result.respCode==undefined){
+                    $.messager.alert('提示', '修改成功','info');
+                    $('#dg').datagrid('reload');
                 }else {
                     $.messager.alert('提示', result.respDescription,'error');
                 }
@@ -245,7 +246,6 @@
             </form>
             <div style="text-align:center;padding:5px">
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submit()">Submit</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="resetUploadForm()">Clear</a>
             </div>
         </div>
 
@@ -270,7 +270,6 @@
             </form>
             <div style="text-align:center;padding:5px">
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitEdit()">Submit</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="resetEditForm()">Clear</a>
             </div>
         </div>
 

@@ -4,6 +4,7 @@ import com.common.exception.ExceptionConst;
 import com.common.exception.ExceptionFormatter;
 import com.common.exception.WException;
 import com.common.util.*;
+import com.web.dto.BatchEditDto;
 import com.web.dto.DataZBStructure;
 import com.web.dto.DestroyResDto;
 import com.web.dto.DtoDBRecogs;
@@ -98,7 +99,7 @@ public class BatchRestController {
     }
 
     @RequestMapping("api.batchlog.update")
-    public DBBatchLog api_batchlog_edit(DBBatchLog batchLogParam, HttpSession httpSession){
+    public DBBatchLog api_batchlog_edit(BatchEditDto batchLogParam, HttpSession httpSession){
         DBBatchLog batchLog = new DBBatchLog();
         batchLog.setSeqid(batchLogParam.getSeqid());
         batchLog.setPickuptime(batchLogParam.getPickuptime());

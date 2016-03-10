@@ -130,7 +130,8 @@
         SELECT DISTINCT a.* FROM  recogs a WHERE 1=1
         AND a.merchid = 'znadmin'
         AND a.status = 4
-        AND (a.result =2 OR a.result=3 OR a.result=4)
+        AND (a.result =2 OR a.result=3 OR a.result=4 OR a.result=1)
+        ORDER BY batchid, seqid
     </select>
 
     <!-- 查询临时表的数据 -->
