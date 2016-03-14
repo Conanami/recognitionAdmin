@@ -3,9 +3,14 @@ package com.web.controller;
 import com.common.exception.ExceptionFormatter;
 import com.common.exception.WException;
 import com.common.util.IopUtils;
+import com.common.util.MobileUtil;
 import com.common.util.WSResponse;
 import com.web.service.IBankService;
+import mybatis.one.mapper.CRecogsMapper;
 import mybatis.one.mapper.DBRecogsMapper;
+import mybatis.one.mapper.DBTmpPhoneMapper;
+import mybatis.one.po.DBRecogsExample;
+import mybatis.one.po.DBTmpPhoneExample;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -40,6 +45,12 @@ public class CSVUploadController {
 
     @Resource
     DBRecogsMapper recogsMapper;
+
+    @Resource
+    CRecogsMapper cRecogsMapper;
+
+    @Resource
+    DBTmpPhoneMapper tmpPhoneMapper;
 
     @ExceptionHandler(Exception.class)
     public WSResponse<Boolean> exceptionHandler(Exception ex, HttpSession httpSession) {
@@ -115,15 +126,23 @@ public class CSVUploadController {
 
         colnum = colnum -1 ;//传入的默认从1开始， 实际使用的从0开始
 
-        List<String> listMobile = new ArrayList<>();
+        List<String> listPhone = new ArrayList<>();
         List<List<String>> lists = readListFromCsvFile(file.getInputStream(), format);
         for (int i=rowstart-1;i<lists.size();i++){
             List<String> list = lists.get(i);
-            String mobile = list.get(colnum);
-            listMobile.add(mobile);
+            String mobile = MobileUtil.formatPhone(list.get(colnum));
+            if (IopUtils.isNotEmpty(mobile)){
+                listPhone.add(mobile);
+            }
         }
-        //先插入临时表
-        bankService.insertTmp(merchid, listMobile);
+        {
+            //先清空 临时表里面 当前商户的 数据
+            DBTmpPhoneExample example = new DBTmpPhoneExample();
+            example.createCriteria().andMerchidEqualTo(merchid);
+            tmpPhoneMapper.deleteByExample(example);
+        }
+        //将数据插入临时表
+        cRecogsMapper.insertTmpPhoneBatch(merchid, listPhone);
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         Date pickupDate = new Date();
@@ -132,7 +151,7 @@ public class CSVUploadController {
         }
         bankService.insertMobiles(merchid, pickupDate, mark);
         WSResponse<Boolean> response = new WSResponse<>();
-        response.setRespDescription("批量提交手机号码 "+listMobile.size()+" 条 成功");
+        response.setRespDescription("批量提交手机号码 "+listPhone.size()+" 条 成功");
         return response;
     }
 

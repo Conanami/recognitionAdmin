@@ -34,6 +34,11 @@ public class WException extends Exception {
 		this.message = message;
 	}
 
+    @Override
+    public String toString(){
+        return "WException code:"+code+" message:"+message;
+    }
+
 	public String getMessage() {
 		return message;
 	}

@@ -20,7 +20,27 @@ public class MobileUtil {
         m = p.matcher(str);  
         b = m.matches();   
         return b;  
-    }  
+    }
+
+    /**
+     * 格式化电话号码
+     * 去掉非 数字 和 - 的字符。 长度最多保留20位
+     * @param phone
+     * @return
+     */
+    public static String formatPhone(String phone){
+        String tmpStr = "";
+        for(int i=0;i<phone.length();i++){
+            String tmp=""+phone.charAt(i);
+            if((tmp).matches("[0-9.]") || tmp.equals("-")){
+                tmpStr+=tmp;
+            }
+        }
+        if (tmpStr.length()>20){
+            tmpStr = tmpStr.substring(0,20);
+        }
+        return tmpStr;
+    }
 	
 	/***
 	 * 判断是身份证号码

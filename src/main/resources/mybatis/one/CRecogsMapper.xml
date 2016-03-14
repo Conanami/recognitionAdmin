@@ -125,6 +125,41 @@
         </if>
     </select>
 
+
+    <!--  批量插入案件 -->
+    <insert id="insertCaseBatch">
+        insert into zncontact ( batchid, caseno, serino,
+        prelation, pname, ptel, telck,
+        ptel1, tel1ck ) values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            ( ${batchid}, #{item.Case_No}, #{item.Serino},
+            #{item.PRelation}, #{item.PName},
+            #{item.PTel}, #{item.TelCK},
+            #{item.PTel1}, #{item.Tel1CK} )
+        </foreach>
+    </insert>
+
+    <!--  查询批量案件中的电话号码，过滤重复 -->
+    <select id="queryPhone" resultType="com.web.dto.MTMDataDto">
+        SELECT DISTINCT a.* FROM
+        (
+        SELECT DISTINCT ptel as phone, caseno FROM zncontact  WHERE batchid=#{batchid}
+        UNION
+        SELECT DISTINCT ptel1 as phone, caseno FROM zncontact  WHERE batchid=#{batchid}
+        ) as a  WHERE ISNULL(a.phone)=FALSE AND a.phone &lt;&gt;  ''
+        ORDER BY a.caseno
+    </select>
+
+    <!--  将各个批量插入的案件 的电话号码，批量写入 临时表 DELETE FROM  tmpphone WHERE  merchid=${merchid}; -->
+    <insert id="insertTmpPhoneBatch">
+        insert into tmpphone ( merchid, phone ) values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            ( ${merchid}, #{item} )
+        </foreach>
+    </insert>
+
     <!-- 查询兆能资产 需要写回的数据 -->
     <select id="queryRecogResult" resultType="mybatis.one.po.DBRecogs">
         SELECT DISTINCT a.* FROM  recogs a WHERE 1=1
@@ -134,10 +169,10 @@
         ORDER BY batchid, seqid
     </select>
 
-    <!-- 查询临时表的数据 -->
-    <select id="selectTmpPhone" resultType="mybatis.one.po.DBTmpPhone">
+    <!-- 查询临时表的电话号码，过滤掉 recogs表里面 尚未拨打的电话号码 -->
+    <select id="selectTmpPhone" resultType="java.lang.String">
         SELECT
-            a.*
+            a.phone
         FROM
             tmpPhone a
         WHERE
@@ -152,5 +187,16 @@
                 AND ISNULL(calltime)
             )
     </select>
+
+    <!--  将从临时表得到的过滤过的电话号码，写入 recogs表 继续拨打 -->
+    <insert id="insertTmpPhoneToRecogsBatch">
+        insert into recogs ( merchid, batchid, mobile, createtime) values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            ( '${merchid}', '${batchid}', #{item}, '${createtime}')
+        </foreach>
+    </insert>
+
+
 
 </mapper>

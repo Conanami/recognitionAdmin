@@ -6,11 +6,15 @@ import com.common.util.IopUtils;
 import com.common.util.WSResponse;
 import com.web.dto.MTMDataDto;
 import com.web.service.IBankService;
+import mybatis.one.mapper.CRecogsMapper;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBRecogsExample;
 import mybatis.two.mapper.CZNMapper;
 import mybatis.two.mapper.DBMTMCaseDataMapper;
+import mybatis.two.mapper.DBMTMContactMapper;
+import mybatis.two.po.DBMTMContact;
+import mybatis.two.po.DBMTMContactExample;
 import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by boshu on 2016/3/7.
@@ -40,6 +45,12 @@ public class ZNRestController {
     CZNMapper cznMapper;
 
     @Resource
+    DBMTMContactMapper mtmContactMapper;
+
+    @Resource
+    CRecogsMapper cRecogsMapper;
+
+    @Resource
     DBRecogsMapper recogsMapper;
 
     @ExceptionHandler(Exception.class)
@@ -48,6 +59,26 @@ public class ZNRestController {
         log.error("Exception异常：" + ex);
         ExceptionFormatter.setResponse(response, ex);
         return response;
+    }
+
+    /**
+     * 格式化电话号码
+     * 去掉非 数字 和 - 的字符。 长度最多保留20位
+     * @param phone
+     * @return
+     */
+    private String formatPhone(String phone){
+        String tmpStr = "";
+        for(int i=0;i<phone.length();i++){
+            String tmp=""+phone.charAt(i);
+            if((tmp).matches("[0-9.]") || tmp.equals("-")){
+                tmpStr+=tmp;
+            }
+        }
+        if (tmpStr.length()>20){
+            tmpStr = tmpStr.substring(0,20);
+        }
+        return tmpStr;
     }
 
     /**
@@ -77,33 +108,37 @@ public class ZNRestController {
         WSResponse<Boolean> response = new WSResponse<>();
         httpSession.setAttribute("api.zn.mobile.sync.message", "开始查询...");
 
-        List<MTMDataDto> list = cznMapper.queryTel(casenostart+"%");
-
-        httpSession.setAttribute("api.zn.mobile.sync.message", "开始导入...");
-
-        List<String> listMobile = new ArrayList<>();
-        int k=0;
-        for (MTMDataDto mtmDataDto : list) {
-            String ptel = mtmDataDto.getPhone();
-            if (IopUtils.isNotEmpty(ptel) ){
-                listMobile.add(ptel);
+        // 案件的 批次id
+        String caseBatchId = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+"_"+new RandomUtils().nextInt(1000);
+        {
+            // 查询符合导入条件的案件
+            List<DBMTMContact> list = cznMapper.queryCase(casenostart+"%");
+            // 批量插入 本地案件表
+            cRecogsMapper.insertCaseBatch(caseBatchId, list);
+            //查询刚刚插入的案件的全部电话号码
+            List<MTMDataDto> mtmDataDtoList = cRecogsMapper.queryPhone(caseBatchId);
+            //格式化电话号码
+            List<String> listPhone = new ArrayList<>();
+            for (int i = 0; i < mtmDataDtoList.size(); i++) {
+                MTMDataDto dataDto = mtmDataDtoList.get(i);
+                String phone = formatPhone(dataDto.getPhone());
+                if (IopUtils.isNotEmpty(phone)){
+                    listPhone.add(phone);
+                }
             }
-            k++;
-            httpSession.setAttribute("api.zn.mobile.sync.message", k+"/"+list.size()+"");
+            //将数据全部插入临时表
+            cRecogsMapper.insertTmpPhoneBatch(merchid, listPhone);
+            // 从临时表 读取 和 recogs表里面尚未拨打电话不重复的 电话号码，创建新批次写入 recogs表
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            Date pickupDate = new Date();
+            if (IopUtils.isNotEmpty(pickuptime)){
+                pickupDate = sdf.parse(pickuptime);
+            }
+            if (IopUtils.isEmpty(mark)){
+                mark = "兆能导入";
+            }
+            bankService.insertMobiles(merchid, pickupDate, mark);
         }
-        //先将数据全部插入临时表
-        bankService.insertTmp(merchid, listMobile);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        Date pickupDate = new Date();
-        if (IopUtils.isNotEmpty(pickuptime)){
-            pickupDate = sdf.parse(pickuptime);
-        }
-        if (IopUtils.isEmpty(mark)){
-            mark = "兆能导入";
-        }
-        bankService.insertMobiles(merchid, pickupDate, mark);
-        httpSession.removeAttribute("api.zn.mobile.sync.message");
 
         response.setRespDescription("取得电话号码成功");
         return response;

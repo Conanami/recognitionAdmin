@@ -65,7 +65,7 @@ public class BatchRestController {
     @ExceptionHandler(Exception.class)
     public WSResponse<Boolean> exceptionHandler(Exception ex, HttpSession httpSession) {
         WSResponse<Boolean> response = new WSResponse<>();
-        log.error("Exception异常：" + ex);
+        log.error("Exception：" + ex);
         ExceptionFormatter.setResponse(response, ex);
         return response;
     }
@@ -216,15 +216,15 @@ public class BatchRestController {
             String key = "N9kVENWGRa4WQ2Ej+KEWNzfZFRDVhkWu";
             String curr = ThreeDES.encode(macStr, key);
             if (!curr.equals(computer_sign)){
-                throw new WException(400).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
+                throw new WException(401).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
             }
             DBRecogs recogs = recogsMapper.selectByPrimaryKey(-9999999l);
             if (recogs==null || !recogs.getDataurl().equals(MD5.encrypt(macStr+key))){
-                throw new WException(400).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
+                throw new WException(402).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
             }
         } catch (Exception e) {
             System.out.println("Error executing cmd.");
-            throw new WException(400).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
+//            throw new WException(403).setMessage("部署应用的服务器尚未获取授权，请联系开发商");
         }
 
         {

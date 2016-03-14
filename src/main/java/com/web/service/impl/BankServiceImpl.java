@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by boshu on 2016/1/1.
@@ -76,15 +74,12 @@ public class BankServiceImpl implements IBankService {
      */
     public void insertMobiles(String merchid, Date pickupDate, String mark){
 
-        List<DBTmpPhone> dbTmpPhones = new ArrayList<>();
-        {
-            dbTmpPhones = cRecogsMapper.selectTmpPhone(merchid);
-//            DBTmpPhoneExample example = new DBTmpPhoneExample();
-//            example.createCriteria().andMerchidEqualTo(merchid);
-//            dbTmpPhones = tmpPhoneMapper.selectByExample(example);
-        }
+        List<String> dbTmpPhones = cRecogsMapper.selectTmpPhone(merchid);
 
         Date createTime = new Date();
+
+        Queue<String> queuePhone=new LinkedList<>();
+        queuePhone.addAll(dbTmpPhones);
 
         // 2000笔数据 定义为一个批次
         int count = (int) Math.ceil(dbTmpPhones.size()*1.0f / 2000.0f);
@@ -99,24 +94,16 @@ public class BankServiceImpl implements IBankService {
             // 每天只预约2000个，多余的延后到明天这个时间点 继续拨打
             batchLog.setPickuptime(new Date(pickupDate.getTime() + 24*60*60*1000*k));
 
-            int mm = 0;
-            for (int i=0;i<2000;i++){
-                if (dbTmpPhones.size()<=i+2000*k){
+            List<String> listPhone = new ArrayList<>();
+            for (int i = 0; i < 2000; i++) {
+                if (queuePhone.size()==0){
                     break;
                 }
-                DBRecogs recogs = new DBRecogs();
-                recogs.setMerchid(merchid);
-                recogs.setBatchid(batchid);
-                recogs.setMobile(dbTmpPhones.get(i+2000*k).getPhone());
-                recogs.setCreatetime(createTime);
-                {
-
-                }
-                recogsMapper.insert(recogs);
-                mm ++;
+                listPhone.add(queuePhone.poll());
             }
-            batchLog.setTotalcount(mm);
+            batchLog.setTotalcount(listPhone.size());
             batchLogMapper.insert(batchLog);
+            cRecogsMapper.insertTmpPhoneToRecogsBatch(merchid, batchid, listPhone, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createTime));
         }
     }
     /**

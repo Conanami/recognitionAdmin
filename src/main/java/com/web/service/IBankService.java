@@ -2,6 +2,7 @@ package com.web.service;
 
 import com.web.dto.DtoDBRecogs;
 import mybatis.one.po.DBRecogs;
+import mybatis.two.po.DBMTMContact;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,7 @@ public interface IBankService {
      * @param list
      */
     public void  insertTmp(String merchid, List<String> list);
+
     /**
      * 批量插入手机号码
      * @param merchid
