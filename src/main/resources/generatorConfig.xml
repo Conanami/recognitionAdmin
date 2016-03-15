@@ -48,6 +48,7 @@
 
         <table  tableName="tmpPhone" domainObjectName="DBTmpPhone" />
         <table  tableName="zncontact" domainObjectName="DBZNContact" />
+        <table  tableName="importbatch" domainObjectName="DBImportBatch" />
     </context>
 
 

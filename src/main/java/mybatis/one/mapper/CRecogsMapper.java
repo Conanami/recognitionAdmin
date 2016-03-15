@@ -79,7 +79,7 @@ public interface CRecogsMapper {
      * 查询 兆能资产 需要写回的数据
      * @return
      */
-    public List<DBRecogs> queryRecogResult();
+    public List<DtoDBRecogs> queryRecogResult();
 
     /**
      * 查询临时电话号码表的数据， 过滤和 recogs 里面尚未拨打的电话号码重复的。

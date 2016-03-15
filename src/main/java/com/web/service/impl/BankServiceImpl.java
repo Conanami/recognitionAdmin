@@ -4,10 +4,7 @@ import com.common.exception.WException;
 import com.common.util.IopUtils;
 import com.web.dto.DtoDBRecogs;
 import com.web.service.IBankService;
-import mybatis.one.mapper.CRecogsMapper;
-import mybatis.one.mapper.DBBatchLogMapper;
-import mybatis.one.mapper.DBRecogsMapper;
-import mybatis.one.mapper.DBTmpPhoneMapper;
+import mybatis.one.mapper.*;
 import mybatis.one.po.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
@@ -38,6 +35,9 @@ public class BankServiceImpl implements IBankService {
 
     @Resource
     DBTmpPhoneMapper tmpPhoneMapper;
+
+    @Resource
+    DBImportBatchMapper importBatchMapper;
 
     /**
      * 将数据插入临时表
@@ -72,20 +72,22 @@ public class BankServiceImpl implements IBankService {
      * 从临时表获取数据 插入批次表，批次详情表
      * @param merchid
      */
-    public void insertMobiles(String merchid, Date pickupDate, String mark){
-
+    public void insertMobiles(String merchid, String importBatchid, Date pickupDate, String mark){
         List<String> dbTmpPhones = cRecogsMapper.selectTmpPhone(merchid);
-
         Date createTime = new Date();
-
         Queue<String> queuePhone=new LinkedList<>();
         queuePhone.addAll(dbTmpPhones);
 
         // 2000笔数据 定义为一个批次
         int count = (int) Math.ceil(dbTmpPhones.size()*1.0f / 2000.0f);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmmss");
         for (int k=0;k<count;k++){
-            String batchid = simpleDateFormat.format(new Date())+"_"+k+"_"+ RandomUtils.nextInt(100);
+            String batchid = importBatchid+"_"+k;
+            DBImportBatch importBatch = new DBImportBatch();
+            importBatch.setImportbatchid(importBatchid);
+            importBatch.setBatchid(batchid);
+            importBatch.setCreatetime(new Date());
+            importBatchMapper.insert(importBatch);
+
             DBBatchLog batchLog = new DBBatchLog();
             batchLog.setMerchid(merchid);
             batchLog.setBatchid(batchid);

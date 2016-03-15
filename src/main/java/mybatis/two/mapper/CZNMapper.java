@@ -16,6 +16,13 @@ public interface CZNMapper {
     public List<MTMDataDto> queryTel(@Param("casenostart") String casenostart );
     //查询 案件号以 casenostart 打头的
     public List<DBMTMContact> queryCase(@Param("casenostart") String casenostart );
+    // 更新联系人表里面的电话状态
+    public void updateMTMContactTelCk(@Param("case_no") String case_no
+                        ,@Param("serino") String serino
+                        ,@Param("result") String result);
+    public void updateMTMContactTel1Ck(@Param("case_no") String case_no
+            ,@Param("serino") String serino
+            ,@Param("result") String result);
 
     public List<Map<String, String>> queryContact(@Param("phonelikestring") String phonelikestring);
     public List<Map<String, String>> queryContact1(@Param("phonelikestring") String phonelikestring);

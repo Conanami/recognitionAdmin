@@ -1,5 +1,6 @@
 package com.web.task;
 
+import com.web.dto.DtoDBRecogs;
 import mybatis.one.mapper.CRecogsMapper;
 import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
@@ -110,62 +111,52 @@ public class BatchLogService {
 //        log.info("---------complete batchlog analysis---------");
     }
 
-
-    public  List<Map<String, String>> queryContact(String mobile){
-        List<Map<String, String>> dbmtmContacts = cznMapper.queryContact("%"+mobile);
-        List<Map<String, String>> dbmtmContacts1 = cznMapper.queryContact1("%"+mobile);
-        dbmtmContacts.addAll(dbmtmContacts1);
-
-        return dbmtmContacts;
-    }
-
     //将 识别完的数据，更新回 兆能资产的数据库
     @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
     public void updateZNDB(){
-        List<DBRecogs> list = cRecogsMapper.queryRecogResult();
+        List<DtoDBRecogs> list = cRecogsMapper.queryRecogResult();
         for (int i = 0; i < list.size(); i++) {
-            DBRecogs recogs = list.get(i);
-
-            log.info("will update mtmcontact phone: "+recogs.getMobile());
-            List<Map<String, String>> dbmtmContacts = queryContact(recogs.getMobile());
-            log.info("will update mtmcontact phone: "+recogs.getMobile()+" size: "+dbmtmContacts.size());
-
+            DtoDBRecogs recogs = list.get(i);
+            String result = "";
             switch (recogs.getResult()){
                 case 1:         //表示正常
-                    cznMapper.updateContact("019", "%"+recogs.getMobile());
+                    result = "019";
                     break;
                 case 2:         //欠费停机
-                    cznMapper.updateContact("006", "%"+recogs.getMobile());
+                    result = "006";
                     break;
                 case 3:         //空号
-                    cznMapper.updateContact("008", "%"+recogs.getMobile());
+                    result = "008";
                     break;
                 case 4:         //关机
-                    cznMapper.updateContact("012", "%"+recogs.getMobile());
+                    result = "012";
                     break;
+            }
+            //更新到联系人表 对应电话的 对应状态
+            if (recogs.getMobile().equals(recogs.getPtel())){
+                cznMapper.updateMTMContactTelCk(recogs.getCaseno(), recogs.getSerino(), result);
+            }
+            if (recogs.getMobile().equals(recogs.getPtel1())){
+                cznMapper.updateMTMContactTel1Ck(recogs.getCaseno(), recogs.getSerino(), result);
             }
 
             //更新对应状态记录
             recogs.setStatus(8);  //8代表已经写回数据库
             recogsMapper.updateByPrimaryKey(recogs);
 
-            for (Map<String, String> contact : dbmtmContacts) {
-                String case_no = contact.get("Case_No");
-                String Serino = contact.get("Serino");
-                contact = cznMapper.queryContactByCaseNo(case_no, Serino);
-
-                DBZNUpdateInfo dbznUpdateInfo = new DBZNUpdateInfo();
-                dbznUpdateInfo.setCaseno(contact.get("Case_No"));
-                dbznUpdateInfo.setPtel(contact.get("PTel"));
-                dbznUpdateInfo.setPtel1(contact.get("PTel1"));
-                dbznUpdateInfo.setTelck(contact.get("TelCK"));
-                dbznUpdateInfo.setTel1ck(contact.get("Tel1CK"));
-                dbznUpdateInfo.setPname(contact.get("PName"));
-                dbznUpdateInfo.setBatchid(recogs.getBatchid());
-                dbznUpdateInfo.setPhone(recogs.getMobile());
-                dbznUpdateInfo.setCreatetime(new Date());
-                znUpdateInfoMapper.insert(dbznUpdateInfo);
-            }
+            // 更新到 日志库
+            Map<String, String> contact = cznMapper.queryContactByCaseNo(recogs.getCaseno(), recogs.getSerino());
+            DBZNUpdateInfo dbznUpdateInfo = new DBZNUpdateInfo();
+            dbznUpdateInfo.setCaseno(contact.get("Case_No"));
+            dbznUpdateInfo.setPtel(contact.get("PTel"));
+            dbznUpdateInfo.setPtel1(contact.get("PTel1"));
+            dbznUpdateInfo.setTelck(contact.get("TelCK"));
+            dbznUpdateInfo.setTel1ck(contact.get("Tel1CK"));
+            dbznUpdateInfo.setPname(contact.get("PName"));
+            dbznUpdateInfo.setBatchid(recogs.getBatchid());
+            dbznUpdateInfo.setPhone(recogs.getMobile());
+            dbznUpdateInfo.setCreatetime(new Date());
+            znUpdateInfoMapper.insert(dbznUpdateInfo);
         }
     }
 }

@@ -109,14 +109,14 @@ public class ZNRestController {
         httpSession.setAttribute("api.zn.mobile.sync.message", "开始查询...");
 
         // 案件的 批次id
-        String caseBatchId = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+"_"+new RandomUtils().nextInt(1000);
+        String importBatchId = "zn"+new SimpleDateFormat("MMddHHmmss").format(new Date())+"_"+new RandomUtils().nextInt(10);
         {
             // 查询符合导入条件的案件
             List<DBMTMContact> list = cznMapper.queryCase(casenostart+"%");
             // 批量插入 本地案件表
-            cRecogsMapper.insertCaseBatch(caseBatchId, list);
+            cRecogsMapper.insertCaseBatch(importBatchId, list);
             //查询刚刚插入的案件的全部电话号码
-            List<MTMDataDto> mtmDataDtoList = cRecogsMapper.queryPhone(caseBatchId);
+            List<MTMDataDto> mtmDataDtoList = cRecogsMapper.queryPhone(importBatchId);
             //格式化电话号码
             List<String> listPhone = new ArrayList<>();
             for (int i = 0; i < mtmDataDtoList.size(); i++) {
@@ -137,7 +137,8 @@ public class ZNRestController {
             if (IopUtils.isEmpty(mark)){
                 mark = "兆能导入";
             }
-            bankService.insertMobiles(merchid, pickupDate, mark);
+            //从临时表获取数据 插入批次表，批次详情表
+            bankService.insertMobiles(merchid, importBatchId, pickupDate, mark);
         }
 
         response.setRespDescription("取得电话号码成功");

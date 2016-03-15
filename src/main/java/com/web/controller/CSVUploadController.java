@@ -135,6 +135,8 @@ public class CSVUploadController {
                 listPhone.add(mobile);
             }
         }
+        // 案件的 批次id
+        String importBatchId = "up"+new SimpleDateFormat("MMddHHmmss").format(new Date())+"_"+new RandomUtils().nextInt(10);
         {
             //先清空 临时表里面 当前商户的 数据
             DBTmpPhoneExample example = new DBTmpPhoneExample();
@@ -149,7 +151,7 @@ public class CSVUploadController {
         if (IopUtils.isNotEmpty(pickuptime)){
             pickupDate = sdf.parse(pickuptime);
         }
-        bankService.insertMobiles(merchid, pickupDate, mark);
+        bankService.insertMobiles(merchid, importBatchId, pickupDate, mark);
         WSResponse<Boolean> response = new WSResponse<>();
         response.setRespDescription("批量提交手机号码 "+listPhone.size()+" 条 成功");
         return response;
