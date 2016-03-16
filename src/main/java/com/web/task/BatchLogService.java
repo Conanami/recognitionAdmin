@@ -111,9 +111,9 @@ public class BatchLogService {
 //        log.info("---------complete batchlog analysis---------");
     }
 
-    //将 识别完的数据，更新回 兆能资产的数据库
+    //将 识别完的数据，更新回 兆能资产的数据库 联系人表
     @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
-    public void updateZNDB(){
+    public void updateZNContact(){
         List<DtoDBRecogs> list = cRecogsMapper.queryRecogResult();
         for (int i = 0; i < list.size(); i++) {
             DtoDBRecogs recogs = list.get(i);
@@ -158,5 +158,12 @@ public class BatchLogService {
             dbznUpdateInfo.setCreatetime(new Date());
             znUpdateInfoMapper.insert(dbznUpdateInfo);
         }
+    }
+
+    // 更新案件状态
+    @Scheduled(fixedRate = 4*60*1000)   //每4分钟执行一次
+    public void updateZNCaseStatus(){
+        List<DBZNContact> list = cRecogsMapper.selectForDebtorStatus();
+
     }
 }

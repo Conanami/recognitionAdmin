@@ -4,6 +4,7 @@ import com.web.dto.DtoDBRecogs;
 import com.web.dto.MTMDataDto;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBTmpPhone;
+import mybatis.one.po.DBZNContact;
 import mybatis.two.po.DBMTMContact;
 import org.apache.ibatis.annotations.Param;
 
@@ -61,7 +62,7 @@ public interface CRecogsMapper {
      * @param batchid
      * @param list
      */
-    public void insertCaseBatch(@Param("batchid") String batchid,
+    public int insertCaseBatch(@Param("batchid") String batchid,
                                 @Param("list") List<DBMTMContact> list);
 
     /**
@@ -71,6 +72,8 @@ public interface CRecogsMapper {
      */
     public List<MTMDataDto> queryPhone(@Param("batchid") String batchid);
 
+    //删除临时表里面 某商户的全部数据
+    public int deleteTmpPhoneByMerchId(@Param("merchid") String merchid);
     //将电话号码批量插入临时表
     public void insertTmpPhoneBatch(@Param("merchid") String merchid
             , @Param("list") List<String> listPhone);
@@ -93,4 +96,7 @@ public interface CRecogsMapper {
             , @Param("batchid") String batchid
             , @Param("list") List<String> list
             , @Param("createtime") String createtime);
+
+    //查询 债务人状态
+    public List<DBZNContact> selectForDebtorStatus();
 }

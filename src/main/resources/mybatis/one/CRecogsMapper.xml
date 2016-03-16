@@ -128,15 +128,15 @@
 
     <!--  批量插入案件 -->
     <insert id="insertCaseBatch">
-        insert into zncontact ( batchid, caseno, serino,
+        insert into zncontact ( importbatchid, caseno, serino,
         prelation, pname, ptel, telck,
         ptel1, tel1ck ) values
         <foreach collection="list" item="item" index="index"
                  separator=",">
-            ( ${batchid}, #{item.Case_No}, #{item.Serino},
-            #{item.PRelation}, #{item.PName},
-            #{item.PTel}, #{item.TelCK},
-            #{item.PTel1}, #{item.Tel1CK} )
+            ( '${batchid}', #{item.caseNo}, #{item.serino},
+            #{item.prelation}, #{item.pname},
+            #{item.ptel}, #{item.telck},
+          #{item.ptel1}, #{item.tel1ck} )
         </foreach>
     </insert>
 
@@ -144,16 +144,21 @@
     <select id="queryPhone" resultType="com.web.dto.MTMDataDto">
         SELECT DISTINCT a.* FROM
         (
-        SELECT DISTINCT ptel as phone, caseno FROM zncontact  WHERE batchid=#{batchid}
+        SELECT DISTINCT ptel as phone, caseno FROM zncontact  WHERE importbatchid=#{batchid}
         UNION
-        SELECT DISTINCT ptel1 as phone, caseno FROM zncontact  WHERE batchid=#{batchid}
+        SELECT DISTINCT ptel1 as phone, caseno FROM zncontact  WHERE importbatchid=#{batchid}
         ) as a  WHERE ISNULL(a.phone)=FALSE AND a.phone &lt;&gt;  ''
         ORDER BY a.caseno
     </select>
 
-    <!--  将各个批量插入的案件 的电话号码，批量写入 临时表 DELETE FROM  tmpphone WHERE  merchid=${merchid}; -->
+    <!--  删除临时表里面，某商户的全部数据 -->
+    <delete id="deleteTmpPhoneByMerchId">
+        DELETE FROM tmpPhone WHERE merchid=#{merchid}
+    </delete>
+
+    <!--  将各个批量插入的案件 的电话号码，批量写入 临时表 -->
     <insert id="insertTmpPhoneBatch">
-        insert into tmpphone ( merchid, phone ) values
+        insert into tmpPhone ( merchid, phone ) values
         <foreach collection="list" item="item" index="index"
                  separator=",">
             ( ${merchid}, #{item} )
@@ -168,7 +173,7 @@
         FROM
             recogs a
         LEFT JOIN importbatch b ON a.batchid = b.batchid
-        LEFT JOIN zncontact c ON b.importbatchid = c.batchid
+        LEFT JOIN zncontact c ON b.importbatchid = c.importbatchid
         WHERE
             1 = 1
         AND (c.ptel=a.mobile OR c.ptel1=a.mobile)
@@ -215,5 +220,17 @@
     </insert>
 
 
+    <!--  查询债务人案件状态  -->
+    <select id="selectForDebtorStatus" resultType="mybatis.one.po.DBZNContact">
+        SELECT DISTINCT seqid, caseno,importbatchid, serino, categorize2 FROM zncontact  WHERE prelation='0'
+            AND (ISNULL(categorize2) OR categorize2='')
+            AND ( telck &lt;&gt;  '' OR tel1ck &lt;&gt;  '' )
+    </select>
+
+    <!--  查询债务人可以联系上的  -->
+    <select id="countForStatusA">
+        select COUNT(b.*) from zncontact b where b.prelation=0
+          and ( b.telck='019' or b.tel1ck='019'  or   b.telck='012' or b.tel1ck='012') and caseno=#{caseno}
+    </select>
 
 </mapper>

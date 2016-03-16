@@ -105,41 +105,21 @@ public class ZNRestController {
             merchid = username;
         }
 
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date pickupDate = new Date();
+        if (IopUtils.isNotEmpty(pickuptime)){
+            pickupDate = sdf.parse(pickuptime);
+        }
+        if (IopUtils.isEmpty(mark)){
+            mark = "兆能导入";
+        }
+
         WSResponse<Boolean> response = new WSResponse<>();
         httpSession.setAttribute("api.zn.mobile.sync.message", "开始查询...");
 
-        // 案件的 批次id
-        String importBatchId = "zn"+new SimpleDateFormat("MMddHHmmss").format(new Date())+"_"+new RandomUtils().nextInt(10);
-        {
-            // 查询符合导入条件的案件
-            List<DBMTMContact> list = cznMapper.queryCase(casenostart+"%");
-            // 批量插入 本地案件表
-            cRecogsMapper.insertCaseBatch(importBatchId, list);
-            //查询刚刚插入的案件的全部电话号码
-            List<MTMDataDto> mtmDataDtoList = cRecogsMapper.queryPhone(importBatchId);
-            //格式化电话号码
-            List<String> listPhone = new ArrayList<>();
-            for (int i = 0; i < mtmDataDtoList.size(); i++) {
-                MTMDataDto dataDto = mtmDataDtoList.get(i);
-                String phone = formatPhone(dataDto.getPhone());
-                if (IopUtils.isNotEmpty(phone)){
-                    listPhone.add(phone);
-                }
-            }
-            //将数据全部插入临时表
-            cRecogsMapper.insertTmpPhoneBatch(merchid, listPhone);
-            // 从临时表 读取 和 recogs表里面尚未拨打电话不重复的 电话号码，创建新批次写入 recogs表
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-            Date pickupDate = new Date();
-            if (IopUtils.isNotEmpty(pickuptime)){
-                pickupDate = sdf.parse(pickuptime);
-            }
-            if (IopUtils.isEmpty(mark)){
-                mark = "兆能导入";
-            }
-            //从临时表获取数据 插入批次表，批次详情表
-            bankService.insertMobiles(merchid, importBatchId, pickupDate, mark);
-        }
+        bankService.importFromZN(merchid, casenostart, pickupDate, mark);
+
+        httpSession.removeAttribute("api.zn.mobile.sync.message");
 
         response.setRespDescription("取得电话号码成功");
         return response;

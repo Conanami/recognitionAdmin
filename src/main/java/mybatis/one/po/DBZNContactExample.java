@@ -254,73 +254,73 @@ public class DBZNContactExample {
             return (Criteria) this;
         }
 
-        public Criteria andBatchidIsNull() {
-            addCriterion("batchid is null");
+        public Criteria andImportbatchidIsNull() {
+            addCriterion("importbatchid is null");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidIsNotNull() {
-            addCriterion("batchid is not null");
+        public Criteria andImportbatchidIsNotNull() {
+            addCriterion("importbatchid is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidEqualTo(String value) {
-            addCriterion("batchid =", value, "batchid");
+        public Criteria andImportbatchidEqualTo(String value) {
+            addCriterion("importbatchid =", value, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidNotEqualTo(String value) {
-            addCriterion("batchid <>", value, "batchid");
+        public Criteria andImportbatchidNotEqualTo(String value) {
+            addCriterion("importbatchid <>", value, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidGreaterThan(String value) {
-            addCriterion("batchid >", value, "batchid");
+        public Criteria andImportbatchidGreaterThan(String value) {
+            addCriterion("importbatchid >", value, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidGreaterThanOrEqualTo(String value) {
-            addCriterion("batchid >=", value, "batchid");
+        public Criteria andImportbatchidGreaterThanOrEqualTo(String value) {
+            addCriterion("importbatchid >=", value, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidLessThan(String value) {
-            addCriterion("batchid <", value, "batchid");
+        public Criteria andImportbatchidLessThan(String value) {
+            addCriterion("importbatchid <", value, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidLessThanOrEqualTo(String value) {
-            addCriterion("batchid <=", value, "batchid");
+        public Criteria andImportbatchidLessThanOrEqualTo(String value) {
+            addCriterion("importbatchid <=", value, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidLike(String value) {
-            addCriterion("batchid like", value, "batchid");
+        public Criteria andImportbatchidLike(String value) {
+            addCriterion("importbatchid like", value, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidNotLike(String value) {
-            addCriterion("batchid not like", value, "batchid");
+        public Criteria andImportbatchidNotLike(String value) {
+            addCriterion("importbatchid not like", value, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidIn(List<String> values) {
-            addCriterion("batchid in", values, "batchid");
+        public Criteria andImportbatchidIn(List<String> values) {
+            addCriterion("importbatchid in", values, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidNotIn(List<String> values) {
-            addCriterion("batchid not in", values, "batchid");
+        public Criteria andImportbatchidNotIn(List<String> values) {
+            addCriterion("importbatchid not in", values, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidBetween(String value1, String value2) {
-            addCriterion("batchid between", value1, value2, "batchid");
+        public Criteria andImportbatchidBetween(String value1, String value2) {
+            addCriterion("importbatchid between", value1, value2, "importbatchid");
             return (Criteria) this;
         }
 
-        public Criteria andBatchidNotBetween(String value1, String value2) {
-            addCriterion("batchid not between", value1, value2, "batchid");
+        public Criteria andImportbatchidNotBetween(String value1, String value2) {
+            addCriterion("importbatchid not between", value1, value2, "importbatchid");
             return (Criteria) this;
         }
 
@@ -884,8 +884,78 @@ public class DBZNContactExample {
             return (Criteria) this;
         }
 
-        public Criteria andBatchidLikeInsensitive(String value) {
-            addCriterion("upper(batchid) like", value.toUpperCase(), "batchid");
+        public Criteria andCategorize2IsNull() {
+            addCriterion("categorize2 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2IsNotNull() {
+            addCriterion("categorize2 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2EqualTo(String value) {
+            addCriterion("categorize2 =", value, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2NotEqualTo(String value) {
+            addCriterion("categorize2 <>", value, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2GreaterThan(String value) {
+            addCriterion("categorize2 >", value, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2GreaterThanOrEqualTo(String value) {
+            addCriterion("categorize2 >=", value, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2LessThan(String value) {
+            addCriterion("categorize2 <", value, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2LessThanOrEqualTo(String value) {
+            addCriterion("categorize2 <=", value, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2Like(String value) {
+            addCriterion("categorize2 like", value, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2NotLike(String value) {
+            addCriterion("categorize2 not like", value, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2In(List<String> values) {
+            addCriterion("categorize2 in", values, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2NotIn(List<String> values) {
+            addCriterion("categorize2 not in", values, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2Between(String value1, String value2) {
+            addCriterion("categorize2 between", value1, value2, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2NotBetween(String value1, String value2) {
+            addCriterion("categorize2 not between", value1, value2, "categorize2");
+            return (Criteria) this;
+        }
+
+        public Criteria andImportbatchidLikeInsensitive(String value) {
+            addCriterion("upper(importbatchid) like", value.toUpperCase(), "importbatchid");
             return (Criteria) this;
         }
 
@@ -926,6 +996,11 @@ public class DBZNContactExample {
 
         public Criteria andTel1ckLikeInsensitive(String value) {
             addCriterion("upper(tel1ck) like", value.toUpperCase(), "tel1ck");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategorize2LikeInsensitive(String value) {
+            addCriterion("upper(categorize2) like", value.toUpperCase(), "categorize2");
             return (Criteria) this;
         }
     }

@@ -9,13 +9,8 @@ import java.util.List;
 
 public interface IBankService {
 
-    /**
-     * 将数据插入临时表
-     * @param merchid
-     * @param list
-     */
-    public void  insertTmp(String merchid, List<String> list);
-
+    // 从兆能资产读取数据写入本地
+    public void importFromZN(String merchid, String casenostart, Date pickupDate, String mark);
     /**
      * 批量插入手机号码
      * @param merchid
