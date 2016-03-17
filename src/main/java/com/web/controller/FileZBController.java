@@ -237,6 +237,10 @@ public class FileZBController {
             log.info("文件类型: " + multifile.getContentType());
             log.info("文件名称: " + multifile.getName());
             log.info("文件原名: " + multifile.getOriginalFilename());
+            //判断 文件大小
+            if (multifile.getSize() < 100*1024){
+                throw new WException(500).setMessage("录音文件大小不够，需要重新拨打");
+            }
 
             //保存文件
             String realName = multifile.getOriginalFilename();

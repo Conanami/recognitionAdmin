@@ -2,6 +2,8 @@ package com.web.task;
 
 import mybatis.one.mapper.DBImgZBMapper;
 import mybatis.one.mapper.DBRecogsMapper;
+import mybatis.one.po.DBImgZB;
+import mybatis.one.po.DBImgZBExample;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBRecogsExample;
 import org.slf4j.Logger;
@@ -34,7 +36,7 @@ public class RecogTaskService {
     /**
      * 扫描领取超过1分钟没有拨打成功的电话
      */
-    @Scheduled(cron="0 0/3 * * * ?")   //每5分钟执行一次
+    @Scheduled(cron="0 0/3 * * * ?")   //每3分钟执行一次
     public void runSacanWaitCalling(){
         DBRecogsExample example = new DBRecogsExample();
         example.createCriteria().andStatusEqualTo(2);  // 1 表示 尚未领取 ，2  表示已经领取， 3 表示 已经拨打， 4 表示 已经识别。
@@ -48,6 +50,12 @@ public class RecogTaskService {
 //                log.info(recogs.getMobile()+" 状态由 已经领取 变更为 尚未领取");
             }
         }
+    }
+
+    // 处理上传录音长度不够的电话
+    @Scheduled(cron="0 0/30 * * * ?")   //每30分钟执行一次
+    public void runSacanWaitCalling2(){
+
     }
 
     /**
