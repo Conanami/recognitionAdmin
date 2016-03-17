@@ -41,15 +41,15 @@
         <!--
         <table  tableName="recogs" domainObjectName="DBRecogs" />
         <table  tableName="batchlog" domainObjectName="DBBatchLog" />
-        <table  tableName="imgzb" domainObjectName="DBImgZB" />
         <table  tableName="devicelog" domainObjectName="DBDeviceLog" />
         <table  tableName="znupdateinfo" domainObjectName="DBZNUpdateInfo" />
         <table  tableName="tmpPhone" domainObjectName="DBTmpPhone" />
         <table  tableName="importbatch" domainObjectName="DBImportBatch" />
-        -->
-
         <table  tableName="zncontact" domainObjectName="DBZNContact" />
         <table  tableName="zncasedata" domainObjectName="DBZNCaseData" />
+        -->
+        <table  tableName="imgzb" domainObjectName="DBImgZB" />
+
     </context>
 
 

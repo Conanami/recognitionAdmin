@@ -805,6 +805,66 @@ public class DBImgZBExample {
             return (Criteria) this;
         }
 
+        public Criteria andFilesizeIsNull() {
+            addCriterion("filesize is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeIsNotNull() {
+            addCriterion("filesize is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeEqualTo(Long value) {
+            addCriterion("filesize =", value, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeNotEqualTo(Long value) {
+            addCriterion("filesize <>", value, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeGreaterThan(Long value) {
+            addCriterion("filesize >", value, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeGreaterThanOrEqualTo(Long value) {
+            addCriterion("filesize >=", value, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeLessThan(Long value) {
+            addCriterion("filesize <", value, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeLessThanOrEqualTo(Long value) {
+            addCriterion("filesize <=", value, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeIn(List<Long> values) {
+            addCriterion("filesize in", values, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeNotIn(List<Long> values) {
+            addCriterion("filesize not in", values, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeBetween(Long value1, Long value2) {
+            addCriterion("filesize between", value1, value2, "filesize");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilesizeNotBetween(Long value1, Long value2) {
+            addCriterion("filesize not between", value1, value2, "filesize");
+            return (Criteria) this;
+        }
+
         public Criteria andImagenameLikeInsensitive(String value) {
             addCriterion("upper(imagename) like", value.toUpperCase(), "imagename");
             return (Criteria) this;

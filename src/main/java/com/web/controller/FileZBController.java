@@ -214,7 +214,7 @@ public class FileZBController {
 
     /**
      * 录音文件上传
-     * @param file
+     * @param multifile
      * @param project
      * @param request
      * @param httpSession
@@ -223,28 +223,28 @@ public class FileZBController {
      */
     @RequestMapping("api.audio.file.upload")
     public WSResponse<String> uploadAudioFile(
-            @RequestParam(value = "file", required = true) MultipartFile file,
+            @RequestParam(value = "file", required = true) MultipartFile multifile,
             @RequestParam(value = "project", required = true) String project,
             @RequestParam(value = "merchid", required = true) String merchid,
             @RequestParam(value = "batchid", required = true) String batchid,
             HttpServletRequest request, HttpSession httpSession) throws Exception{
         WSResponse<String> response = new WSResponse<>();
-        if (file.isEmpty()) {
+        if (multifile.isEmpty()) {
             throw new WException(500).setMessage("文件未上传");
         } else {
             log.info("文件上传开始===================");
-            log.info("文件长度: " + file.getSize());
-            log.info("文件类型: " + file.getContentType());
-            log.info("文件名称: " + file.getName());
-            log.info("文件原名: " + file.getOriginalFilename());
+            log.info("文件长度: " + multifile.getSize());
+            log.info("文件类型: " + multifile.getContentType());
+            log.info("文件名称: " + multifile.getName());
+            log.info("文件原名: " + multifile.getOriginalFilename());
 
             //保存文件
-            String realName = file.getOriginalFilename();
+            String realName = multifile.getOriginalFilename();
             String suffix = realName.substring(realName.indexOf(".")+1,
                     realName.length()).toLowerCase();
 
             String filename = realName.substring(0, realName.indexOf("."))+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ RandomUtils.nextInt(10000);
-            FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
+            FileUtils.copyInputStreamToFile(multifile.getInputStream(), new File(
                     imageserverUrl+project+File.separator+merchid+File.separator+batchid+File.separator, filename+"."+suffix));
 
             DBImgZB img = new DBImgZB();
@@ -255,6 +255,7 @@ public class FileZBController {
             img.setSuffix(suffix);
             img.setOldname(realName);
             img.setRemark("");
+            img.setFilesize(multifile.getSize());
             img.setCreatetime(new Date());
             zbmapper.insert(img);
 
