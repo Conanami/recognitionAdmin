@@ -159,12 +159,12 @@
 
     <!--  删除临时表里面，某商户的全部数据 -->
     <delete id="deleteTmpPhoneByMerchId">
-        DELETE FROM tmpPhone WHERE merchid=#{merchid}
+        DELETE FROM tmpphone WHERE merchid=#{merchid}
     </delete>
 
     <!--  将各个批量插入的案件 的电话号码，批量写入 临时表 -->
     <insert id="insertTmpPhoneBatch">
-        insert into tmpPhone ( merchid, phone ) values
+        insert into tmpphone ( merchid, phone ) values
         <foreach collection="list" item="item" index="index"
                  separator=",">
             ( '${merchid}', #{item} )
@@ -202,7 +202,7 @@
         SELECT
             a.phone
         FROM
-            tmpPhone a
+            tmpphone a
         WHERE
             merchid = #{merchid} AND
             a.phone NOT IN (
