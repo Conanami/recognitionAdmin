@@ -36,14 +36,6 @@
         update mtmcontact set Tel1Ck=#{result} where case_no = #{case_no} AND serino = #{serino}
     </update>
 
-    <select id="queryContact" resultType="java.util.Map">
-        SELECT * FROM MTMContact WHERE PTel LIKE #{phonelikestring} AND (TelCk=NULL or TelCk='')
-    </select>
-
-    <select id="queryContact1" resultType="java.util.Map">
-        SELECT * FROM MTMContact WHERE PTel1 LIKE #{phonelikestring} AND (Tel1Ck=NULL or Tel1Ck='')
-    </select>
-
     <select id="queryContactByCaseNo" resultType="java.util.Map">
         SELECT * FROM MTMContact WHERE case_no = #{case_no} AND serino = #{serino}
     </select>
@@ -53,5 +45,27 @@
         update mtmcontact set TelCk=#{result} where ptel like #{phonelikestring} and (TelCk=NULL or TelCk='')
         update mtmcontact set Tel1Ck=#{result}  where ptel1 like #{phonelikestring} and (Tel1Ck=NULL or Tel1Ck='')
     </select>
+
+    <!-- 批量更新 兆能 联系人表  MTMContact -->
+    <update id="batchUpdateMTMContact" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update MTMContact
+            <set>
+                TelCk=#{item.telck}, Tel1Ck=#{item.tel1ck}
+            </set>
+            where case_no = '${item.caseno}' AND serino = '${item.serino}'
+        </foreach>
+    </update>
+
+    <!-- 批量更新 兆能 案件表  MTMCaseData -->
+    <update id="batchUpdateMTMCaseData" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update MTMCaseData
+            <set>
+                categorize2='${item.categorize2}'
+            </set>
+            where case_no = '${item.caseno}'
+        </foreach>
+    </update>
 
 </mapper>

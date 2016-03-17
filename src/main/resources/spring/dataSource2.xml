@@ -14,7 +14,7 @@
 	<!-- 配置数据源-->
 	<bean id="twoDataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
 		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
-		<property name="url" value="jdbc:sqlserver://192.168.0.18:1433;database=Prometheus;integratedSecurity=false" />
+		<property name="url" value="jdbc:sqlserver://192.168.0.18:1433;database=Prometheus;integratedSecurity=false;allowMultiQueries=true" />
 		<property name="username" value="ZH" />
 		<property name="password" value="ZH" />
 		<property name="maxActive" value="300" />

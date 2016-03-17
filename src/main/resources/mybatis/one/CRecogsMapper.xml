@@ -126,7 +126,7 @@
     </select>
 
 
-    <!--  批量插入案件 -->
+    <!--  批量插入案件详情 -->
     <insert id="insertCaseBatch">
         insert into zncontact ( importbatchid, caseno, serino,
         prelation, pname, ptel, telck,
@@ -138,6 +138,12 @@
             #{item.ptel}, #{item.telck},
           #{item.ptel1}, #{item.tel1ck} )
         </foreach>
+    </insert>
+
+    <!--  批量插入案件 -->
+    <insert id="insertCaseData">
+        INSERT INTO zncasedata (caseno, createtime)
+        ( SELECT DISTINCT  caseno, NOW() as createtime FROM zncontact WHERE caseno not in (SELECT caseno FROM zncasedata)  )
     </insert>
 
     <!--  查询批量案件中的电话号码，过滤重复 -->
@@ -161,11 +167,11 @@
         insert into tmpPhone ( merchid, phone ) values
         <foreach collection="list" item="item" index="index"
                  separator=",">
-            ( ${merchid}, #{item} )
+            ( '${merchid}', #{item} )
         </foreach>
     </insert>
 
-    <!-- 查询兆能资产 需要写回的数据 -->
+    <!-- 查询电话号码的识别结果，  需要写回 zncontact 的数据 -->
     <select id="queryRecogResult" resultType="com.web.dto.DtoDBRecogs">
         SELECT DISTINCT
             a.*, c.caseno,
@@ -219,18 +225,58 @@
         </foreach>
     </insert>
 
-
-    <!--  查询债务人案件状态  -->
-    <select id="selectForDebtorStatus" resultType="mybatis.one.po.DBZNContact">
-        SELECT DISTINCT seqid, caseno,importbatchid, serino, categorize2 FROM zncontact  WHERE prelation='0'
-            AND (ISNULL(categorize2) OR categorize2='')
-            AND ( telck &lt;&gt;  '' OR tel1ck &lt;&gt;  '' )
+    <!--  A：债务人可以联系上  债务人有 019 暂不接听或者 012 关机的  -->
+    <select id="countForStatusA" resultType="java.lang.Integer">
+        select COUNT(*) from zncontact b where b.prelation=0
+            and ( b.telck='019' or b.tel1ck='019'  or   b.telck='012' or b.tel1ck='012') and caseno=#{caseno}
     </select>
 
-    <!--  查询债务人可以联系上的  -->
-    <select id="countForStatusA">
-        select COUNT(b.*) from zncontact b where b.prelation=0
-          and ( b.telck='019' or b.tel1ck='019'  or   b.telck='012' or b.tel1ck='012') and caseno=#{caseno}
+    <!-- B:  债务人联系不上，联系人可以联系上 ,  联系人有019 暂不接听的-->
+    <select id="countForStatusB" resultType="java.lang.Integer">
+        select COUNT(*) from zncontact b where b.prelation!=0
+            and ( b.telck='019' or b.tel1ck='019' )  and caseno=#{caseno}
     </select>
+
+    <select id="selectNoRecogContactCase" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM zncontact WHERE seqstatus &lt;&gt; '101' AND caseno =#{caseno}
+    </select>
+
+    <!-- C：债务人联系不上，联系人也没有可接通，只有关机 ，  联系人有 012 关机的-->
+    <select id="countForStatusC" resultType="java.lang.Integer">
+        select COUNT(*) from zncontact b where b.prelation!=0
+            and ( b.telck='012' or b.tel1ck='012' )  and caseno=#{caseno}
+    </select>
+
+    <!-- D: 债务人联系不上，联系人连关机都没有，全部停机，  联系人没有 012 关机的 -->
+    <select id="countForStatusD">
+    </select>
+
+    <!--  查询可以待写回 兆能资产 的 联系人记录   -->
+    <select id="selectZNContactResult" resultType="mybatis.one.po.DBZNContact">
+        SELECT * FROM zncontact WHERE `seqstatus`='101'
+    </select>
+
+    <!--  查询可以待写回 兆能资产 的 案件状态记录   -->
+    <select id="selectZNCaseDataResult" resultType="mybatis.one.po.DBZNCaseData">
+        SELECT * FROM zncasedata WHERE ISNULL(`status`) AND  (ISNULL(categorize2)=FALSE AND categorize2  &lt;&gt; '' )
+    </select>
+
+    <!-- 批量更新 映射 联系人表  zncontact   暂时作废-->
+    <update id="batchUpdateZNContactStatus" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE zncontact SET seqstatus = '201' WHERE caseno = '${item.caseno}' AND serino = '${item.serino}'
+        </foreach>
+    </update>
+
+    <!-- 批量更新 映射 案件表  zncasedata   暂时作废 -->
+    <update id="batchUpdateZNCaseDataStatus" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update zncasedata
+            <set>
+                seqstatus = '201'
+            </set>
+            where caseno = #{item.caseno}
+        </foreach>
+    </update>
 
 </mapper>

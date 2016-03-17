@@ -1,6 +1,8 @@
 package mybatis.two.mapper;
 
 import com.web.dto.MTMDataDto;
+import mybatis.one.po.DBZNCaseData;
+import mybatis.one.po.DBZNContact;
 import mybatis.two.po.DBMTMCaseData;
 import mybatis.two.po.DBMTMContact;
 import org.apache.ibatis.annotations.Param;
@@ -33,4 +35,9 @@ public interface CZNMapper {
 
     public void updateContact(@Param("result") String result,
                               @Param("phonelikestring") String phonelikestring);
+
+    //批量更新 兆能 联系人表  MTMContact
+    public int batchUpdateMTMContact(@Param("list") List<DBZNContact> list);
+    // 批量更新 兆能 案件表  MTMCaseData
+    public int batchUpdateMTMCaseData(@Param("list") List<DBZNCaseData> list);
 }

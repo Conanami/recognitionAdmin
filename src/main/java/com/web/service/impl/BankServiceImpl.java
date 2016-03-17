@@ -48,15 +48,21 @@ public class BankServiceImpl implements IBankService {
 
 
     // 同步兆能数据
-    public void importFromZN(String merchid, String casenostart, Date pickupDate, String mark){
+    public void importFromZN(String merchid, String casenostart, Date pickupDate, String mark) throws WException{
         // 案件的 批次id
         String importBatchId = "zn"+new SimpleDateFormat("MMddHHmmss").format(new Date())+"_"+new RandomUtils().nextInt(10);
         // 查询符合导入条件的案件
         List<DBMTMContact> list = cznMapper.queryCase(casenostart+"%");
         log.info("query case :"+list.size());
+        if (list.size()==0){
+            //没有案件可以导入
+            throw new WException(500).setMessage("没有符合条件的数据可以导入");
+        }
         // 批量插入 本地案件表
         int s1 = cRecogsMapper.insertCaseBatch(importBatchId, list);
         log.info("batch insert to zncontact:"+s1);
+        int s2 = cRecogsMapper.insertCaseData();
+        log.info("batch insert to zncasedata:"+s2);
         //查询刚刚插入的案件的全部电话号码
         List<MTMDataDto> mtmDataDtoList = cRecogsMapper.queryPhone(importBatchId);
         log.info("query zncontact distinct:"+mtmDataDtoList.size());

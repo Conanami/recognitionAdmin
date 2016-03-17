@@ -57,6 +57,7 @@ public class ZNRestController {
     public WSResponse<Boolean> exceptionHandler(Exception ex, HttpSession httpSession) {
         WSResponse<Boolean> response = new WSResponse<>();
         log.error("Exception异常：" + ex);
+        httpSession.removeAttribute("api.zn.mobile.sync.message");
         ExceptionFormatter.setResponse(response, ex);
         return response;
     }

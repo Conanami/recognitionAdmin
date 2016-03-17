@@ -1,17 +1,11 @@
 package com.web.task;
 
+import com.common.util.IopUtils;
 import com.web.dto.DtoDBRecogs;
-import mybatis.one.mapper.CRecogsMapper;
-import mybatis.one.mapper.DBBatchLogMapper;
-import mybatis.one.mapper.DBRecogsMapper;
-import mybatis.one.mapper.DBZNUpdateInfoMapper;
+import mybatis.one.mapper.*;
 import mybatis.one.po.*;
 import mybatis.two.mapper.CZNMapper;
 import mybatis.two.mapper.DBMTMContactMapper;
-import mybatis.two.po.DBMTMCaseData;
-import mybatis.two.po.DBMTMCaseDataExample;
-import mybatis.two.po.DBMTMContact;
-import mybatis.two.po.DBMTMContactExample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -47,6 +41,12 @@ public class BatchLogService {
 
     @Resource
     DBZNUpdateInfoMapper znUpdateInfoMapper;
+
+    @Resource
+    DBZNContactMapper localContactMapper;
+
+    @Resource
+    DBZNCaseDataMapper caseDataMapper;
 
     @Scheduled(fixedRate = 3*60*1000)   //每5分钟执行一次
     public void run(){
@@ -132,38 +132,96 @@ public class BatchLogService {
                     result = "012";
                     break;
             }
-            //更新到联系人表 对应电话的 对应状态
-            if (recogs.getMobile().equals(recogs.getPtel())){
-                cznMapper.updateMTMContactTelCk(recogs.getCaseno(), recogs.getSerino(), result);
+            // 更新对应号码识别状态到 zncontact 表
+            {
+                DBZNContactExample example = new DBZNContactExample();
+                example.createCriteria().andCasenoEqualTo(recogs.getCaseno()).andSerinoEqualTo(recogs.getSerino());
+                List<DBZNContact> list1 = localContactMapper.selectByExample(example);
+                for (DBZNContact dbznContact : list1) {
+                    if (recogs.getMobile().equals(dbznContact.getPtel())){
+                        dbznContact.setTelck(result);
+                    }
+                    if (recogs.getMobile().equals(dbznContact.getPtel1())) {
+                        dbznContact.setTel1ck(result);
+                    }
+                    boolean pass = false;
+                    pass = pass ||  ( IopUtils.isNotEmpty(dbznContact.getPtel()) && IopUtils.isEmpty(dbznContact.getTelck()) );
+                    pass = pass ||  ( IopUtils.isNotEmpty(dbznContact.getPtel1()) && IopUtils.isEmpty(dbznContact.getTel1ck()) );
+                    if (!pass){
+                        dbznContact.setSeqstatus("101");//如果 联系人的号码都被识别过了。状态变成101
+                    }
+                    localContactMapper.updateByPrimaryKey(dbznContact);
+
+                    //写入日志
+                    DBZNUpdateInfo dbznUpdateInfo = new DBZNUpdateInfo();
+                    dbznUpdateInfo.setCaseno(dbznContact.getCaseno());
+                    dbznUpdateInfo.setPtel(dbznContact.getPtel());
+                    dbznUpdateInfo.setPtel1(dbznContact.getPtel1());
+                    dbznUpdateInfo.setTelck(dbznContact.getTelck());
+                    dbznUpdateInfo.setTel1ck(dbznContact.getTel1ck());
+                    dbznUpdateInfo.setPname(dbznContact.getPname());
+                    dbznUpdateInfo.setBatchid(recogs.getBatchid());
+                    dbznUpdateInfo.setPhone(recogs.getMobile());
+                    dbznUpdateInfo.setCreatetime(new Date());
+                    znUpdateInfoMapper.insert(dbznUpdateInfo);
+                }
             }
-            if (recogs.getMobile().equals(recogs.getPtel1())){
-                cznMapper.updateMTMContactTel1Ck(recogs.getCaseno(), recogs.getSerino(), result);
+
+            // 识别 案件的状态
+            {
+                DBZNCaseData caseData = caseDataMapper.selectByPrimaryKey(recogs.getCaseno());
+                // 如果案件还没有识别状态
+                if (IopUtils.isEmpty(caseData.getCategorize2())){
+                    if (cRecogsMapper.selectNoRecogContactCase(recogs.getCaseno())==0 ){
+                        int asize = cRecogsMapper.countForStatusA(recogs.getCaseno());
+                        if (asize>0){
+                            caseData.setCategorize2("A");
+                        }else if(cRecogsMapper.countForStatusB(recogs.getCaseno()) >0 ){
+                            caseData.setCategorize2("B");
+                        }else if(cRecogsMapper.countForStatusC(recogs.getCaseno()) >0 ){
+                            caseData.setCategorize2("C");
+                        }else{
+                            caseData.setCategorize2("D");
+                        }
+                    }
+                    if (IopUtils.isNotEmpty(caseData.getCategorize2())){
+                        caseData.setCreatetime(new Date());
+                        caseDataMapper.updateByPrimaryKey(caseData);
+                        log.info("complete recog case "+caseData.getCaseno()+" result:"+caseData.getCategorize2());
+                    }
+                }
             }
 
             //更新对应状态记录
             recogs.setStatus(8);  //8代表已经写回数据库
             recogsMapper.updateByPrimaryKey(recogs);
 
-            // 更新到 日志库
-            Map<String, String> contact = cznMapper.queryContactByCaseNo(recogs.getCaseno(), recogs.getSerino());
-            DBZNUpdateInfo dbznUpdateInfo = new DBZNUpdateInfo();
-            dbznUpdateInfo.setCaseno(contact.get("Case_No"));
-            dbznUpdateInfo.setPtel(contact.get("PTel"));
-            dbznUpdateInfo.setPtel1(contact.get("PTel1"));
-            dbznUpdateInfo.setTelck(contact.get("TelCK"));
-            dbznUpdateInfo.setTel1ck(contact.get("Tel1CK"));
-            dbznUpdateInfo.setPname(contact.get("PName"));
-            dbznUpdateInfo.setBatchid(recogs.getBatchid());
-            dbznUpdateInfo.setPhone(recogs.getMobile());
-            dbznUpdateInfo.setCreatetime(new Date());
-            znUpdateInfoMapper.insert(dbznUpdateInfo);
         }
     }
 
-    // 更新案件状态
-    @Scheduled(fixedRate = 4*60*1000)   //每4分钟执行一次
+    // 批次写回 兆能的数据库
+    @Scheduled(fixedRate = 3*60*1000)   //每30分钟执行一次
     public void updateZNCaseStatus(){
-        List<DBZNContact> list = cRecogsMapper.selectForDebtorStatus();
+        List<DBZNContact> dbznContactList = cRecogsMapper.selectZNContactResult();
+        if (dbznContactList.size()>0){
+            int size = cznMapper.batchUpdateMTMContact(dbznContactList);
+            log.info("successed update MTMContact size:"+size);
+            for (DBZNContact dbznContact : dbznContactList) {
+                dbznContact.setSeqstatus("201");
+                localContactMapper.updateByPrimaryKey(dbznContact);
+            }
+            log.info("successed update zncontact size:"+dbznContactList.size());
+        }
 
+        List<DBZNCaseData> dbznCaseDataList = cRecogsMapper.selectZNCaseDataResult();
+        if (dbznCaseDataList.size()>0){
+            int size = cznMapper.batchUpdateMTMCaseData(dbznCaseDataList);
+            log.info("successed update MTMCaseData size:"+size);
+            for (DBZNCaseData caseData : dbznCaseDataList) {
+                caseData.setStatus("201");
+                caseDataMapper.updateByPrimaryKey(caseData);
+            }
+            log.info("successed update zncasedata size:"+dbznCaseDataList.size());
+        }
     }
 }

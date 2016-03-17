@@ -1,5 +1,6 @@
 package com.web.service;
 
+import com.common.exception.WException;
 import com.web.dto.DtoDBRecogs;
 import mybatis.one.po.DBRecogs;
 import mybatis.two.po.DBMTMContact;
@@ -10,7 +11,7 @@ import java.util.List;
 public interface IBankService {
 
     // 从兆能资产读取数据写入本地
-    public void importFromZN(String merchid, String casenostart, Date pickupDate, String mark);
+    public void importFromZN(String merchid, String casenostart, Date pickupDate, String mark) throws WException;
     /**
      * 批量插入手机号码
      * @param merchid

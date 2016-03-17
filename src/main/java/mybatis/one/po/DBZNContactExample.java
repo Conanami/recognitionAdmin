@@ -1,6 +1,7 @@
 package mybatis.one.po;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DBZNContactExample {
@@ -884,73 +885,133 @@ public class DBZNContactExample {
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2IsNull() {
-            addCriterion("categorize2 is null");
+        public Criteria andCreatetimeIsNull() {
+            addCriterion("createtime is null");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2IsNotNull() {
-            addCriterion("categorize2 is not null");
+        public Criteria andCreatetimeIsNotNull() {
+            addCriterion("createtime is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2EqualTo(String value) {
-            addCriterion("categorize2 =", value, "categorize2");
+        public Criteria andCreatetimeEqualTo(Date value) {
+            addCriterion("createtime =", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2NotEqualTo(String value) {
-            addCriterion("categorize2 <>", value, "categorize2");
+        public Criteria andCreatetimeNotEqualTo(Date value) {
+            addCriterion("createtime <>", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2GreaterThan(String value) {
-            addCriterion("categorize2 >", value, "categorize2");
+        public Criteria andCreatetimeGreaterThan(Date value) {
+            addCriterion("createtime >", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2GreaterThanOrEqualTo(String value) {
-            addCriterion("categorize2 >=", value, "categorize2");
+        public Criteria andCreatetimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("createtime >=", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2LessThan(String value) {
-            addCriterion("categorize2 <", value, "categorize2");
+        public Criteria andCreatetimeLessThan(Date value) {
+            addCriterion("createtime <", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2LessThanOrEqualTo(String value) {
-            addCriterion("categorize2 <=", value, "categorize2");
+        public Criteria andCreatetimeLessThanOrEqualTo(Date value) {
+            addCriterion("createtime <=", value, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2Like(String value) {
-            addCriterion("categorize2 like", value, "categorize2");
+        public Criteria andCreatetimeIn(List<Date> values) {
+            addCriterion("createtime in", values, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2NotLike(String value) {
-            addCriterion("categorize2 not like", value, "categorize2");
+        public Criteria andCreatetimeNotIn(List<Date> values) {
+            addCriterion("createtime not in", values, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2In(List<String> values) {
-            addCriterion("categorize2 in", values, "categorize2");
+        public Criteria andCreatetimeBetween(Date value1, Date value2) {
+            addCriterion("createtime between", value1, value2, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2NotIn(List<String> values) {
-            addCriterion("categorize2 not in", values, "categorize2");
+        public Criteria andCreatetimeNotBetween(Date value1, Date value2) {
+            addCriterion("createtime not between", value1, value2, "createtime");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2Between(String value1, String value2) {
-            addCriterion("categorize2 between", value1, value2, "categorize2");
+        public Criteria andSeqstatusIsNull() {
+            addCriterion("seqstatus is null");
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2NotBetween(String value1, String value2) {
-            addCriterion("categorize2 not between", value1, value2, "categorize2");
+        public Criteria andSeqstatusIsNotNull() {
+            addCriterion("seqstatus is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusEqualTo(String value) {
+            addCriterion("seqstatus =", value, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusNotEqualTo(String value) {
+            addCriterion("seqstatus <>", value, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusGreaterThan(String value) {
+            addCriterion("seqstatus >", value, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusGreaterThanOrEqualTo(String value) {
+            addCriterion("seqstatus >=", value, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusLessThan(String value) {
+            addCriterion("seqstatus <", value, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusLessThanOrEqualTo(String value) {
+            addCriterion("seqstatus <=", value, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusLike(String value) {
+            addCriterion("seqstatus like", value, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusNotLike(String value) {
+            addCriterion("seqstatus not like", value, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusIn(List<String> values) {
+            addCriterion("seqstatus in", values, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusNotIn(List<String> values) {
+            addCriterion("seqstatus not in", values, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusBetween(String value1, String value2) {
+            addCriterion("seqstatus between", value1, value2, "seqstatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andSeqstatusNotBetween(String value1, String value2) {
+            addCriterion("seqstatus not between", value1, value2, "seqstatus");
             return (Criteria) this;
         }
 
@@ -999,8 +1060,8 @@ public class DBZNContactExample {
             return (Criteria) this;
         }
 
-        public Criteria andCategorize2LikeInsensitive(String value) {
-            addCriterion("upper(categorize2) like", value.toUpperCase(), "categorize2");
+        public Criteria andSeqstatusLikeInsensitive(String value) {
+            addCriterion("upper(seqstatus) like", value.toUpperCase(), "seqstatus");
             return (Criteria) this;
         }
     }

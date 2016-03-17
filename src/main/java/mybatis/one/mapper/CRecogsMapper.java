@@ -4,6 +4,7 @@ import com.web.dto.DtoDBRecogs;
 import com.web.dto.MTMDataDto;
 import mybatis.one.po.DBRecogs;
 import mybatis.one.po.DBTmpPhone;
+import mybatis.one.po.DBZNCaseData;
 import mybatis.one.po.DBZNContact;
 import mybatis.two.po.DBMTMContact;
 import org.apache.ibatis.annotations.Param;
@@ -58,12 +59,15 @@ public interface CRecogsMapper {
     public DtoDBRecogs pickup(@Param("merchid") String merchid);
 
     /**
-     * 批量插入案件
+     * 批量插入案件 案件详情
      * @param batchid
      * @param list
      */
     public int insertCaseBatch(@Param("batchid") String batchid,
                                 @Param("list") List<DBMTMContact> list);
+
+    // 批量插入案件
+    public int insertCaseData();
 
     /**
      * 查询刚刚批量插入案件的 电话号码（过滤重复和空）
@@ -97,6 +101,25 @@ public interface CRecogsMapper {
             , @Param("list") List<String> list
             , @Param("createtime") String createtime);
 
-    //查询 债务人状态
-    public List<DBZNContact> selectForDebtorStatus();
+    //A：债务人可以联系上
+    public int countForStatusA(@Param("caseno") String caseno);
+    //B:  债务人联系不上，联系人可以联系上
+    public int countForStatusB(@Param("caseno") String caseno);
+    // 查询案件下，有没有尚未识别的记录
+    public int selectNoRecogContactCase(@Param("caseno") String caseno);
+
+    //C：债务人联系不上，联系人也没有可接通，只有关机
+    public int countForStatusC(@Param("caseno") String caseno);
+    //D: 债务人联系不上，联系人连关机都没有，全部停机
+    public int countForStatusD(@Param("caseno") String caseno);
+
+    //查询可以待写回 兆能资产 的 联系人记录
+    public List<DBZNContact> selectZNContactResult();
+    // 查询可以待写回 兆能资产 的 案件状态记录
+    public List<DBZNCaseData> selectZNCaseDataResult();
+
+    //批量更新 映射 联系人表  zncontact   暂时作废
+    public int batchUpdateZNContactStatus(@Param("list") List<DBZNContact> list);
+    // 批量更新 映射 案件表  zncaseData  暂时作废
+    public int batchUpdateZNCaseDataStatus(@Param("list") List<DBZNCaseData> list);
 }
