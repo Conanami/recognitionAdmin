@@ -277,6 +277,7 @@
                 <th field="manualresult" formatter="format_result">人工结果</th>
                 <th field="dataurl" formatter="format_audiourl">录音文件</th>
                 <th field="calltime" >拨打时间</th>
+                <th field="callcount" >呼叫次数</th>
 			</tr>
 		</thead>
 	</table>

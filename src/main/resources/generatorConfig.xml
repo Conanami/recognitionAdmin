@@ -50,6 +50,7 @@
         <table  tableName="imgzb" domainObjectName="DBImgZB" />
         -->
         <table  tableName="tmpphone" domainObjectName="DBTmpPhone" />
+        <table  tableName="recogs" domainObjectName="DBRecogs" />
 
     </context>
 
