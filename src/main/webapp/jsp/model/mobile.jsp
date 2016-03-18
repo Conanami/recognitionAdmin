@@ -69,6 +69,8 @@
                 return '需要重新拨打';
             }else if(value==9){
                 return '需要重新识别';
+            }else if(value==-2){
+                return '无声';
             }
             return '';
         }
@@ -235,6 +237,7 @@
         <select class="easyui-combobox" id="resultSearch" name="resultSearch" editable="false" style="width:100px;">
             <option value="99">全部</option>
             <option value="-1">尚未处理</option>
+            <option value="-2">无声</option>
             <option value="0">未知</option>
             <option value="8">需要重新拨打</option>
             <option value="9">需要重新识别</option>
@@ -247,6 +250,7 @@
         <select class="easyui-combobox" id="manualresultSearch" name="manualresultSearch" editable="false" style="width:100px;">
             <option value="99">全部</option>
             <option value="-1">尚未处理</option>
+            <option value="-2">无声</option>
             <option value="0">未知</option>
             <option value="8">需要重新拨打</option>
             <option value="9">需要重新识别</option>

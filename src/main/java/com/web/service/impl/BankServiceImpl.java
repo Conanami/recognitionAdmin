@@ -184,7 +184,7 @@ public class BankServiceImpl implements IBankService {
         }
         if (IopUtils.isEmpty(recogs.getMobile())
                 || recogs.getMobile().length()>13
-                || recogs.getMobile().length()<7){
+                || recogs.getMobile().length()<8){
             recogs.setStatus(9); // 9 为 状态 号码异常
             recogs.setResult(-1);
             recogs.setManualresult(-1);
