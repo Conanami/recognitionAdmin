@@ -236,6 +236,8 @@
             <option value="99">全部</option>
             <option value="-1">尚未处理</option>
             <option value="0">未知</option>
+            <option value="8">需要重新拨打</option>
+            <option value="9">需要重新识别</option>
             <option value="1">正常</option>
             <option value="2">欠费停机</option>
             <option value="3">空号</option>
