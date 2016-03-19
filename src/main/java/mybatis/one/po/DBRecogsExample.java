@@ -1085,6 +1085,66 @@ public class DBRecogsExample {
             return (Criteria) this;
         }
 
+        public Criteria andSilentcountIsNull() {
+            addCriterion("silentcount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountIsNotNull() {
+            addCriterion("silentcount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountEqualTo(Integer value) {
+            addCriterion("silentcount =", value, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountNotEqualTo(Integer value) {
+            addCriterion("silentcount <>", value, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountGreaterThan(Integer value) {
+            addCriterion("silentcount >", value, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("silentcount >=", value, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountLessThan(Integer value) {
+            addCriterion("silentcount <", value, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountLessThanOrEqualTo(Integer value) {
+            addCriterion("silentcount <=", value, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountIn(List<Integer> values) {
+            addCriterion("silentcount in", values, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountNotIn(List<Integer> values) {
+            addCriterion("silentcount not in", values, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountBetween(Integer value1, Integer value2) {
+            addCriterion("silentcount between", value1, value2, "silentcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSilentcountNotBetween(Integer value1, Integer value2) {
+            addCriterion("silentcount not between", value1, value2, "silentcount");
+            return (Criteria) this;
+        }
+
         public Criteria andMerchidLikeInsensitive(String value) {
             addCriterion("upper(merchid) like", value.toUpperCase(), "merchid");
             return (Criteria) this;

@@ -196,16 +196,18 @@ public class BankServiceImpl implements IBankService {
 
             throw new WException(500).setMessage("当前记录手机号为空");
         }
-
+        // 总的呼叫次数
         Integer callcount = recogs.getCallcount();
         if (callcount==null) callcount= 0;
-        if (callcount>5){
-            recogs.setStatus(9); //呼叫次数过多的 也定位号码异常
-            recogs.setResult(-1);
+        // 总的识别为无声的次数
+        Integer silentcount = recogs.getSilentcount();
+        if (silentcount==null) silentcount= 0;
+        if (silentcount>=5){
+            recogs.setStatus(4); //呼叫次数过多的 ，不再识别
             recogs.setManualresult(-1);
             recogs.setReceivetime(new Date());
             recogsMapper.updateByPrimaryKey(recogs);
-            throw new WException(500).setMessage("当前领取到的号码呼叫次数过多，作废");
+            throw new WException(500).setMessage("当前领取到的号码识别为无声的次数过多，不再领取");
         }
 
         recogs.setStatus(2);
