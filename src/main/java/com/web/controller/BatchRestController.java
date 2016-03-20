@@ -67,6 +67,7 @@ public class BatchRestController {
         WSResponse<Boolean> response = new WSResponse<>();
         log.error("Exception：" + ex);
         ExceptionFormatter.setResponse(response, ex);
+        isLock = false;
         return response;
     }
 
@@ -181,6 +182,7 @@ public class BatchRestController {
         return response;
     }
 
+    static boolean isLock;
     /**
      * 获取手机号
      * @param merchId
@@ -197,6 +199,11 @@ public class BatchRestController {
             @RequestParam(value = "signinfo", required = true) String signInfo,
             HttpServletRequest request,
             HttpSession httpSession) throws Exception{
+        if (isLock){
+            throw new WException(500).setMessage("领取电话号码被锁住");
+        }
+
+        isLock = true;
          /* 商户号检查 */
         String appSecret = new MerchManagerUtil(merchManagerUrl).getSecret("recog", merchId);
         if (IopUtils.isEmpty(appSecret)){
@@ -244,6 +251,7 @@ public class BatchRestController {
         response.add(recogs);
         response.setRespDescription("领取手机号成功");
 
+        isLock = false;
         return response;
     }
 
