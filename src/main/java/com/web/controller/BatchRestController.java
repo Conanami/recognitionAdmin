@@ -196,6 +196,7 @@ public class BatchRestController {
     public WSResponse<DtoDBRecogs> api_pickup_mobile(
             @RequestParam(value = "merchid", required = true) String merchId,
             @RequestParam(value = "UniqueID", required = true) String UniqueID,
+            @RequestParam(value = "zjmobile", required = false) String zjmobile,
             @RequestParam(value = "signinfo", required = true) String signInfo,
             HttpServletRequest request,
             HttpSession httpSession) throws Exception{
@@ -239,6 +240,7 @@ public class BatchRestController {
             DBDeviceLog deviceLog = deviceLogMapper.selectByPrimaryKey(UniqueID);
             if (deviceLog==null){
                 deviceLog = new DBDeviceLog();
+                deviceLog.setMobile(zjmobile);
                 deviceLog.setUniqueid(UniqueID);
                 deviceLogMapper.insert(deviceLog);
             }
