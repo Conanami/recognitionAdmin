@@ -68,7 +68,7 @@ public class MerchValidateUtil {
 			buffer.append(param).append(params.get(param));
 		}
 		buffer.append(secret);
-		log.info("sign:"+buffer.toString());
+//		log.info("sign:"+buffer.toString());
 		String sign=IopUtils.md5(buffer.toString());
 		return sign;
 	}

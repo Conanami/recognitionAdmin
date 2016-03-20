@@ -232,10 +232,10 @@ public class FileZBController {
         if (multifile.isEmpty()) {
             throw new WException(500).setMessage("文件未上传");
         } else {
-            log.info("文件上传开始===================");
+//            log.info("文件上传开始===================");
             log.info("文件长度: " + multifile.getSize());
-            log.info("文件类型: " + multifile.getContentType());
-            log.info("文件名称: " + multifile.getName());
+//            log.info("文件类型: " + multifile.getContentType());
+//            log.info("文件名称: " + multifile.getName());
             log.info("文件原名: " + multifile.getOriginalFilename());
             //判断 文件大小
             if (multifile.getSize() < 100*1024){
@@ -269,7 +269,7 @@ public class FileZBController {
                     ;
             response.add(url);
 
-            log.info("文件上传结束===================");
+//            log.info("文件上传结束===================");
         }
         response.setRespDescription("文件上传成功");
         return response;
