@@ -1145,6 +1145,66 @@ public class DBRecogsExample {
             return (Criteria) this;
         }
 
+        public Criteria andDialcountIsNull() {
+            addCriterion("dialcount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountIsNotNull() {
+            addCriterion("dialcount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountEqualTo(Integer value) {
+            addCriterion("dialcount =", value, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountNotEqualTo(Integer value) {
+            addCriterion("dialcount <>", value, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountGreaterThan(Integer value) {
+            addCriterion("dialcount >", value, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("dialcount >=", value, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountLessThan(Integer value) {
+            addCriterion("dialcount <", value, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountLessThanOrEqualTo(Integer value) {
+            addCriterion("dialcount <=", value, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountIn(List<Integer> values) {
+            addCriterion("dialcount in", values, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountNotIn(List<Integer> values) {
+            addCriterion("dialcount not in", values, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountBetween(Integer value1, Integer value2) {
+            addCriterion("dialcount between", value1, value2, "dialcount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDialcountNotBetween(Integer value1, Integer value2) {
+            addCriterion("dialcount not between", value1, value2, "dialcount");
+            return (Criteria) this;
+        }
+
         public Criteria andMerchidLikeInsensitive(String value) {
             addCriterion("upper(merchid) like", value.toUpperCase(), "merchid");
             return (Criteria) this;

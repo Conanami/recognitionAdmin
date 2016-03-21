@@ -90,6 +90,7 @@ public class BankServiceImpl implements IBankService {
         int count = (int) Math.ceil(listPhone.size()*1.0f / 2000.0f);
         for (int k=0;k<count;k++){
             String batchid = importBatchId+"_"+k;
+            log.info("batchid:"+batchid);
             DBImportBatch importBatch = new DBImportBatch();
             importBatch.setImportbatchid(importBatchId);
             importBatch.setBatchid(batchid);
@@ -208,6 +209,15 @@ public class BankServiceImpl implements IBankService {
             recogs.setReceivetime(new Date());
             recogsMapper.updateByPrimaryKey(recogs);
             throw new WException(500).setMessage("当前领取到的号码识别为无声的次数过多，不再领取");
+        }
+        // 已领取变更为未领取的次数
+        Integer dialcount = recogs.getDialcount();
+        if (dialcount==null) dialcount=0;
+        if (dialcount>=5){
+            recogs.setStatus(11); //重打的次数太多，设置为 拨打重试失败
+            recogs.setReceivetime(new Date());
+            recogsMapper.updateByPrimaryKey(recogs);
+            throw new WException(500).setMessage("当前领取到的号码重试拨打的次数过多，不再领取");
         }
 
         recogs.setStatus(2);

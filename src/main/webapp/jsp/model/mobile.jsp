@@ -50,6 +50,8 @@
                 return '已经写回';
             }else if(value==9){
                 return '号码异常';
+            }else if(value==11){
+                return '拨打重试失败';
             }
             return '';
 	    }
@@ -232,6 +234,10 @@
             <option value="2">已经领取</option>
             <option value="3">已经拨打</option>
             <option value="4">已经识别</option>
+            <option value="5">录音文件丢失</option>
+            <option value="9">号码异常</option>
+            <option value="8">已经写回</option>
+            <option value="11">拨打重试失败</option>
         </select>
         <label style="font-size: small">语音识别结果:</label>
         <select class="easyui-combobox" id="resultSearch" name="resultSearch" editable="false" style="width:100px;">

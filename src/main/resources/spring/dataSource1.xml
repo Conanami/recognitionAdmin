@@ -22,8 +22,9 @@
 		<property name="url" value="${one.jdbc.url}" />
 		<property name="username" value="${one.jdbc.username}" />
 		<property name="password" value="${one.jdbc.password}" />
-		<property name="maxActive" value="300" />
-		<property name="maxIdle" value="10" />
+		<property name="maxActive" value="${one.jdbc.maxActive}" />
+		<property name="maxIdle" value="${one.jdbc.maxIdle}" />
+        <property name="maxWait" value="${one.jdbc.maxWait}" />
         <property name="validationQuery" value="select 1"/>
         <property name="testWhileIdle" value="true"/>
         <property name="timeBetweenEvictionRunsMillis" value="8000"/>

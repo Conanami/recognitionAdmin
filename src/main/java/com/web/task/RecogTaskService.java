@@ -46,6 +46,9 @@ public class RecogTaskService {
             if (recogs.getReceivetime().getTime() + 30*60*1000 < new Date().getTime()){
                 count += 1;
                 recogs.setStatus(1);
+                Integer dialcount = recogs.getDialcount();
+                if (dialcount==null) dialcount=0;
+                recogs.setDialcount(dialcount+1);
                 recogsMapper.updateByPrimaryKey(recogs);
 //                log.info(recogs.getMobile()+" 状态由 已经领取 变更为 尚未领取");
             }
