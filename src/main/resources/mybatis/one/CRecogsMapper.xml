@@ -197,7 +197,6 @@
         ORDER BY
             batchid,
             seqid
-        LIMIT 0, 1
     </select>
 
     <!-- 查询临时表的电话号码，过滤掉 recogs表里面 尚未拨打的电话号码 -->
