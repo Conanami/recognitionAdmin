@@ -62,7 +62,6 @@ public class BatchLogService {
                 ex.setOrderByClause("calltime asc");
                 List<DBRecogs> dbRecogsList = recogsMapper.selectByExample(ex);
                 batchLog.setCallcount(dbRecogsList.size());
-//                log.info("batchid："+batchLog.getBatchid()+"  call complete count:"+batchLog.getCallcount());
                 Date start = null;
                 Date end = null;
                 if (dbRecogsList.size()>0){
@@ -82,29 +81,9 @@ public class BatchLogService {
                 batchLogMapper.updateByPrimaryKey(batchLog);
             }
             {
-                //分析识别时间
-                DBRecogsExample ex = new DBRecogsExample();
-                ex.createCriteria().andBatchidEqualTo(batchLog.getBatchid()).andRecogtimeIsNotNull();
-                ex.setOrderByClause("recogtime asc");
-                List<DBRecogs> dbRecogsList = recogsMapper.selectByExample(ex);
+                //分析识别数量
+                List<DBRecogs> dbRecogsList = cRecogsMapper.selectBatchRecogCount(batchLog.getBatchid());
                 batchLog.setRecogcount(dbRecogsList.size());
-//                log.info("batchid："+batchLog.getBatchid()+"  recog complete count:"+batchLog.getRecogcount());
-                Date start = null;
-                Date end = null;
-                if (dbRecogsList.size()>0){
-                    start = dbRecogsList.get(0).getRecogtime();
-                    end = dbRecogsList.get(dbRecogsList.size()-1).getRecogtime();
-                }
-                batchLog.setRecogstarttime(start);
-                if (dbRecogsList.size()== batchLog.getTotalcount()){
-                    batchLog.setRecogendtime(end);
-                }else{
-                    batchLog.setRecogendtime(null);
-                }
-                if (start!=null && batchLog.getRecogendtime()!=null){
-                    long dd = (end.getTime() - start.getTime()) /1000;
-                    batchLog.setTotalrecogtime(dd);
-                }
                 batchLogMapper.updateByPrimaryKey(batchLog);
             }
         }

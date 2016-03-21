@@ -126,6 +126,26 @@
         </if>
     </select>
 
+    <!--  查询一个批次里面，已经完成识别的 记录, 包括识别结果1,2,3,4， 识别状态 4， 9， 11， 12 -->
+    <select id="selectBatchRecogCount" resultType="mybatis.one.po.DBRecogs">
+        SELECT * FROM   recogs a
+        WHERE
+            1 = 1
+        AND (
+        (a. STATUS = 4  AND  (  a.result = 1
+            OR a.result = 2
+            OR a.result = 3
+            OR a.result = 4 ))
+        OR  a. STATUS = 9
+        OR  a. STATUS = 11
+        OR  a. STATUS = 12
+        OR  a. STATUS = 8
+        )
+        AND a.batchid=#{batchid}
+        ORDER BY
+            seqid
+    </select>
+
 
     <!--  批量插入案件详情 -->
     <insert id="insertCaseBatch">
