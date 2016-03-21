@@ -114,7 +114,7 @@ public class BankServiceImpl implements IBankService {
             }
             batchLog.setTotalcount(list1.size());
             batchLogMapper.insert(batchLog);
-            cRecogsMapper.insertTmpPhoneToRecogsBatch(merchid, batchid, listPhone, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createTime));
+            cRecogsMapper.insertTmpPhoneToRecogsBatch(merchid, batchid, list1, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createTime));
         }
     }
 
