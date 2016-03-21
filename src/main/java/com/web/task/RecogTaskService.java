@@ -49,8 +49,10 @@ public class RecogTaskService {
                 Integer dialcount = recogs.getDialcount();
                 if (dialcount==null) dialcount=0;
                 recogs.setDialcount(dialcount+1);
+                if (recogs.getDialcount()>=5){
+                    recogs.setStatus(11);//重打的次数太多，设置为 拨打重试失败
+                }
                 recogsMapper.updateByPrimaryKey(recogs);
-//                log.info(recogs.getMobile()+" 状态由 已经领取 变更为 尚未领取");
             }
         }
     }

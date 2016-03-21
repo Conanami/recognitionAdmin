@@ -56,34 +56,22 @@ public class BatchLogService {
         List<DBBatchLog> dbBatchLogs = batchLogMapper.selectByExample(example);
         for (DBBatchLog batchLog : dbBatchLogs ) {
             {
-                //分析拨打时间
-                DBRecogsExample ex = new DBRecogsExample();
-                ex.createCriteria().andBatchidEqualTo(batchLog.getBatchid()).andCalltimeIsNotNull();
-                ex.setOrderByClause("calltime asc");
-                List<DBRecogs> dbRecogsList = recogsMapper.selectByExample(ex);
-                batchLog.setCallcount(dbRecogsList.size());
-                Date start = null;
-                Date end = null;
-                if (dbRecogsList.size()>0){
-                    start = dbRecogsList.get(0).getCalltime();
-                    end = dbRecogsList.get(dbRecogsList.size()-1).getCalltime();
-                }
-                batchLog.setCallstarttime(start);
-                if (dbRecogsList.size()== batchLog.getTotalcount()){
-                    batchLog.setCallendtime(end);
-                }else{
-                    batchLog.setCallendtime(null);
-                }
-                if (start!=null && batchLog.getCallendtime()!=null){
-                    long dd = (end.getTime() - start.getTime()) /1000;
-                    batchLog.setTotalcalltime(dd);
-                }
-                batchLogMapper.updateByPrimaryKey(batchLog);
-            }
-            {
                 //分析识别数量
                 List<DBRecogs> dbRecogsList = cRecogsMapper.selectBatchRecogCount(batchLog.getBatchid());
                 batchLog.setRecogcount(dbRecogsList.size());
+                if (dbRecogsList.size()>0){
+                    batchLog.setCallstarttime(dbRecogsList.get(0).getReceivetime());
+                }
+                if (dbRecogsList.size()==batchLog.getTotalcount()){
+                    // 如果完成识别的数量等于 批次的总数量，则该批次任务完成。
+                    batchLog.setCallendtime(dbRecogsList.get(dbRecogsList.size()-1).getReceivetime());
+                    long dd = (dbRecogsList.get(dbRecogsList.size()-1).getReceivetime().getTime()
+                            - dbRecogsList.get(0).getReceivetime().getTime()) /1000;
+                    batchLog.setTotalcalltime(dd);
+                }else{
+                    batchLog.setCallendtime(null);
+                    batchLog.setTotalcalltime(0l);
+                }
                 batchLogMapper.updateByPrimaryKey(batchLog);
             }
         }
