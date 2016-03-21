@@ -185,12 +185,14 @@
             1 = 1
         AND (c.ptel=a.mobile OR c.ptel1=a.mobile)
         AND a.merchid = 'znadmin'
-        AND a. STATUS = 4
         AND (
-            a.result = 2
+        (a. STATUS = 4  AND  (  a.result = 1
+            OR a.result = 2
             OR a.result = 3
-            OR a.result = 4
-            OR a.result = 1
+            OR a.result = 4 ))
+        OR  a. STATUS = 9
+        OR  a. STATUS = 11
+        OR  a. STATUS = 12
         )
         ORDER BY
             batchid,

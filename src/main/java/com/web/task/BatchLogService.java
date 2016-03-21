@@ -132,6 +132,19 @@ public class BatchLogService {
                     result = "012";
                     break;
             }
+            if (recogs.getStatus()==12){// 无声， 识别重试失败，也表示正常
+                result = "019";
+            }
+            if (recogs.getStatus()==9){// 号码异常，也标记为正常
+                result = "019";
+            }
+            if (recogs.getStatus()==11){// 拨打重试失败， 标记为 正常
+                result = "019";
+            }
+            if (IopUtils.isEmpty(result)){
+                log.info("result is empty, "+recogs.getMobile());
+                continue;
+            }
             // 更新对应号码识别状态到 zncontact 表
             {
                 DBZNContactExample example = new DBZNContactExample();
