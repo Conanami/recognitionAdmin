@@ -118,19 +118,21 @@ public class BatchLogService {
         for (int i = 0; i < list.size(); i++) {
             DtoDBRecogs recogs = list.get(i);
             String result = "";
-            switch (recogs.getResult()){
-                case 1:         //表示正常
-                    result = "019";
-                    break;
-                case 2:         //欠费停机
-                    result = "006";
-                    break;
-                case 3:         //空号
-                    result = "008";
-                    break;
-                case 4:         //关机
-                    result = "012";
-                    break;
+            if (recogs.getStatus()==4){// 识别正常的号码，才进行 空停关正常的判断
+                switch (recogs.getResult()){
+                    case 1:         //表示正常
+                        result = "019";
+                        break;
+                    case 2:         //欠费停机
+                        result = "006";
+                        break;
+                    case 3:         //空号
+                        result = "008";
+                        break;
+                    case 4:         //关机
+                        result = "012";
+                        break;
+                }
             }
             if (recogs.getStatus()==12){// 无声， 识别重试失败，也表示正常
                 result = "019";

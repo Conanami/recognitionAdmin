@@ -37,19 +37,6 @@
 			<scope>${scope.type}</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>${scope.type}</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>${scope.type}</scope>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
