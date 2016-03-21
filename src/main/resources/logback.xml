@@ -4,17 +4,19 @@
 	<!--Appendar详解: http://logback.qos.ch/manual/appenders.html#RollingFileAppender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 当前Log文件名 -->
-        <file>/usr/local/src/apache-tomcat-8.0.26/logs/recognitionadmin/logback.log</file>
+        <file>${catalina.home}/logs/recognitionadmin/logback.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 非当天的Log文件压缩备份为 archive/survey.2015-08-18.zip -->
-            <fileNamePattern>/usr/local/src/apache-tomcat-8.0.26/logs/recognitionadmin/archive/logback.%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <fileNamePattern>${catalina.home}/logs/recognitionadmin/archive/%d{yyyy/MM,aux}/L%d{dd}-%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
             <!-- 超过30天的备份文件会被删除 -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <!-- 格式说明:http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout -->
-            <Pattern>%d [%thread] %-5level %40logger{40} - %L %msg%n</Pattern>
+            <Pattern>%d [%thread] %-5level %logger{20} - %L %msg%n</Pattern>
         </layout>
     </appender>
 
