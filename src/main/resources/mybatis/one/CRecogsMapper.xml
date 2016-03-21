@@ -255,7 +255,7 @@
 
     <!--  查询可以待写回 兆能资产 的 联系人记录   -->
     <select id="selectZNContactResult" resultType="mybatis.one.po.DBZNContact">
-        SELECT * FROM zncontact WHERE `seqstatus`='101'
+        SELECT * FROM zncontact WHERE `seqstatus`='101' LIMIT 0,500
     </select>
 
     <!--  查询可以待写回 兆能资产 的 案件状态记录   -->
