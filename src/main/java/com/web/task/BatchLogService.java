@@ -48,7 +48,7 @@ public class BatchLogService {
     @Resource
     DBZNCaseDataMapper caseDataMapper;
 
-    @Scheduled(fixedRate = 3*60*1000)   //每5分钟执行一次
+    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
     public void run(){
 //        log.info("---------start batchlog analysis---------");
         DBBatchLogExample example = new DBBatchLogExample();
@@ -200,7 +200,7 @@ public class BatchLogService {
     }
 
     // 批次写回 兆能的数据库
-    @Scheduled(fixedRate = 3*60*1000)   //每30分钟执行一次
+    @Scheduled(fixedRate = 15*60*1000)   //每15分钟执行一次
     public void updateZNCaseStatus(){
         List<DBZNContact> dbznContactList = cRecogsMapper.selectZNContactResult();
         if (dbznContactList.size()>0){

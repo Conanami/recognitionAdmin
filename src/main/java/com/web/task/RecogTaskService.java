@@ -34,16 +34,16 @@ public class RecogTaskService {
 
 
     /**
-     * 扫描领取超过1分钟没有拨打成功的电话
+     * 扫描领取超过30分钟没有拨打成功的电话,  扫描频率 30分钟一次。
      */
-    @Scheduled(cron="0 0/3 * * * ?")   //每3分钟执行一次
+    @Scheduled(fixedRate = 30*60*1000)   //间隔单位毫秒
     public void runSacanWaitCalling(){
         DBRecogsExample example = new DBRecogsExample();
         example.createCriteria().andStatusEqualTo(2);  // 1 表示 尚未领取 ，2  表示已经领取， 3 表示 已经拨打， 4 表示 已经识别。
         List<DBRecogs> list = recogsMapper.selectByExample(example);
         int count = 0;
         for (DBRecogs recogs : list){
-            if (recogs.getReceivetime().getTime() + 3*60*1000 < new Date().getTime()){
+            if (recogs.getReceivetime().getTime() + 30*60*1000 < new Date().getTime()){
                 count += 1;
                 recogs.setStatus(1);
                 recogsMapper.updateByPrimaryKey(recogs);
@@ -52,11 +52,6 @@ public class RecogTaskService {
         }
     }
 
-    // 处理上传录音长度不够的电话
-    @Scheduled(cron="0 0/30 * * * ?")   //每30分钟执行一次
-    public void runSacanWaitCalling2(){
-
-    }
 
     /**
      * 扫描需要 重新识别的号码  9 表示需要重新识别
