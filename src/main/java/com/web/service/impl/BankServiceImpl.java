@@ -3,6 +3,7 @@ package com.web.service.impl;
 import com.common.exception.WException;
 import com.common.util.IopUtils;
 import com.common.util.MobileUtil;
+import com.web.dto.AppSingle;
 import com.web.dto.DtoDBRecogs;
 import com.web.dto.MTMDataDto;
 import com.web.service.IBankService;
@@ -165,7 +166,7 @@ public class BankServiceImpl implements IBankService {
      */
     public DtoDBRecogs pickup(String merchid) throws Exception{
         //status 状态 空 或者 1 表示 尚未 领取 ，2  表示已经领取， 3 表示 已经拨打， 4 表示 已经识别。
-        DtoDBRecogs recogs = cRecogsMapper.pickup(merchid);
+        DtoDBRecogs recogs = AppSingle.instance.phoneList.poll();
         if (recogs==null){
             throw new WException(500).setMessage("没有待识别的记录");
         }
@@ -203,8 +204,8 @@ public class BankServiceImpl implements IBankService {
         // 总的识别为无声的次数
         Integer silentcount = recogs.getSilentcount();
         if (silentcount==null) silentcount= 0;
-        if (silentcount>=5){
-            recogs.setStatus(4); //呼叫次数过多的 ，不再识别
+        if (silentcount>= AppSingle.instance.silentLimit){
+            recogs.setStatus(12); //呼叫次数过多的 ，不再识别
             recogs.setManualresult(-1);
             recogs.setReceivetime(new Date());
             recogsMapper.updateByPrimaryKey(recogs);
@@ -213,7 +214,7 @@ public class BankServiceImpl implements IBankService {
         // 已领取变更为未领取的次数
         Integer dialcount = recogs.getDialcount();
         if (dialcount==null) dialcount=0;
-        if (dialcount>=5){
+        if (dialcount>=AppSingle.instance.dialLimit){
             recogs.setStatus(11); //重打的次数太多，设置为 拨打重试失败
             recogs.setReceivetime(new Date());
             recogsMapper.updateByPrimaryKey(recogs);

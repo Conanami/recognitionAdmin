@@ -200,11 +200,11 @@ public class BatchRestController {
             @RequestParam(value = "signinfo", required = true) String signInfo,
             HttpServletRequest request,
             HttpSession httpSession) throws Exception{
-        if (isLock){
-            throw new WException(500).setMessage("领取电话号码被锁住");
-        }
-
-        isLock = true;
+//        if (isLock){
+//            throw new WException(501).setMessage("number locked");
+//        }
+//
+//        isLock = true;
          /* 商户号检查 */
         String appSecret = new MerchManagerUtil(merchManagerUrl).getSecret("recog", merchId);
         if (IopUtils.isEmpty(appSecret)){
@@ -252,8 +252,9 @@ public class BatchRestController {
         DtoDBRecogs recogs = bankService.pickup(null);
         response.add(recogs);
         response.setRespDescription("领取手机号成功");
+        log.info("receive zjmobile:"+zjmobile+" batchid: "+recogs.getBatchid()+" phone:"+recogs.getMobile());
 
-        isLock = false;
+//        isLock = false;
         return response;
     }
 

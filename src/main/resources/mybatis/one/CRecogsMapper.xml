@@ -18,13 +18,12 @@
         ISNULL(a.`status`)
         OR a.`status` = 1
         OR a.manualresult = 8
-        OR a.result = 8
         )
         AND ISNULL(b.batchid)=FALSE
         ORDER BY
             seqid
         LIMIT 0,
-         1
+         30
     </select>
 
   <!-- 根据 商户号，手机号，流水号 查询 手机号状态识别记录-->

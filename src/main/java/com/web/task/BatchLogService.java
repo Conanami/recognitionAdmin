@@ -1,6 +1,7 @@
 package com.web.task;
 
 import com.common.util.IopUtils;
+import com.web.dto.AppSingle;
 import com.web.dto.DtoDBRecogs;
 import mybatis.one.mapper.*;
 import mybatis.one.po.*;
@@ -8,6 +9,7 @@ import mybatis.two.mapper.CZNMapper;
 import mybatis.two.mapper.DBMTMContactMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ import java.util.Map;
 @Service
 public class BatchLogService {
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
+//    @Value("${recog.setting}")
+//    private String recog_setting_url = "";      //识别程序设置属性 url
 
     @Resource
     DBBatchLogMapper batchLogMapper;
@@ -59,15 +64,21 @@ public class BatchLogService {
                 //分析识别数量
                 List<DBRecogs> dbRecogsList = cRecogsMapper.selectBatchRecogCount(batchLog.getBatchid());
                 batchLog.setRecogcount(dbRecogsList.size());
+//                log.info("calc batchid:"+batchLog.getBatchid()+" recogSize:"+batchLog.getRecogcount());
                 if (dbRecogsList.size()>0){
                     batchLog.setCallstarttime(dbRecogsList.get(0).getReceivetime());
                 }
                 if (dbRecogsList.size()==batchLog.getTotalcount()){
                     // 如果完成识别的数量等于 批次的总数量，则该批次任务完成。
                     batchLog.setCallendtime(dbRecogsList.get(dbRecogsList.size()-1).getReceivetime());
-                    long dd = (dbRecogsList.get(dbRecogsList.size()-1).getReceivetime().getTime()
-                            - dbRecogsList.get(0).getReceivetime().getTime()) /1000;
-                    batchLog.setTotalcalltime(dd);
+
+                    try {
+                        long dd = (dbRecogsList.get(dbRecogsList.size()-1).getReceivetime().getTime()
+                                - dbRecogsList.get(0).getReceivetime().getTime()) /1000;
+                        batchLog.setTotalcalltime(dd);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }else{
                     batchLog.setCallendtime(null);
                     batchLog.setTotalcalltime(0l);
@@ -76,6 +87,16 @@ public class BatchLogService {
             }
         }
 //        log.info("---------complete batchlog analysis---------");
+    }
+
+    //更新电话待分配队列
+    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
+    public void updatePhoneQueue(){
+        if (AppSingle.instance.phoneList.size()<30){
+            List<DtoDBRecogs> list = cRecogsMapper.pickup(null);
+            AppSingle.instance.phoneList.clear();
+            AppSingle.instance.phoneList.addAll(list);
+        }
     }
 
     //将 识别完的数据，更新回 兆能资产的数据库 联系人表

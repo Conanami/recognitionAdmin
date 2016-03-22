@@ -23,6 +23,6 @@ public class SpringTest {
 
         batchLogService = context.getBean(BatchLogService.class);
 
-        batchLogService.updateZNCaseStatus();
+        batchLogService.run();
     }
 }

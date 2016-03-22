@@ -56,7 +56,7 @@ public interface CRecogsMapper {
      * @param merchid
      * @return
      */
-    public DtoDBRecogs pickup(@Param("merchid") String merchid);
+    public List<DtoDBRecogs> pickup(@Param("merchid") String merchid);
 
     // 查询一个批次里面，已经完成识别的 记录, 包括识别结果1,2,3,4， 识别状态 4， 9， 11， 12
     public List<DBRecogs> selectBatchRecogCount(@Param("batchid") String batchid);
