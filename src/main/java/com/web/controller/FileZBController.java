@@ -161,7 +161,7 @@ public class FileZBController {
 
     /**
      * 其他文件上传
-     * @param file
+     * @param multifile
      * @param project
      * @param request
      * @param httpSession
@@ -170,40 +170,47 @@ public class FileZBController {
      */
     @RequestMapping("api.file.upload")
     public WSResponse<String> uploadFile(
-            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "file", required = false) MultipartFile multifile,
             @RequestParam(value = "project", required = false) String project,
+            @RequestParam(value = "merchid", required = false) String merchid,
+            @RequestParam(value = "batchid", required = false) String batchid,
             HttpServletRequest request, HttpSession httpSession) throws Exception{
         WSResponse<String> response = new WSResponse<>();
-        if (file.isEmpty()) {
+        if (multifile.isEmpty()) {
             throw new WException(500).setMessage("文件未上传");
         } else {
             log.info("文件上传开始===================");
-            log.info("文件长度: " + file.getSize());
-            log.info("文件类型: " + file.getContentType());
-            log.info("文件名称: " + file.getName());
-            log.info("文件原名: " + file.getOriginalFilename());
+            log.info("文件长度: " + multifile.getSize());
+            log.info("文件类型: " + multifile.getContentType());
+            log.info("文件名称: " + multifile.getName());
+            log.info("文件原名: " + multifile.getOriginalFilename());
 
             //保存文件
-            String realName = file.getOriginalFilename();
+            String realName = multifile.getOriginalFilename();
             String suffix = realName.substring(realName.indexOf(".")+1,
                     realName.length()).toLowerCase();
 
-            String filename = realName.substring(0, realName.indexOf("."))+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ RandomUtils.nextInt(10000);
-            FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
-                    imageserverUrl+project+File.separator, filename+"."+suffix));
+            String filename = realName.substring(0, realName.indexOf("."))
+                    +new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ RandomUtils.nextInt(10000);
+            FileUtils.copyInputStreamToFile(multifile.getInputStream(), new File(
+                    imageserverUrl+project+File.separator+merchid+File.separator+batchid+File.separator, filename+"."+suffix));
 
             DBImgZB img = new DBImgZB();
+            img.setMerchid(merchid);
+            img.setBatchid(batchid);
             img.setGroupname(project);
             img.setImagename(filename);
             img.setSuffix(suffix);
             img.setOldname(realName);
             img.setRemark("");
+            img.setFilesize(multifile.getSize());
             img.setCreatetime(new Date());
             zbmapper.insert(img);
 
             String url = request.getScheme() + "://" + request.getServerName()
                     + ":" + request.getServerPort() + request.getContextPath()
-                    + "/api.file.get?filename=" + filename + "." + suffix;
+                    + "/api.file.get?filename=" + filename + "." + suffix
+                    ;
             response.add(url);
 
             log.info("文件上传结束===================");
@@ -247,7 +254,8 @@ public class FileZBController {
             String suffix = realName.substring(realName.indexOf(".")+1,
                     realName.length()).toLowerCase();
 
-            String filename = realName.substring(0, realName.indexOf("."))+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ RandomUtils.nextInt(10000);
+            String filename = realName.substring(0, realName.indexOf("."))
+                    +new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ RandomUtils.nextInt(10000);
             FileUtils.copyInputStreamToFile(multifile.getInputStream(), new File(
                     imageserverUrl+project+File.separator+merchid+File.separator+batchid+File.separator, filename+"."+suffix));
 
