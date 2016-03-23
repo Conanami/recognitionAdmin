@@ -259,7 +259,7 @@
     </select>
 
     <select id="selectNoRecogContactCase" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM zncontact WHERE seqstatus &lt;&gt; '101' AND caseno =#{caseno}
+        SELECT COUNT(*) FROM zncontact WHERE   (seqstatus &lt;&gt; '101'  OR ISNULL(seqstatus) ) AND caseno =#{caseno}
     </select>
 
     <!-- C：债务人联系不上，联系人也没有可接通，只有关机 ，  联系人有 012 关机的-->

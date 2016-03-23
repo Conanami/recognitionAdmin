@@ -193,12 +193,11 @@
                 <th field="totalcount" >总数量</th>
                 <th field="mark" >备注</th>
                 <th field="createtime" >导入时间</th>
-                <th field="callstarttime" >呼叫开始时间</th>
-                <th field="callendtime" >呼叫完成时间</th>
-                <th field="callcount" >完成呼叫数量</th>
-                <th field="recogcount" >完成识别数量</th>
+                <th field="callstarttime" >开始时间</th>
+                <th field="callendtime" >完成时间</th>
+                <th field="recogcount" >完成数量</th>
                 <th field="pickuptime" >预约拨打时间</th>
-                <th field="totalcalltime" formatter="formatTimeSeconds">总呼叫时间</th>
+                <th field="totalcalltime" formatter="formatTimeSeconds">总时间</th>
                 <th field="opt2" formatter="showdetailcell">详情</th>
 			</tr>
 		</thead>

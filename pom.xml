@@ -196,6 +196,12 @@
 			<scope>${scope.type}</scope>
 		</dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.11</version>
+        </dependency>
+
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
@@ -388,17 +394,18 @@
 				<version>1.1</version>
 			    <configuration>
                     <!--
-  <url>http://192.168.0.6/manager/text</url>
+
+ <url>http://monitor.taiyuedata.com/manager/text</url>
+                    <username>tomcat</username>
+                    <password>ZMXrsjSRcLnjnPBz</password>
+
+                   -->
+
+                    <url>http://192.168.0.6/manager/text</url>
                     <username>tomcat</username>
                     <password>jx940c59aw4w5lf2</password>
 
 
-                   -->
-
-
-                    <url>http://monitor.taiyuedata.com/manager/text</url>
-                    <username>tomcat</username>
-                    <password>ZMXrsjSRcLnjnPBz</password>
 
 
 

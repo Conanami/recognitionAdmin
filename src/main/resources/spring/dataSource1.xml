@@ -29,6 +29,10 @@
         <property name="testWhileIdle" value="true"/>
         <property name="timeBetweenEvictionRunsMillis" value="8000"/>
         <property name="minEvictableIdleTimeMillis" value="1000"/>
+        <!-- 设置自动回收超时连接 -->
+        <property name="removeAbandoned" value="true" />
+        <!-- 自动回收超时时间(以秒数为单位) -->
+        <property name="removeAbandonedTimeout" value="200"/>
 	</bean>
 	
 	<!-- sqlSessionFactory -->
