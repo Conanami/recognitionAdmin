@@ -309,10 +309,6 @@
 
 		<!-- 工具栏 -->
 		<div id="toolbar">
-            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:showImport()">导入</a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="javascript:showEditForm()">编辑</a>
-			
-			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#dg').edatagrid('destroyRow')">删除</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg').datagrid('reload')">reload</a>
 		</div>
 

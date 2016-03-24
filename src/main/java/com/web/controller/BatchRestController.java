@@ -67,7 +67,6 @@ public class BatchRestController {
         WSResponse<Boolean> response = new WSResponse<>();
         log.error("Exception：" + ex);
         ExceptionFormatter.setResponse(response, ex);
-        isLock = false;
         return response;
     }
 
@@ -182,7 +181,20 @@ public class BatchRestController {
         return response;
     }
 
-    static boolean isLock;
+    // 查询 设备运行状态
+    @RequestMapping("api.devicelog.query")
+    public WSResponse<DBDeviceLog> api_devicelog_query(
+            HttpServletRequest request) throws Exception{
+        DBDeviceLogExample example = new DBDeviceLogExample();
+        example.createCriteria().andLasttimeIsNotNull();
+        List<DBDeviceLog> list = deviceLogMapper.selectByExample(example);
+        WSResponse<DBDeviceLog> response = new WSResponse<>();
+        response.addAll(list);
+        response.setTotal(list.size());
+        response.setRespDescription("查询终端日志成功");
+        return response;
+    }
+
     /**
      * 获取手机号
      * @param merchId
@@ -200,11 +212,7 @@ public class BatchRestController {
             @RequestParam(value = "signinfo", required = true) String signInfo,
             HttpServletRequest request,
             HttpSession httpSession) throws Exception{
-//        if (isLock){
-//            throw new WException(501).setMessage("number locked");
-//        }
-//
-//        isLock = true;
+
          /* 商户号检查 */
         String appSecret = new MerchManagerUtil(merchManagerUrl).getSecret("recog", merchId);
         if (IopUtils.isEmpty(appSecret)){
@@ -254,7 +262,6 @@ public class BatchRestController {
         response.setRespDescription("领取手机号成功");
         log.info("receive zjmobile:"+zjmobile+" batchid: "+recogs.getBatchid()+" phone:"+recogs.getMobile());
 
-//        isLock = false;
         return response;
     }
 

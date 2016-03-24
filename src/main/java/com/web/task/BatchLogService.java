@@ -73,12 +73,11 @@ public class BatchLogService {
                     // 如果完成识别的数量等于 批次的总数量，则该批次任务完成。
                     batchLog.setCallendtime(dbRecogsList.get(dbRecogsList.size()-1).getReceivetime());
 
-                    try {
+                    if (dbRecogsList.get(dbRecogsList.size()-1).getReceivetime()!=null
+                            && dbRecogsList.get(0).getReceivetime()!=null){
                         long dd = (dbRecogsList.get(dbRecogsList.size()-1).getReceivetime().getTime()
                                 - dbRecogsList.get(0).getReceivetime().getTime()) /1000;
                         batchLog.setTotalcalltime(dd);
-                    }catch (Exception e){
-                        e.printStackTrace();
                     }
                 }else{
                     batchLog.setCallendtime(null);
@@ -91,7 +90,7 @@ public class BatchLogService {
     }
 
     //更新电话待分配队列
-    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
+//    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
     public void updatePhoneQueue(){
         if (AppSingle.instance.phoneList.size()<30){
             List<DtoDBRecogs> list = cRecogsMapper.pickup(null);

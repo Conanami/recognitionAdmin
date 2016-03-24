@@ -43,8 +43,19 @@
             });
         }
 
+        function querySearch(){
+            $('#dg2').edatagrid({
+                pageSize: 15,//每页显示的记录条数
+                pageList: [15,30,60],//可以设置每页记录条数的列表
+                url: "<c:url value='/api.devicelog.query'/>",
+                queryParams: {
+                }
+            });
+        }
+
         $(function(){
             queryOfflineStatus();
+            querySearch();
         });
     </script>
 </head>
@@ -52,6 +63,22 @@
 <body style="padding:6px;">
     <div class="easyui-layout" style="width:auto;height:30px;">
         <label id="offlinestatus" style="font-size: small">状态:</label>
+    </div>
+    <table id="dg2" title="手机终端运行状况" style="width:auto;height:auto"
+           pagination="false" idField="uniqueid" toolbar="#toolbar"
+           rownumbers="true" fitColumns="true" singleSelect="true">
+        <thead>
+        <tr>
+            <th field="mobile" style="width: 100px;">手机当前号码</th>
+            <th field="lasttime" style="width: 150px;">最近一次拨打时间</th>
+            <th field="uniqueid" style="width: 150px;">唯一标识</th>
+        </tr>
+        </thead>
+    </table>
+
+    <!-- 工具栏 -->
+    <div id="toolbar">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg2').datagrid('reload')">reload</a>
     </div>
 </body>
 </html>
