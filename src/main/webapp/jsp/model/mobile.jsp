@@ -272,7 +272,7 @@
         <input id="mobileSearch" class="easyui-textbox"  placeholder="请输入手机号码"/>
 
         <br />
-        <a href="#" class="easyui-linkbutton" iconCls="icon-query" plain="true" onclick="javascript:querySearch()">查询</a>
+        <a href="#" class="easyui-linkbutton" style="font-size: large" plain="true" onclick="javascript:querySearch()">查询</a>
     </div>
 	<table id="dg" title="手机号列表" style="width:auto;height:auto"
 			toolbar="#toolbar" pagination="true" idField="seqid"

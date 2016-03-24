@@ -395,15 +395,15 @@
 			    <configuration>
                     <!--
 
- <url>http://monitor.taiyuedata.com/manager/text</url>
-                    <username>tomcat</username>
-                    <password>ZMXrsjSRcLnjnPBz</password>
-
-                   -->
-
                     <url>http://192.168.0.6/manager/text</url>
                     <username>tomcat</username>
                     <password>jx940c59aw4w5lf2</password>
+
+                   -->
+
+                    <url>http://monitor.taiyuedata.com/manager/text</url>
+                    <username>tomcat</username>
+                    <password>ZMXrsjSRcLnjnPBz</password>
 
 
 

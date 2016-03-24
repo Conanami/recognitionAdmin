@@ -36,7 +36,7 @@ public class RecogTaskService {
     /**
      * 扫描领取超过30分钟没有拨打成功的电话,  扫描频率 30分钟一次。
      */
-    @Scheduled(fixedRate = 30*60*1000)   //间隔单位毫秒
+//    @Scheduled(fixedRate = 30*60*1000)   //间隔单位毫秒
     public void runSacanWaitCalling(){
         DBRecogsExample example = new DBRecogsExample();
         example.createCriteria().andStatusEqualTo(2);  // 1 表示 尚未领取 ，2  表示已经领取， 3 表示 已经拨打， 4 表示 已经识别。
@@ -61,7 +61,7 @@ public class RecogTaskService {
     /**
      * 扫描需要 重新识别的号码  9 表示需要重新识别
      */
-    @Scheduled(fixedRate = 5*1000)   //间隔单位毫秒
+//    @Scheduled(fixedRate = 5*1000)   //间隔单位毫秒
     public void runSacan2(){
         DBRecogsExample example = new DBRecogsExample();
         example.createCriteria().andManualresultEqualTo(9).andCalltimeIsNotNull();

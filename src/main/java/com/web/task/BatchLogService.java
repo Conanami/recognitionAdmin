@@ -54,7 +54,7 @@ public class BatchLogService {
     @Resource
     DBZNCaseDataMapper caseDataMapper;
 
-    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
+//    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
     public void run(){
 //        log.info("---------start batchlog analysis---------");
         DBBatchLogExample example = new DBBatchLogExample();
