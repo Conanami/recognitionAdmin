@@ -134,7 +134,7 @@
             $('#fm').find('#seqid').textbox('setValue',0);
             var row = $('#dg').datagrid('getSelected');
             if (row){
-                $('#dlg').dialog('open').dialog('center').dialog('setTitle','修改');
+                $('#dlg').dialog('open').dialog('center').dialog('setTitle','查看');
 	            $('#fm').form('clear');
                 $('#fm').form('load',row);
                 $('#fm').find('#dataurl').attr('src', row.dataurl);
@@ -309,6 +309,7 @@
 
 		<!-- 工具栏 -->
 		<div id="toolbar">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="javascript:showEditForm()">查看</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="javascript:$('#dg').datagrid('reload')">reload</a>
 		</div>
 
@@ -339,42 +340,28 @@
 	            </div>
                 <div class="fitem">
                     <label>商户号:</label>
-                    <input id="merchid" name="merchid" class="easyui-textbox" required="true">
+                    <input id="merchid" name="merchid" class="easyui-textbox" editable="false" required="true">
                 </div>
                 <div class="fitem">
                     <label>被叫号码:</label>
-                    <input id="mobile" name="mobile" class="easyui-textbox" required="true">
+                    <input id="mobile" name="mobile" class="easyui-textbox" editable="false" required="true">
                 </div>
                 <div class="fitem">
                     <label>录音文件:</label>
                     <audio id="dataurl" name="dataurl" src="audio.wav" preload="auto" controls ></audio>
                 </div>
-                <div class="fitem">
-                    <label>人工分析结果:</label>
-                    <select class="easyui-combobox" id="manualresult" name="manualresult" editable="false" style="width:200px;">
-                        <option value="-1">无</option>
-                        <option value="0">未知</option>
-                        <option value="8">需要重新拨打</option>
-                        <option value="9">需要重新识别</option>
-                        <option value="1">正常</option>
-                        <option value="2">欠费停机</option>
-                        <option value="3">空号</option>
-                        <option value="4">关机</option>
-                    </select>
-                </div>
                 <label>下载录音文件需要2-3秒，请耐心等待播放键可用</label>
 	        </form>
 	    </div>
 
-        <!-- 课程编辑的 工具栏 -->
+        <!-- 编辑的 工具栏 -->
         <div id="dlg-buttons-new">
             <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveNew()" style="width:90px">Save</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgnew').dialog('close')" style="width:90px">Cancel</a>
         </div>
 
-	    <!-- 课程编辑的 工具栏 -->
+	    <!-- 编辑的 工具栏 -->
 	    <div id="dlg-buttons">
-	        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUpdate()" style="width:90px">Save</a>
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
 	    </div>
     

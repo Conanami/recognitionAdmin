@@ -60,6 +60,11 @@ a {
 :-ms-input-placeholder { /* Internet Explorer 10+ */
 	color: #cccccc;
 }
+BODY {background-image: URL('<c:url value='/images/login_bg.jpg'/>');
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;}
+
 </style>
 </head>
 <script type="text/javascript"> 
@@ -118,13 +123,13 @@ $(function () {
 
 </script>
 
-<body style="background: #78cad7;">
+<body>
 
 	<div
 		style="vertical-align: middle; text-align: center; width: 440px; position: fixed; margin-left: -220px; margin-top: -164px; height: 100%; left: 50%; top: 50%;"
 		id="contentDiv">
 		<div
-			style="height: 100px;  background:url('<c:url value='/images/login_area_bg.png'/>'); center top no-repeat ;  background-size: 100% 100% ;  ">
+			style="height: 100px;  background:url('<c:url value='/images/login_area_bg.jpg'/>'); center top no-repeat ;  background-size: 100% 100% ;  ">
 			<label
 				style="color: white; line-height: 100px; font-size: 18px; font-weight: 600;">号码识别后台管理系统</label>
 		</div>
