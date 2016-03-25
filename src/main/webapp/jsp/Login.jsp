@@ -95,7 +95,7 @@ function login(){
 	}, function(obj) {	
 		ajaxLoadEnd();
 		if (obj.respCode != 0) {
-			alert(obj.respDescription);
+            $.messager.alert('提示', obj.respDescription,'error');
 		} else {
 			$.cookie('usernameCookie', $("#username").val()); // 存储 cookie 
 			window.location.href = "<c:url value='/jsp/admin.jsp'/>";

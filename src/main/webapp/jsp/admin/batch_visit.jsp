@@ -16,6 +16,7 @@
     <script type="text/javascript" src="<c:url value='/js/jquery.form.js'/>" ></script>
     <script type="text/javascript" src="<c:url value='/js/easyui/jquery.edatagrid.js'/>" ></script>
     <script type="text/javascript" src="<c:url value='/js/audioplayer.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/js/Chart.min.js'/>"></script>
 
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/form_common.css'/>" />
     <style>
@@ -60,7 +61,8 @@
         function showdetailcell(value,rec){
             var m = rec.seqid+","+rec.merchid+","+rec.batchid+","+rec.mark;
             var btn = '<a onclick="showdetail(\''+m+'\')" href="javascript:void(0)">查看详情</a>';
-            return btn;
+            var btn2 = '<a onclick="showChart(\''+m+'\')" href="javascript:void(0)">查看统计</a>';
+            return btn+'   '+btn2;
         }
         function showdetail(rec){
             var arrs = rec.split(',');
@@ -77,6 +79,73 @@
                 maximizable:true,
                 content : content
             });
+        }
+
+        function showChart(rec){
+            $('#dlg3').dialog('open');
+            $('#dlg3').panel({title: "显示统计图表"});
+
+            var arrs = rec.split(',');
+            var url = "<c:url value='/api.batch.statistic.query'/>";
+            $.post(url, {
+                batchid : arrs[2]
+            }, function(result) {
+                if (result.respCode==0){
+                    //$.messager.alert('提示', result,'info');
+                    var dto = result.rows[0];
+                    showStatisticNum(dto);
+                    var ctx = document.getElementById("chart-area").getContext("2d");
+                    var pieData = createPieData(dto);
+                    window.myPie = new Chart(ctx).Pie(createPieData(dto));
+                    //$('#dlg3').find('#pickuptime').datetimebox('setValue',result.rows[0]);
+                } else {
+                    $.messager.alert('提示', result.respDescription,'error');
+                }
+            });
+        }
+
+        function showStatisticNum(dto){
+            $('#dlg3').find('#zclbl').text(dto.zcSize);
+            $('#dlg3').find('#tjlbl').text(dto.tjSize);
+            $('#dlg3').find('#gjlbl').text(dto.gjSize);
+            $('#dlg3').find('#khlbl').text(dto.khSize);
+            $('#dlg3').find('#otherlbl').text(dto.wsSize+dto.otherSize);
+        }
+
+        function createPieData(dto){
+            var pieData = [
+                {
+                    value: dto.zcSize,
+                    color:"#F7464A",
+                    highlight: "#FF5A5E",
+                    label: "正常"
+                },
+                {
+                    value: dto.tjSize,
+                    color: "#46BFBD",
+                    highlight: "#5AD3D1",
+                    label: "停机"
+                },
+                {
+                    value: dto.khSize,
+                    color: "#FDB45C",
+                    highlight: "#FFC870",
+                    label: "空号"
+                },
+                {
+                    value: dto.gjSize,
+                    color: "#949FB1",
+                    highlight: "#A8B3C5",
+                    label: "关机"
+                },
+                {
+                    value: dto.wsSize+dto.otherSize,
+                    color: "#4D5360",
+                    highlight: "#616774",
+                    label: "其他"
+                }
+            ];
+            return pieData;
         }
 
         function showImport(){
@@ -247,6 +316,37 @@
         <div id="dlg2" class="easyui-dialog" title="查看详情" closed="true"
              data-options="iconCls:'icon-save',cache:false, border:true, noheader:false"
              style="width:90%;height:600px;padding:10px;background:#fafafa;">
+        </div>
+
+        <!-- 弹出的panel3 -->
+        <div id="dlg3" class="easyui-dialog" title="查看统计" closed="true"
+             data-options="iconCls:'icon-search',cache:false, border:true, noheader:false"
+             style="width:400px;height:400px;padding:10px;background:#fafafa;">
+            <canvas id="chart-area" style="width: 300px;height: 150px">
+
+            </canvas>
+            <table cellpadding="5" width="100%">
+                <tr>
+                    <td style="width:40%;">正常:</td>
+                    <td style="width:60%;"><label id="zclbl">0</label></td>
+                </tr>
+                <tr>
+                    <td >关机:</td>
+                    <td ><label id="gjlbl">0</label></td>
+                </tr>
+                <tr>
+                    <td >停机:</td>
+                    <td ><label id="tjlbl">0</label></td>
+                </tr>
+                <tr>
+                    <td >空号:</td>
+                    <td ><label id="khlbl">0</label></td>
+                </tr>
+                <tr>
+                    <td >其他:</td>
+                    <td ><label id="otherlbl">0</label></td>
+                </tr>
+            </table>
         </div>
 	</div>
 </body>

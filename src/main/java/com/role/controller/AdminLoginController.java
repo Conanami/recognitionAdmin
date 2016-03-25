@@ -8,11 +8,13 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.common.exception.WException;
 import mybatis.one.po.DBAdminUserRole;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +73,13 @@ public class AdminLoginController {
 		String pswtoMD5 =  MD5.encrypt(password);//数据库中存放MD5加密后的大写密文，后期会修改从页面提交过来也会是密文
 		
 		// 使用 shiro 登录
-		SecurityUtils.getSubject().login(new UsernamePasswordToken(username, pswtoMD5));
+        try {
+            SecurityUtils.getSubject().login(new UsernamePasswordToken(username, pswtoMD5));
+        }catch (IncorrectCredentialsException ex1){
+            throw new WException(500).setMessage("请输入有效的登录密码");
+        }catch (Exception e){
+            throw new WException(500).setMessage("登录异常");
+        }
 		//获取菜单
 		Integer userid = (Integer) httpSession.getAttribute("userid");
 		JSONArray  menuArr = getMenu(userid);

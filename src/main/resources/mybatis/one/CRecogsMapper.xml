@@ -145,6 +145,11 @@
             receivetime
     </select>
 
+    <!--  查询某个批次的 统计结果 -->
+    <select id="selectResultStatistic" resultType="com.web.dto.BatchStatisticDto">
+        SELECT `result`, COUNT(seqid) AS rowscount  FROM recogs WHERE batchid=#{batchid} GROUP BY `status`
+    </select>
+
 
     <!--  批量插入案件详情 -->
     <insert id="insertCaseBatch">

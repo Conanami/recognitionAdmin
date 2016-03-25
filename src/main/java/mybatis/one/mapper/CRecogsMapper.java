@@ -1,5 +1,6 @@
 package mybatis.one.mapper;
 
+import com.web.dto.BatchStatisticDto;
 import com.web.dto.DtoDBRecogs;
 import com.web.dto.MTMDataDto;
 import mybatis.one.po.DBRecogs;
@@ -60,6 +61,9 @@ public interface CRecogsMapper {
 
     // 查询一个批次里面，已经完成识别的 记录, 包括识别结果1,2,3,4， 识别状态 4， 9， 11， 12
     public List<DBRecogs> selectBatchRecogCount(@Param("batchid") String batchid);
+
+    // 查询统计结果
+    public List<BatchStatisticDto> selectResultStatistic(@Param("batchid") String batchid);
 
     /**
      * 批量插入案件 案件详情

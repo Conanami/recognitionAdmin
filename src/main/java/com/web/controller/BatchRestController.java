@@ -4,11 +4,9 @@ import com.common.exception.ExceptionConst;
 import com.common.exception.ExceptionFormatter;
 import com.common.exception.WException;
 import com.common.util.*;
-import com.web.dto.BatchEditDto;
-import com.web.dto.DataZBStructure;
-import com.web.dto.DestroyResDto;
-import com.web.dto.DtoDBRecogs;
+import com.web.dto.*;
 import com.web.service.IBankService;
+import mybatis.one.mapper.CRecogsMapper;
 import mybatis.one.mapper.DBBatchLogMapper;
 import mybatis.one.mapper.DBDeviceLogMapper;
 import mybatis.one.mapper.DBRecogsMapper;
@@ -55,6 +53,9 @@ public class BatchRestController {
 
     @Resource
     DBRecogsMapper recogsMapper;
+
+    @Resource
+    CRecogsMapper cRecogsMapper;
 
     @Resource
     DBBatchLogMapper batchLogMapper;
@@ -132,6 +133,63 @@ public class BatchRestController {
         DestroyResDto res = new DestroyResDto();
         res.setSuccess(true);
         return res;
+    }
+
+    /**
+     * 批次查询
+     * @param batchid
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("api.batch.statistic.query")
+    public WSResponse<BatchStatisticForm> api_batch_statistic(
+            @RequestParam(value = "batchid", required = true) String batchid,
+            HttpSession httpSession){
+        WSResponse<BatchStatisticForm> response = new WSResponse<>();
+        List<BatchStatisticDto> list = cRecogsMapper.selectResultStatistic(batchid);
+
+        Integer zcSize = 0;
+        Integer tjSize = 0;
+        Integer gjSize = 0;
+        Integer khSize = 0;
+        Integer wsSize = 0;
+        Integer otherSize = 0;
+
+        for (BatchStatisticDto statisticDto : list) {
+            Integer result = statisticDto.getResult();
+            if (result==null) continue;
+            switch (statisticDto.getResult()){
+                case 1:
+                    zcSize = statisticDto.getRowscount();
+                    break;
+                case 2:
+                    tjSize = statisticDto.getRowscount();
+                    break;
+                case 3:
+                    khSize = statisticDto.getRowscount();
+                    break;
+                case 4:
+                    gjSize = statisticDto.getRowscount();
+                    break;
+                case -2:
+                    wsSize = statisticDto.getRowscount();
+                    break;
+                default:
+                    otherSize += statisticDto.getRowscount();;
+                    break;
+            }
+        }
+        BatchStatisticForm form = new BatchStatisticForm();
+        form.setZcSize(zcSize);
+        form.setGjSize(gjSize);
+        form.setKhSize(khSize);
+        form.setOtherSize(otherSize);
+        form.setTjSize(tjSize);
+        form.setWsSize(wsSize);
+
+        response.add(form);
+        response.setRespDescription("批次统计记录查询成功");
+        return response;
     }
 
     /**
