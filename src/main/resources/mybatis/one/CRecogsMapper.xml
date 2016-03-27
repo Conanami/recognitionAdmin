@@ -147,7 +147,7 @@
 
     <!--  查询某个批次的 统计结果 -->
     <select id="selectResultStatistic" resultType="com.web.dto.BatchStatisticDto">
-        SELECT `result`, COUNT(seqid) AS rowscount  FROM recogs WHERE batchid=#{batchid} GROUP BY `status`
+        SELECT `result`, COUNT(seqid) AS rowscount  FROM recogs WHERE batchid=#{batchid} GROUP BY `result`
     </select>
 
 

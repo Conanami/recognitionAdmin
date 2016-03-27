@@ -80,7 +80,7 @@
                 content : content
             });
         }
-
+        var chart = undefined;
         function showChart(rec){
             $('#dlg3').dialog('open');
             $('#dlg3').panel({title: "显示统计图表"});
@@ -95,8 +95,10 @@
                     var dto = result.rows[0];
                     showStatisticNum(dto);
                     var ctx = document.getElementById("chart-area").getContext("2d");
-                    var pieData = createPieData(dto);
-                    window.myPie = new Chart(ctx).Pie(createPieData(dto));
+                    if(chart!=undefined){
+                        chart.destroy();
+                    }
+                    chart = new Chart($('#chart-area').get(0).getContext("2d")).Pie(createPieData(dto));
                     //$('#dlg3').find('#pickuptime').datetimebox('setValue',result.rows[0]);
                 } else {
                     $.messager.alert('提示', result.respDescription,'error');
@@ -116,32 +118,32 @@
             var pieData = [
                 {
                     value: dto.zcSize,
-                    color:"#F7464A",
-                    highlight: "#FF5A5E",
+                    color:"green",
+                    highlight: "green",
                     label: "正常"
                 },
                 {
                     value: dto.tjSize,
-                    color: "#46BFBD",
-                    highlight: "#5AD3D1",
+                    color: "burlywood",
+                    highlight: "burlywood",
                     label: "停机"
                 },
                 {
                     value: dto.khSize,
-                    color: "#FDB45C",
-                    highlight: "#FFC870",
+                    color: "red",
+                    highlight: "red",
                     label: "空号"
                 },
                 {
                     value: dto.gjSize,
-                    color: "#949FB1",
-                    highlight: "#A8B3C5",
+                    color: "blue",
+                    highlight: "blue",
                     label: "关机"
                 },
                 {
                     value: dto.wsSize+dto.otherSize,
-                    color: "#4D5360",
-                    highlight: "#616774",
+                    color: "gray",
+                    highlight: "gray",
                     label: "其他"
                 }
             ];
@@ -327,24 +329,24 @@
             </canvas>
             <table cellpadding="5" width="100%">
                 <tr>
-                    <td style="width:40%;">正常:</td>
-                    <td style="width:60%;"><label id="zclbl">0</label></td>
+                    <td style="width:40%;color: green;">正常:</td>
+                    <td style="width:60%;color: green;"><label id="zclbl">0</label></td>
                 </tr>
                 <tr>
-                    <td >关机:</td>
-                    <td ><label id="gjlbl">0</label></td>
+                    <td style="color: blue">关机:</td>
+                    <td style="color: blue"><label id="gjlbl">0</label></td>
                 </tr>
                 <tr>
-                    <td >停机:</td>
-                    <td ><label id="tjlbl">0</label></td>
+                    <td style="color: yellow">停机:</td>
+                    <td style="color: yellow"><label id="tjlbl">0</label></td>
                 </tr>
                 <tr>
-                    <td >空号:</td>
-                    <td ><label id="khlbl">0</label></td>
+                    <td style="color: red">空号:</td>
+                    <td style="color: red"><label id="khlbl">0</label></td>
                 </tr>
                 <tr>
-                    <td >其他:</td>
-                    <td ><label id="otherlbl">0</label></td>
+                    <td style="color: gray">其他:</td>
+                    <td style="color: gray"><label id="otherlbl">0</label></td>
                 </tr>
             </table>
         </div>
