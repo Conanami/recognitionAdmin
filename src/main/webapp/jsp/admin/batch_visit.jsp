@@ -124,8 +124,8 @@
                 },
                 {
                     value: dto.tjSize,
-                    color: "burlywood",
-                    highlight: "burlywood",
+                    color: "orangered",
+                    highlight: "orangered",
                     label: "停机"
                 },
                 {
@@ -337,8 +337,8 @@
                     <td style="color: blue"><label id="gjlbl">0</label></td>
                 </tr>
                 <tr>
-                    <td style="color: yellow">停机:</td>
-                    <td style="color: yellow"><label id="tjlbl">0</label></td>
+                    <td style="color: orangered">停机:</td>
+                    <td style="color: orangered"><label id="tjlbl">0</label></td>
                 </tr>
                 <tr>
                     <td style="color: red">空号:</td>
