@@ -284,7 +284,7 @@
 
     <!--  查询可以待写回 兆能资产 的 案件状态记录   -->
     <select id="selectZNCaseDataResult" resultType="mybatis.one.po.DBZNCaseData">
-        SELECT * FROM zncasedata WHERE ISNULL(`status`) AND  (ISNULL(categorize2)=FALSE AND categorize2  &lt;&gt; '' )  LIMIT 0,500
+        SELECT * FROM zncasedata WHERE `status`=101 AND  (ISNULL(categorize2)=FALSE AND categorize2  &lt;&gt; '' )  LIMIT 0,500
     </select>
 
     <!-- 批量更新 映射 联系人表  zncontact   暂时作废-->
