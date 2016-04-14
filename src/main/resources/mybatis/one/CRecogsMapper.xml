@@ -238,7 +238,7 @@
                     recogs
                 WHERE
                     merchid = #{merchid}
-                AND ISNULL(calltime)
+                AND ISNULL(STATUS)
             )
     </select>
 

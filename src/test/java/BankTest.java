@@ -12,23 +12,7 @@ public class BankTest {
 
     @Test
     public void test() {
-        try {
-            File file = new File("C:\\Users\\boshu\\Downloads\\13061603533_201602071728204338.wav");
-
-            log.info(""+file.length());
-
-//            String page = IOUtils.toString(new FileInputStream(file));
-//            Document document = Jsoup.parse(page);
-//            Element realForm = document.select("div.info-show ").first();
-//            if (realForm != null) {
-//                String name = realForm.select(".item").get(1).html().replace("<label>账户户名：</label>", "");
-//                String cardno = realForm.select(".item").get(2).html().replace("<label>账户账号：</label>", "");
-//                log.info("name:"+name +"\n cardno:"+cardno);
-//            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        int count = (int) Math.ceil(1*1.0f / 2000.0f);
+        log.info("count: "+count);
     }
 }
