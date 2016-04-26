@@ -241,13 +241,29 @@ public class BatchRestController {
 
     // 查询 设备运行状态
     @RequestMapping("api.devicelog.query")
-    public WSResponse<DBDeviceLog> api_devicelog_query(
+    public WSResponse<DeviceLogDto> api_devicelog_query(
             HttpServletRequest request) throws Exception{
-        DBDeviceLogExample example = new DBDeviceLogExample();
-        example.createCriteria().andLasttimeIsNotNull();
-        List<DBDeviceLog> list = deviceLogMapper.selectByExample(example);
-        WSResponse<DBDeviceLog> response = new WSResponse<>();
-        response.addAll(list);
+        WSResponse<DeviceLogDto> response = new WSResponse<>();
+
+        List<DBDeviceLog> list = new ArrayList<DBDeviceLog>(){
+            {
+                DBDeviceLogExample example = new DBDeviceLogExample();
+                example.createCriteria().andLasttimeIsNotNull();
+                addAll(deviceLogMapper.selectByExample(example));
+            }
+        };
+
+        long nowtime = new Date().getTime();
+        for (DBDeviceLog dbDeviceLog : list) {
+            long diff = nowtime - dbDeviceLog.getLasttime().getTime();
+            DeviceLogDto dto = new DeviceLogDto();
+            dto.setLastcallmobile(dbDeviceLog.getLastcallmobile());
+            dto.setLasttime(dbDeviceLog.getLasttime());
+            dto.setMobile(dbDeviceLog.getMobile());
+            dto.setUniqueid(dbDeviceLog.getUniqueid());
+            dto.setDifference(diff);
+            response.add(dto);
+        }
         response.setTotal(list.size());
         response.setRespDescription("查询终端日志成功");
         return response;

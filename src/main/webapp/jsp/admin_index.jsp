@@ -43,6 +43,24 @@
             });
         }
 
+        // 格式化手机状态
+        function showstatus(value,rec){
+            if(rec.difference>30*1000){
+                return '离线';
+            }else{
+                return '在线';
+            }
+        }
+
+        //格式化状态字段的颜色
+        function cellStyler(value,row,index){
+            if (row.difference > 30*1000){
+                return 'background-color:#ffffff;color:black;';
+            }else{
+                return 'background-color:#ffee00;color:green;font-weight:600';
+            }
+        }
+
         function querySearch(){
             $('#dg2').edatagrid({
                 pageSize: 15,//每页显示的记录条数
@@ -70,6 +88,7 @@
         <thead>
         <tr>
             <th field="mobile" style="width: 100px;">手机当前号码</th>
+            <th field="status" style="width: 100px;" formatter="showstatus" styler="cellStyler">状态</th>
             <th field="lasttime" style="width: 150px;">最近一次拨打时间</th>
             <th field="uniqueid" style="width: 150px;">唯一标识</th>
         </tr>
