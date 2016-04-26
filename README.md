@@ -82,8 +82,8 @@ UPDATE recogs SET `status`=1 , result = -1 , receivetime = NULL , calltime =NULL
 
 
 use mysql
-grant all privileges on *.* to root@'%' identified by 'wnbPFja1UHkzwwUm60gByUKSO92Z23s5';
-grant all privileges on *.* to root@'localhost' identified by 'wnbPFja1UHkzwwUm60gByUKSO92Z23s5';
+grant all privileges on *.* to root@'%' identified by '******';
+grant all privileges on *.* to root@'localhost' identified by '******';
 flush privileges;
 
 
