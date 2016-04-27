@@ -9,15 +9,21 @@ import com.web.service.IBankService;
 import mybatis.one.mapper.CRecogsMapper;
 import mybatis.one.mapper.DBRecogsMapper;
 import mybatis.one.mapper.DBTmpPhoneMapper;
-import mybatis.one.po.DBRecogsExample;
 import mybatis.one.po.DBTmpPhoneExample;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -90,12 +96,19 @@ public class CSVUploadController {
             System.out.println("文件原名: " + file.getOriginalFilename());
             System.out.println("========================================");
 
+            if (file.getSize()>1000*1000){
+                throw new WException(500).setMessage("文件大小不能超过1M");
+            }
+
             //保存文件
             String realName = file.getOriginalFilename();
-            type = realName.substring(realName.indexOf("."),
+            type = realName.substring(realName.lastIndexOf("."),
                     realName.length());
-            if (!type.equals(".txt") && !type.equals(".csv")) {
-                throw new WException(500).setMessage("文件必须是制表符分隔txt格式,或者csv格式");
+            if (!type.equals(".txt")
+                    && !type.equals(".csv")
+                    && !type.equals(".xls")
+                    && !type.equals(".xlsx")) {
+                throw new WException(500).setMessage("文件必须是制表符分隔txt格式,csv格式,excel格式");
             }
         }
 
@@ -106,13 +119,6 @@ public class CSVUploadController {
             throw  new WException(500).setMessage("请输入有效的 读取手机号开始的行数，从1开始");
         }
 
-        CSVFormat format = CSVFormat.DEFAULT;
-        if (type.equals(".txt")){
-            format = CSVFormat.TDF;
-        }
-        if (type.equals(".csv")){
-            format = CSVFormat.EXCEL;
-        }
 
         String merchid = "";
         if (IopUtils.isEmpty(merchid)) {
@@ -124,17 +130,16 @@ public class CSVUploadController {
             merchid = username;
         }
 
-        colnum = colnum -1 ;//传入的默认从1开始， 实际使用的从0开始
 
         List<String> listPhone = new ArrayList<>();
-        List<List<String>> lists = readListFromCsvFile(file.getInputStream(), format);
-        for (int i=rowstart-1;i<lists.size();i++){
-            List<String> list = lists.get(i);
-            String mobile = MobileUtil.formatPhone(list.get(colnum));
-            if (IopUtils.isNotEmpty(mobile)){
-                listPhone.add(mobile);
-            }
+        if (type.equals(".txt") || type.equals(".csv")){
+            listPhone =  readCsv(file.getInputStream(), type, rowstart, colnum);
+        }else if(type.equals(".xlsx") || type.equals(".xls")){
+            listPhone = readExcel(file.getInputStream(), type, rowstart, colnum);
+        }else{
+            throw new WException(500).setMessage("文件必须是制表符分隔txt格式,csv格式,excel格式");
         }
+
         // 案件的 批次id
         String importBatchId = "up"+new SimpleDateFormat("MMddHHmmss").format(new Date())+"_"+new RandomUtils().nextInt(10);
         {
@@ -151,11 +156,54 @@ public class CSVUploadController {
         if (IopUtils.isNotEmpty(pickuptime)){
             pickupDate = sdf.parse(pickuptime);
         }
-        bankService.insertMobiles(merchid, importBatchId, pickupDate, mark);
+        int insertsize = bankService.insertMobiles(merchid, importBatchId, pickupDate, mark);
         WSResponse<Boolean> response = new WSResponse<>();
-        response.setRespDescription("批量提交手机号码 "+listPhone.size()+" 条 成功");
+        response.setRespDescription("批量提交手机号码 "+insertsize+" 条 ");
         return response;
     }
+
+    //读取 cvs格式 文件  传入的 rowstart, colstart 默认从1开始， 实际使用的从0开始
+    public List<String> readCsv(InputStream fis, String type, int rowstart, int colstart) throws Exception{
+        CSVFormat format = CSVFormat.DEFAULT;
+        if (type.equals(".txt")){
+            format = CSVFormat.TDF;
+        }
+        if (type.equals(".csv")){
+            format = CSVFormat.EXCEL;
+        }
+
+        List<String> listPhone = new ArrayList<>();
+        List<List<String>> lists = readListFromCsvFile(fis, format);
+        for (int i=rowstart-1;i<lists.size();i++){
+            List<String> list = lists.get(i);
+            String mobile = MobileUtil.formatPhone(list.get(colstart-1));
+            if (IopUtils.isNotEmpty(mobile)){
+                listPhone.add(mobile);
+            }
+        }
+        return listPhone;
+    }
+
+    //读取excel文件, 读取第一页的手机号, 支持 xls,xlsx  传入的 rowstart, colstart 默认从1开始， 实际使用的从0开始
+    public List<String> readExcel(InputStream fis, String type, int rowstart, int colstart) throws Exception{
+        List<String> listPhone = new ArrayList<>();
+
+        Workbook workbook = WorkbookFactory.create(fis);
+        Sheet sheet = workbook.getSheetAt(0);
+        int firstRowNum = sheet.getFirstRowNum();
+        int lastRowNum = sheet.getLastRowNum();
+        int start = Math.max(firstRowNum, rowstart-1);
+        for (int i=start;i<=lastRowNum;i++){
+            Cell cell = sheet.getRow(i).getCell(colstart-1);
+            if (cell==null){
+                throw new WException(500).setMessage("excel文件第"+i+"行 手机号为空,请检查文件");
+            }
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            listPhone.add(cell.getStringCellValue());
+        }
+        return listPhone;
+    }
+
 
     public boolean isNumeric(String str){
         Pattern pattern = Pattern.compile("[0-9]*");

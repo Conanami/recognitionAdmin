@@ -13,10 +13,10 @@ public interface IBankService {
     // 从兆能资产读取数据写入本地
     public void importFromZN(String merchid, String casenostart, Date pickupDate, String mark) throws WException;
     /**
-     * 批量插入手机号码
+     * 批量插入手机号码, 返回成功插入的数量
      * @param merchid
      */
-    public void insertMobiles(String merchid, String batchid, Date pickupDate, String mark);
+    public int insertMobiles(String merchid, String batchid, Date pickupDate, String mark);
 
     /**
      * 领取手机号 用于拨打电话

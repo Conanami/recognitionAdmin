@@ -123,7 +123,7 @@ public class BankServiceImpl implements IBankService {
      * 从临时表获取数据 插入批次表，批次详情表
      * @param merchid
      */
-    public void insertMobiles(String merchid, String importBatchid, Date pickupDate, String mark){
+    public int insertMobiles(String merchid, String importBatchid, Date pickupDate, String mark){
         List<String> dbTmpPhones = cRecogsMapper.selectTmpPhone(merchid);
         Date createTime = new Date();
         Queue<String> queuePhone=new LinkedList<>();
@@ -158,6 +158,7 @@ public class BankServiceImpl implements IBankService {
             batchLogMapper.insert(batchLog);
             cRecogsMapper.insertTmpPhoneToRecogsBatch(merchid, batchid, listPhone, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createTime));
         }
+        return dbTmpPhones.size();
     }
     /**
      * 领取手机号 用于拨打电话
