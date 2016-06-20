@@ -54,51 +54,6 @@ public class BatchLogService {
     @Resource
     DBZNCaseDataMapper caseDataMapper;
 
-//    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
-    public void run(){
-//        log.info("---------start batchlog analysis---------");
-        DBBatchLogExample example = new DBBatchLogExample();
-        example.createCriteria().andBatchidIsNotNull();
-        List<DBBatchLog> dbBatchLogs = batchLogMapper.selectByExample(example);
-        for (DBBatchLog batchLog : dbBatchLogs ) {
-            {
-                //分析识别数量
-                List<DBRecogs> dbRecogsList = cRecogsMapper.selectBatchRecogCount(batchLog.getBatchid());
-                batchLog.setRecogcount(dbRecogsList.size());
-//                log.info("calc batchid:"+batchLog.getBatchid()+" recogSize:"+batchLog.getRecogcount());
-                if (dbRecogsList.size()>0){
-                    batchLog.setCallstarttime(dbRecogsList.get(0).getReceivetime());
-                }
-                if (dbRecogsList.size()==batchLog.getTotalcount()){
-                    // 如果完成识别的数量等于 批次的总数量，则该批次任务完成。
-                    batchLog.setCallendtime(dbRecogsList.get(dbRecogsList.size()-1).getReceivetime());
-
-                    if (dbRecogsList.get(dbRecogsList.size()-1).getReceivetime()!=null
-                            && dbRecogsList.get(0).getReceivetime()!=null){
-                        long dd = (dbRecogsList.get(dbRecogsList.size()-1).getReceivetime().getTime()
-                                - dbRecogsList.get(0).getReceivetime().getTime()) /1000;
-                        batchLog.setTotalcalltime(dd);
-                    }
-                }else{
-                    batchLog.setCallendtime(null);
-                    batchLog.setTotalcalltime(0l);
-                }
-                batchLogMapper.updateByPrimaryKey(batchLog);
-            }
-        }
-//        log.info("---------complete batchlog analysis---------");
-    }
-
-    //更新电话待分配队列
-//    @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
-    public void updatePhoneQueue(){
-        if (AppSingle.instance.phoneList.size()<30){
-            List<DtoDBRecogs> list = cRecogsMapper.pickup(null);
-            AppSingle.instance.phoneList.clear();
-            AppSingle.instance.phoneList.addAll(list);
-        }
-    }
-
     //将 识别完的数据，更新回 兆能资产的数据库 联系人表
     @Scheduled(fixedRate = 3*60*1000)   //每3分钟执行一次
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
@@ -201,6 +156,7 @@ public class BatchLogService {
                     caseData.setCategorize2("D");
                 }
             }
+            log.info("案件 "+caseData.getCaseno()+" 状态识别为 "+caseData.getCategorize2());
             if (IopUtils.isNotEmpty(caseData.getCategorize2())){
                 caseData.setCreatetime(new Date());
                 caseData.setStatus("101");
@@ -210,10 +166,13 @@ public class BatchLogService {
         }
     }
 
+    // 识别案件
+    @Scheduled(fixedRate = 15*60*1000)   //每15分钟执行一次
     public void queryAllCaseData(){
         DBZNCaseDataExample example = new DBZNCaseDataExample();
         example.createCriteria().andCategorize2EqualTo("");
         List<DBZNCaseData> list = caseDataMapper.selectByExample(example);
+        log.info("查询得到"+list.size()+" 笔未识别的案件记录");
         for (DBZNCaseData caseData : list) {
             updateCaseData(caseData.getCaseno());
         }
